@@ -3,63 +3,112 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Flam's, la flammekueche moderne, conviviale et généreuse pour les grandes tablées." />
-    <title>Flam's - Laissez-vous déborder par la vie</title>
+    <meta name="description" content="Flam's, flammekueche, vin et grandes tablées pour se retrouver simplement." />
+    <title>Flam's - Flammekueche, vin et grandes tablées</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <div class="cursor-glow" aria-hidden="true"></div>
-    <header class="site-header" data-header>
-      <a class="brand" href="#accueil" aria-label="Accueil Flam's"><img src="./assets/logos/flams-logo-cream.svg" alt="Flam's" /></a>
-      <button class="menu-toggle" type="button" aria-label="Ouvrir le menu" data-menu-toggle><span></span><span></span></button>
-      <nav class="site-nav" aria-label="Navigation principale"><a href="#carte">La carte</a><a href="#experience">L'expérience</a><a href="#vins">Les vins</a><a href="#venir">Venir</a></nav>
-      <a class="header-cta magnetic" href="#venir">Réserver</a>
+
+    <header class="topbar" data-header>
+      <a class="wordmark" href="#accueil" aria-label="Accueil Flam's">FLAM'S</a>
+      <nav class="quick-actions" aria-label="Actions principales">
+        <a href="#venir">Réserver</a>
+        <a href="#carte">La carte</a>
+        <a href="#groupes">Groupes</a>
+      </nav>
+      <button class="burger" type="button" aria-label="Ouvrir le menu" data-menu-toggle>
+        <span></span><span></span><span></span>
+      </button>
     </header>
 
+    <aside class="menu-panel" data-menu aria-label="Menu secondaire">
+      <a href="#carte">La carte</a>
+      <a href="#experience">L'expérience</a>
+      <a href="#groupes">Les groupes</a>
+      <a href="#venir">Venir</a>
+    </aside>
+
     <main id="accueil">
-      <section class="hero reveal">
-        <div class="hero-copy">
-          <p class="kicker">Flammekueche, vin, grandes tablées</p>
-          <h1>Laissez-vous déborder par la vie</h1>
-          <p>Un lieu simple, chaud et généreux où la flammekueche devient un réflexe de bande. On partage, on trinque, on recommence.</p>
-          <div class="hero-actions"><a class="button button-primary magnetic" href="#carte">Voir ce qui chauffe</a><a class="button button-ghost magnetic" href="#experience">Sentir l'ambiance</a></div>
+      <section class="hero">
+        <div class="grain" aria-hidden="true"></div>
+        <div class="hero-center reveal">
+          <p class="eyebrow">Depuis toujours, pour les tablées qui débordent</p>
+          <h1>Flammekueche, vin et grandes tablées</h1>
+          <a class="main-cta magnetic" href="#carte">J'ai faim</a>
         </div>
-        <div class="hero-stage" aria-label="Univers Flam's">
-          <img class="hero-board parallax" src="./assets/icons/board-yellow.svg" alt="Planche Flam's" />
-          <img class="hero-dragon parallax" src="./assets/icons/dragon-bordeaux.svg" alt="Dragon Flam's" />
-          <img class="hero-flame parallax" src="./assets/icons/flame-red.svg" alt="Flamme Flam's" />
-          <div class="hero-note">bon plan<br />à partager</div>
+        <div class="spark spark-one" aria-hidden="true"></div>
+        <div class="spark spark-two" aria-hidden="true"></div>
+        <div class="corner-scene scene-left" aria-hidden="true">
+          <span class="plate"></span>
+          <span class="flame-shape"></span>
+          <span class="tiny-star"></span>
+        </div>
+        <div class="corner-scene scene-right" aria-hidden="true">
+          <span class="bottle-shape"></span>
+          <span class="board-shape"></span>
+          <span class="tiny-star"></span>
+        </div>
+        <a class="scroll-cue" href="#experience" aria-label="Descendre">↓</a>
+      </section>
+
+      <section class="intro-section reveal" id="experience">
+        <div class="seal" aria-hidden="true">
+          <span>FLAM'S</span>
+          <small>feu, vin, copains</small>
+        </div>
+        <article class="intro-copy">
+          <p class="eyebrow">C'est qui Flam's ?</p>
+          <h2>Un lieu où l'on vient comme on est, mais jamais tout seul très longtemps.</h2>
+          <p>On aime la vie, la cuisine qui se partage, les verres qui tournent et les grandes tablées où la flammekueche disparaît avant même qu'on ait fini la phrase.</p>
+          <p>Pas de grand discours : du feu, du croustillant, des prix accessibles, et cette envie simple de se retrouver.</p>
+        </article>
+      </section>
+
+      <section class="cards-section reveal" id="carte">
+        <div class="section-title">
+          <p class="eyebrow">La carte</p>
+          <h2>Ça chauffe, ça croustille, ça tourne.</h2>
+        </div>
+        <div class="cards">
+          <article class="mimo-card magnetic">
+            <span>01</span>
+            <h3>Flammekueches</h3>
+            <p>Fines, chaudes, généreuses, faites pour arriver au milieu de la table.</p>
+          </article>
+          <article class="mimo-card magnetic">
+            <span>02</span>
+            <h3>Vins Flam's</h3>
+            <p>Rouge croquant, blanc gourmand, bulles : simple, vivant, jamais cérémonieux.</p>
+          </article>
+          <article class="mimo-card magnetic">
+            <span>03</span>
+            <h3>Desserts</h3>
+            <p>Le genre de fin qui fait demander une cuillère en plus.</p>
+          </article>
         </div>
       </section>
 
-      <section class="brand-strip reveal"><img src="./assets/images/bandeau-brand.svg" alt="Motifs Flam's" /></section>
-
-      <section class="menu-section reveal" id="carte">
-        <div class="section-intro"><p class="kicker">La carte</p><h2>Des classiques, du feu, zéro chichi.</h2></div>
-        <div class="signature-grid">
-          <article class="signature-card magnetic"><span>01</span><h3>Flammekueche à partager</h3><p>Fine, chaude, généreuse. Elle arrive au centre et tout le monde pioche.</p></article>
-          <article class="signature-card magnetic"><span>02</span><h3>Verres qui circulent</h3><p>Rouge croquant, blanc gourmand, bulles. L'accord simple pour une table vivante.</p></article>
-          <article class="signature-card magnetic"><span>03</span><h3>Desserts qui débordent</h3><p>La fin de repas qui fait commander une cuillère de plus à toute la table.</p></article>
+      <section class="split-section reveal" id="groupes">
+        <div>
+          <p class="eyebrow">Groupes</p>
+          <h2>Une table de six qui finit à douze ? On connaît.</h2>
         </div>
+        <p>Anniversaire, afterwork, sortie de promo, bande de copains : Flam's est pensé pour le collectif. Fluide, accessible, chaleureux, sans formalisme.</p>
       </section>
 
-      <section class="experience reveal" id="experience">
-        <div class="experience-media"><img src="./assets/images/wine-blanc-gourmand.svg" alt="Blanc gourmand Flam's" /></div>
-        <div class="experience-copy"><p class="kicker">L'expérience</p><h2>Pas besoin d'une grande occasion pour faire une grande table.</h2><p>Flam's parle avec le ventre et avec le cœur : une expérience lisible, accessible, conviviale et franchement généreuse.</p><div class="pill-row"><span>Convivial</span><span>Généreux</span><span>Accessible</span><span>Simple</span></div></div>
-      </section>
-
-      <section class="wine-section reveal" id="vins">
-        <div><p class="kicker">Les vins Flam's</p><h2>Ça trinque sans faire compliqué.</h2></div>
-        <div class="wine-grid"><img class="magnetic" src="./assets/images/wine-rouge-croquant.svg" alt="Rouge croquant Flam's" /><img class="magnetic" src="./assets/images/wine-blanc-gourmand.svg" alt="Blanc gourmand Flam's" /></div>
-      </section>
-
-      <section class="visit-section reveal" id="venir">
-        <div><p class="kicker">Venir</p><h2>On garde une place au chaud ?</h2></div>
-        <a class="big-link magnetic" href="mailto:contact@example.com">Réserver une table <span>→</span></a>
+      <section class="final-cta reveal" id="venir">
+        <p class="eyebrow">Venir</p>
+        <h2>On garde une place au chaud ?</h2>
+        <a class="main-cta magnetic" href="mailto:contact@flams.fr">Réserver</a>
       </section>
     </main>
 
-    <footer class="site-footer"><img src="./assets/logos/flams-logo-cream.svg" alt="Flam's" /><span>Parler avec le ventre. Parler avec le cœur.</span></footer>
+    <footer class="footer">
+      <strong>FLAM'S</strong>
+      <span>Parler avec le ventre. Parler avec le cœur.</span>
+    </footer>
+
     <script src="./script.js"></script>
   </body>
 </html>
