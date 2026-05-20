@@ -2,11 +2,7 @@ const header = document.querySelector('[data-header]');
 const menuToggle = document.querySelector('[data-menu-toggle]');
 const glow = document.querySelector('.cursor-glow');
 const magneticItems = document.querySelectorAll('.magnetic');
-const marqueeTrack = document.querySelector('.marquee-track');
-
-if (marqueeTrack) {
-  marqueeTrack.innerHTML += marqueeTrack.innerHTML;
-}
+const revealItems = document.querySelectorAll('.reveal');
 
 window.addEventListener('scroll', () => {
   header.classList.toggle('is-scrolled', window.scrollY > 18);
@@ -32,8 +28,18 @@ magneticItems.forEach((item) => {
     const y = event.clientY - rect.top - rect.height / 2;
     item.style.transform = `translate(${x * 0.035}px, ${y * 0.035}px)`;
   });
-
   item.addEventListener('pointerleave', () => {
     item.style.transform = '';
   });
 });
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('is-visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.18 });
+
+revealItems.forEach((item) => observer.observe(item));
