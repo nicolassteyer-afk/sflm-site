@@ -9,101 +9,57 @@
   </head>
   <body>
     <div class="cursor-glow" aria-hidden="true"></div>
-
     <header class="site-header" data-header>
-      <a class="brand" href="#accueil" aria-label="Accueil Flam's">FLAM'S</a>
-      <button class="menu-toggle" type="button" aria-label="Ouvrir le menu" data-menu-toggle>
-        <span></span><span></span>
-      </button>
-      <nav class="site-nav" aria-label="Navigation principale">
-        <a href="#carte">La carte</a>
-        <a href="#experience">L'expérience</a>
-        <a href="#groupes">Groupes</a>
-        <a href="#venir">Venir</a>
-      </nav>
+      <a class="brand" href="#accueil" aria-label="Accueil Flam's"><img src="./assets/logos/flams-logo-cream.svg" alt="Flam's" /></a>
+      <button class="menu-toggle" type="button" aria-label="Ouvrir le menu" data-menu-toggle><span></span><span></span></button>
+      <nav class="site-nav" aria-label="Navigation principale"><a href="#carte">La carte</a><a href="#experience">L'expérience</a><a href="#vins">Les vins</a><a href="#venir">Venir</a></nav>
       <a class="header-cta magnetic" href="#venir">Réserver</a>
     </header>
 
     <main id="accueil">
-      <section class="hero">
+      <section class="hero reveal">
         <div class="hero-copy">
           <p class="kicker">Flammekueche, vin, grandes tablées</p>
           <h1>Laissez-vous déborder par la vie</h1>
-          <p>
-            Chez Flam's, on se retrouve sans cérémonie autour d'une flammekueche qui arrive chaude,
-            d'un verre qui circule et d'une table qui s'agrandit.
-          </p>
-          <div class="hero-actions">
-            <a class="button button-primary magnetic" href="#carte">Voir ce qui chauffe</a>
-            <a class="button button-ghost magnetic" href="#groupes">Ramener la bande</a>
-          </div>
+          <p>Un lieu simple, chaud et généreux où la flammekueche devient un réflexe de bande. On partage, on trinque, on recommence.</p>
+          <div class="hero-actions"><a class="button button-primary magnetic" href="#carte">Voir ce qui chauffe</a><a class="button button-ghost magnetic" href="#experience">Sentir l'ambiance</a></div>
         </div>
-
         <div class="hero-stage" aria-label="Univers Flam's">
-          <div class="planche-shape"></div>
-          <div class="dragon-card">
-            <span class="flame-mark">🔥</span>
-            <strong>Bon plan</strong>
-            <p>simple, généreux, fédérateur</p>
-          </div>
-          <div class="floating-ticket">grand<br />format</div>
+          <img class="hero-board parallax" src="./assets/icons/board-yellow.svg" alt="Planche Flam's" />
+          <img class="hero-dragon parallax" src="./assets/icons/dragon-bordeaux.svg" alt="Dragon Flam's" />
+          <img class="hero-flame parallax" src="./assets/icons/flame-red.svg" alt="Flamme Flam's" />
+          <div class="hero-note">bon plan<br />à partager</div>
         </div>
       </section>
 
-      <section class="marquee" aria-label="Ambiance Flam's">
-        <div class="marquee-track">
-          <span>Ça croustille</span><span>Ça partage</span><span>Ça trinque</span><span>Ça déborde</span><span>Ça recommence</span>
-        </div>
-      </section>
+      <section class="brand-strip reveal"><img src="./assets/images/bandeau-brand.svg" alt="Motifs Flam's" /></section>
 
-      <section class="menu-section" id="carte">
-        <div class="section-intro">
-          <p class="kicker">La carte</p>
-          <h2>Des classiques, du feu, et zéro chichi.</h2>
-        </div>
+      <section class="menu-section reveal" id="carte">
+        <div class="section-intro"><p class="kicker">La carte</p><h2>Des classiques, du feu, zéro chichi.</h2></div>
         <div class="signature-grid">
-          <article class="signature-card magnetic"><span>01</span><h3>Flammekueche à partager</h3><p>Fine, chaude, généreuse. Elle arrive au centre, elle disparaît vite.</p></article>
-          <article class="signature-card magnetic"><span>02</span><h3>Vins qui mettent bien</h3><p>Rouge croquant, blanc gourmand, bulles pour les soirs qui s'allongent.</p></article>
-          <article class="signature-card magnetic"><span>03</span><h3>Desserts sans retenue</h3><p>La fin qui fait commander une cuillère de plus à toute la table.</p></article>
+          <article class="signature-card magnetic"><span>01</span><h3>Flammekueche à partager</h3><p>Fine, chaude, généreuse. Elle arrive au centre et tout le monde pioche.</p></article>
+          <article class="signature-card magnetic"><span>02</span><h3>Verres qui circulent</h3><p>Rouge croquant, blanc gourmand, bulles. L'accord simple pour une table vivante.</p></article>
+          <article class="signature-card magnetic"><span>03</span><h3>Desserts qui débordent</h3><p>La fin de repas qui fait commander une cuillère de plus à toute la table.</p></article>
         </div>
       </section>
 
-      <section class="experience" id="experience">
-        <div class="bottle-card"><span>FLAM'S</span><strong>Blanc gourmand</strong></div>
-        <div class="experience-copy">
-          <p class="kicker">L'expérience</p>
-          <h2>Pas besoin d'une grande occasion pour faire une grande table.</h2>
-          <p>
-            Flam's garde l'ADN populaire et joyeux de la flammekueche, avec une image plus actuelle,
-            plus désirable, et prête à devenir un réflexe pour les jeunes adultes qui veulent se retrouver.
-          </p>
-          <div class="pill-row"><span>Convivial</span><span>Généreux</span><span>Accessible</span><span>Simple</span></div>
-        </div>
+      <section class="experience reveal" id="experience">
+        <div class="experience-media"><img src="./assets/images/wine-blanc-gourmand.svg" alt="Blanc gourmand Flam's" /></div>
+        <div class="experience-copy"><p class="kicker">L'expérience</p><h2>Pas besoin d'une grande occasion pour faire une grande table.</h2><p>Flam's parle avec le ventre et avec le cœur : une expérience lisible, accessible, conviviale et franchement généreuse.</p><div class="pill-row"><span>Convivial</span><span>Généreux</span><span>Accessible</span><span>Simple</span></div></div>
       </section>
 
-      <section class="group-section" id="groupes">
-        <div class="ornament-row" aria-hidden="true"><span>🔥</span><span>🍷</span><span>▰</span><span>🍷</span><span>🔥</span></div>
-        <div class="group-content">
-          <p class="kicker">Groupes</p>
-          <h2>Un anniversaire, un afterwork, une table de douze qui devient quinze.</h2>
-          <p>
-            On aime quand ça vit. Les grandes tablées sont au cœur de Flam's : fluides, bruyantes juste ce qu'il faut,
-            et pensées pour partager sans compter les parts.
-          </p>
-        </div>
+      <section class="wine-section reveal" id="vins">
+        <div><p class="kicker">Les vins Flam's</p><h2>Ça trinque sans faire compliqué.</h2></div>
+        <div class="wine-grid"><img class="magnetic" src="./assets/images/wine-rouge-croquant.svg" alt="Rouge croquant Flam's" /><img class="magnetic" src="./assets/images/wine-blanc-gourmand.svg" alt="Blanc gourmand Flam's" /></div>
       </section>
 
-      <section class="visit-section" id="venir">
+      <section class="visit-section reveal" id="venir">
         <div><p class="kicker">Venir</p><h2>On garde une place au chaud ?</h2></div>
         <a class="big-link magnetic" href="mailto:contact@example.com">Réserver une table <span>→</span></a>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <strong>FLAM'S</strong>
-      <span>Parler avec le ventre. Parler avec le cœur.</span>
-    </footer>
-
+    <footer class="site-footer"><img src="./assets/logos/flams-logo-cream.svg" alt="Flam's" /><span>Parler avec le ventre. Parler avec le cœur.</span></footer>
     <script src="./script.js"></script>
   </body>
 </html>
