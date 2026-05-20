@@ -3,112 +3,68 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Flam's, flammekueche, vin et grandes tablées pour se retrouver simplement." />
-    <title>Flam's - Flammekueche, vin et grandes tablées</title>
+    <meta name="description" content="Flam's, restaurant de flammekueches, vins et grandes tablées dans une ambiance chaleureuse et contemporaine." />
+    <title>Flam's - Flammekueches, vin et grandes tablées</title>
+    <link rel="stylesheet" href="./assets/fonts/ironmonger-data.css" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <div class="cursor-glow" aria-hidden="true"></div>
+    <div class="ember-layer" aria-hidden="true"></div>
 
-    <header class="topbar" data-header>
-      <a class="wordmark" href="#accueil" aria-label="Accueil Flam's">FLAM'S</a>
-      <nav class="quick-actions" aria-label="Actions principales">
-        <a href="#venir">Réserver</a>
-        <a href="#carte">La carte</a>
-        <a href="#groupes">Groupes</a>
-      </nav>
-      <button class="burger" type="button" aria-label="Ouvrir le menu" data-menu-toggle>
-        <span></span><span></span><span></span>
-      </button>
+    <header class="site-header" data-header>
+      <a class="brand" href="#accueil" aria-label="Accueil Flam's"><img src="./assets/logos/flams-logo-cream.svg" alt="Flam's" /></a>
+      <nav class="site-nav" aria-label="Navigation principale" data-nav><a href="#ambiance">Ambiance</a><a href="#carte">Carte</a><a href="#vins">Vins</a><a href="#groupes">Groupes</a></nav>
+      <a class="header-cta magnetic" href="#venir">Réserver</a>
+      <button class="menu-toggle" type="button" aria-label="Ouvrir le menu" data-menu-toggle><span></span><span></span></button>
     </header>
 
-    <aside class="menu-panel" data-menu aria-label="Menu secondaire">
-      <a href="#carte">La carte</a>
-      <a href="#experience">L'expérience</a>
-      <a href="#groupes">Les groupes</a>
-      <a href="#venir">Venir</a>
-    </aside>
-
     <main id="accueil">
-      <section class="hero">
-        <div class="grain" aria-hidden="true"></div>
-        <div class="hero-center reveal">
-          <p class="eyebrow">Depuis toujours, pour les tablées qui débordent</p>
-          <h1>Flammekueche, vin et grandes tablées</h1>
-          <a class="main-cta magnetic" href="#carte">J'ai faim</a>
+      <section class="hero section-panel">
+        <div class="burn-mark burn-one" aria-hidden="true"></div><div class="burn-mark burn-two" aria-hidden="true"></div>
+        <div class="claw-mark claw-one" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="hero-copy reveal">
+          <p class="kicker">Feu doux, grande table, esprit libre</p>
+          <h1>Le goût du feu, sans faire de bruit.</h1>
+          <p>Flam's réchauffe la flammekueche avec une ambiance plus actuelle : matière brute, lumière chaude, vins faciles à partager et tables qui prennent vie.</p>
+          <div class="hero-actions"><a class="button button-primary magnetic" href="#carte">Voir la carte</a><a class="button button-ghost magnetic" href="#ambiance">Sentir l'ambiance</a></div>
         </div>
-        <div class="spark spark-one" aria-hidden="true"></div>
-        <div class="spark spark-two" aria-hidden="true"></div>
-        <div class="corner-scene scene-left" aria-hidden="true">
-          <span class="plate"></span>
-          <span class="flame-shape"></span>
-          <span class="tiny-star"></span>
+        <div class="hero-visual reveal" aria-label="Ambiance Flam's">
+          <img class="hero-board" src="./assets/icons/board-yellow.svg" alt="" />
+          <img class="hero-flame" src="./assets/icons/flame-red.svg" alt="" />
+          <img class="hero-logo" src="./assets/logos/flams-logo-bordeaux.svg" alt="Flam's" />
+          <div class="wood-slab" aria-hidden="true"></div>
         </div>
-        <div class="corner-scene scene-right" aria-hidden="true">
-          <span class="bottle-shape"></span>
-          <span class="board-shape"></span>
-          <span class="tiny-star"></span>
-        </div>
-        <a class="scroll-cue" href="#experience" aria-label="Descendre">↓</a>
+        <a class="scroll-cue" href="#ambiance" aria-label="Descendre">↓</a>
       </section>
 
-      <section class="intro-section reveal" id="experience">
-        <div class="seal" aria-hidden="true">
-          <span>FLAM'S</span>
-          <small>feu, vin, copains</small>
-        </div>
-        <article class="intro-copy">
-          <p class="eyebrow">C'est qui Flam's ?</p>
-          <h2>Un lieu où l'on vient comme on est, mais jamais tout seul très longtemps.</h2>
-          <p>On aime la vie, la cuisine qui se partage, les verres qui tournent et les grandes tablées où la flammekueche disparaît avant même qu'on ait fini la phrase.</p>
-          <p>Pas de grand discours : du feu, du croustillant, des prix accessibles, et cette envie simple de se retrouver.</p>
-        </article>
+      <section class="texture-strip" aria-label="Signature Flam's"><div class="marquee-track"><span>flamme douce</span><span>bois marqué</span><span>verre qui circule</span><span>table vivante</span><span>croûte fine</span></div></section>
+
+      <section class="ambiance section-panel reveal" id="ambiance">
+        <div class="ambiance-image"><img src="./assets/images/bandeau-brand.svg" alt="" /></div>
+        <article class="ambiance-copy"><p class="kicker">Ambiance</p><h2>Un repaire chaleureux, jamais théâtral.</h2><p>Le dragon reste dans les détails : griffures dans la matière, traces brûlées, bois sombre, éclats de feu, lumière basse. On ne le montre pas, on sent qu'il est passé par là.</p><div class="material-list"><span>bois</span><span>braise</span><span>roche</span><span>vin</span></div></article>
       </section>
 
-      <section class="cards-section reveal" id="carte">
-        <div class="section-title">
-          <p class="eyebrow">La carte</p>
-          <h2>Ça chauffe, ça croustille, ça tourne.</h2>
-        </div>
-        <div class="cards">
-          <article class="mimo-card magnetic">
-            <span>01</span>
-            <h3>Flammekueches</h3>
-            <p>Fines, chaudes, généreuses, faites pour arriver au milieu de la table.</p>
-          </article>
-          <article class="mimo-card magnetic">
-            <span>02</span>
-            <h3>Vins Flam's</h3>
-            <p>Rouge croquant, blanc gourmand, bulles : simple, vivant, jamais cérémonieux.</p>
-          </article>
-          <article class="mimo-card magnetic">
-            <span>03</span>
-            <h3>Desserts</h3>
-            <p>Le genre de fin qui fait demander une cuillère en plus.</p>
-          </article>
+      <section class="menu-section section-panel reveal" id="carte">
+        <div class="section-intro"><p class="kicker">La carte</p><h2>Simple à choisir, impossible à laisser refroidir.</h2></div>
+        <div class="menu-grid">
+          <article class="menu-card magnetic"><img src="./assets/icons/flame-yellow.svg" alt="" /><span>01</span><h3>Flammekueches</h3><p>Fines, chaudes, généreuses. Le genre de plat qui arrive au centre et fédère tout de suite.</p></article>
+          <article class="menu-card magnetic"><img src="./assets/images/dessert-cookie.svg" alt="" /><span>02</span><h3>Desserts</h3><p>Gourmands, directs, faits pour fermer le repas avec une cuillère en plus.</p></article>
+          <article class="menu-card magnetic"><img src="./assets/images/punchvin.svg" alt="" /><span>03</span><h3>À partager</h3><p>Des formats qui gardent la table en mouvement, sans cérémonie ni mode d'emploi.</p></article>
         </div>
       </section>
 
-      <section class="split-section reveal" id="groupes">
-        <div>
-          <p class="eyebrow">Groupes</p>
-          <h2>Une table de six qui finit à douze ? On connaît.</h2>
-        </div>
-        <p>Anniversaire, afterwork, sortie de promo, bande de copains : Flam's est pensé pour le collectif. Fluide, accessible, chaleureux, sans formalisme.</p>
+      <section class="wine-section section-panel reveal" id="vins">
+        <div class="wine-copy"><p class="kicker">Les vins Flam's</p><h2>Ça trinque léger, ça parle longtemps.</h2><p>Rouge croquant, blanc gourmand, bulles franches : une cave lisible, festive et pensée pour accompagner la flammekueche sans prendre toute la place.</p></div>
+        <div class="wine-bottles"><img class="magnetic" src="./assets/images/wine-rouge-croquant.svg" alt="Rouge croquant Flam's" /><img class="magnetic" src="./assets/images/wine-blanc-gourmand.svg" alt="Blanc gourmand Flam's" /><img class="magnetic" src="./assets/images/cremant.svg" alt="Crémant Flam's" /></div>
       </section>
 
-      <section class="final-cta reveal" id="venir">
-        <p class="eyebrow">Venir</p>
-        <h2>On garde une place au chaud ?</h2>
-        <a class="main-cta magnetic" href="mailto:contact@flams.fr">Réserver</a>
-      </section>
+      <section class="groups section-panel reveal" id="groupes"><div class="claw-mark claw-two" aria-hidden="true"><span></span><span></span><span></span></div><p class="kicker">Groupes</p><h2>La table commence à quatre, puis elle déborde.</h2><p>Anniversaire, afterwork, dîner de bande, repas improvisé : Flam's doit rester fluide, lisible, vivant. Le site donne envie de venir maintenant, pas de lire un mode d'emploi.</p><a class="button button-primary magnetic" href="#venir">Organiser une tablée</a></section>
+
+      <section class="visit-section section-panel reveal" id="venir"><div><p class="kicker">Venir</p><h2>On garde une place au chaud ?</h2></div><a class="big-link magnetic" href="mailto:contact@flams.fr">Réserver une table <span>→</span></a></section>
     </main>
 
-    <footer class="footer">
-      <strong>FLAM'S</strong>
-      <span>Parler avec le ventre. Parler avec le cœur.</span>
-    </footer>
-
+    <footer class="site-footer"><img src="./assets/logos/flams-logo-cream.svg" alt="Flam's" /><span>Parler avec le ventre. Parler avec le cœur.</span></footer>
     <script src="./script.js"></script>
   </body>
 </html>
