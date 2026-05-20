@@ -3,111 +3,105 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Site officiel SFLM, une vitrine claire et moderne prete a evoluer."
-    />
-    <title>SFLM</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <meta name="description" content="Flam's, la flammekueche moderne, conviviale et généreuse pour les grandes tablées." />
+    <title>Flam's - Laissez-vous déborder par la vie</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <header class="site-header">
-      <a class="brand" href="#" aria-label="Accueil SFLM">
-        <span class="brand-mark">S</span>
-        <span>SFLM</span>
-      </a>
+    <div class="cursor-glow" aria-hidden="true"></div>
+
+    <header class="site-header" data-header>
+      <a class="brand" href="#accueil" aria-label="Accueil Flam's">FLAM'S</a>
+      <button class="menu-toggle" type="button" aria-label="Ouvrir le menu" data-menu-toggle>
+        <span></span><span></span>
+      </button>
       <nav class="site-nav" aria-label="Navigation principale">
-        <a href="#services">Services</a>
-        <a href="#approche">Approche</a>
-        <a href="#contact">Contact</a>
+        <a href="#carte">La carte</a>
+        <a href="#experience">L'expérience</a>
+        <a href="#groupes">Groupes</a>
+        <a href="#venir">Venir</a>
       </nav>
-      <a class="header-action" href="#contact">Demander un devis</a>
+      <a class="header-cta magnetic" href="#venir">Réserver</a>
     </header>
 
-    <main>
+    <main id="accueil">
       <section class="hero">
-        <div class="hero-content">
-          <p class="eyebrow">Votre site, votre image, votre rythme</p>
-          <h1>SFLM construit une presence web claire, rapide et professionnelle.</h1>
-          <p class="hero-copy">
-            Une base solide pour presenter votre activite, rassurer vos clients et faire
-            evoluer votre site au fil de vos idees.
+        <div class="hero-copy">
+          <p class="kicker">Flammekueche, vin, grandes tablées</p>
+          <h1>Laissez-vous déborder par la vie</h1>
+          <p>
+            Chez Flam's, on se retrouve sans cérémonie autour d'une flammekueche qui arrive chaude,
+            d'un verre qui circule et d'une table qui s'agrandit.
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="#contact">Lancer le projet</a>
-            <a class="button secondary" href="#services">Voir les services</a>
+            <a class="button button-primary magnetic" href="#carte">Voir ce qui chauffe</a>
+            <a class="button button-ghost magnetic" href="#groupes">Ramener la bande</a>
           </div>
         </div>
-        <div class="hero-panel" aria-label="Apercu des points forts">
-          <div class="metric-card">
-            <span class="metric-value">01</span>
-            <span class="metric-label">Site vitrine moderne</span>
+
+        <div class="hero-stage" aria-label="Univers Flam's">
+          <div class="planche-shape"></div>
+          <div class="dragon-card">
+            <span class="flame-mark">🔥</span>
+            <strong>Bon plan</strong>
+            <p>simple, généreux, fédérateur</p>
           </div>
-          <div class="metric-card">
-            <span class="metric-value">02</span>
-            <span class="metric-label">Mise en ligne sur Vercel</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-value">03</span>
-            <span class="metric-label">Evolution continue avec Codex</span>
-          </div>
+          <div class="floating-ticket">grand<br />format</div>
         </div>
       </section>
 
-      <section class="section" id="services">
-        <div class="section-heading">
-          <p class="eyebrow">Services</p>
-          <h2>Une vitrine simple a comprendre et facile a enrichir.</h2>
-        </div>
-        <div class="service-grid">
-          <article class="service-card">
-            <h3>Presentation</h3>
-            <p>Une page claire pour expliquer qui vous etes, ce que vous proposez et pourquoi vous choisir.</p>
-          </article>
-          <article class="service-card">
-            <h3>Credibilite</h3>
-            <p>Des sections structurees pour mettre en avant vos points forts, vos preuves et vos prochaines offres.</p>
-          </article>
-          <article class="service-card">
-            <h3>Publication</h3>
-            <p>Un projet pret pour GitHub et Vercel, afin de suivre chaque evolution facilement.</p>
-          </article>
+      <section class="marquee" aria-label="Ambiance Flam's">
+        <div class="marquee-track">
+          <span>Ça croustille</span><span>Ça partage</span><span>Ça trinque</span><span>Ça déborde</span><span>Ça recommence</span>
         </div>
       </section>
 
-      <section class="feature-band" id="approche">
-        <div>
-          <p class="eyebrow">Approche</p>
-          <h2>On avance par versions visibles.</h2>
+      <section class="menu-section" id="carte">
+        <div class="section-intro">
+          <p class="kicker">La carte</p>
+          <h2>Des classiques, du feu, et zéro chichi.</h2>
         </div>
-        <p>
-          Chaque modification peut etre codee, verifiee, poussee sur GitHub puis publiee sur
-          Vercel. Vous voyez le site progresser sans perdre le controle.
-        </p>
+        <div class="signature-grid">
+          <article class="signature-card magnetic"><span>01</span><h3>Flammekueche à partager</h3><p>Fine, chaude, généreuse. Elle arrive au centre, elle disparaît vite.</p></article>
+          <article class="signature-card magnetic"><span>02</span><h3>Vins qui mettent bien</h3><p>Rouge croquant, blanc gourmand, bulles pour les soirs qui s'allongent.</p></article>
+          <article class="signature-card magnetic"><span>03</span><h3>Desserts sans retenue</h3><p>La fin qui fait commander une cuillère de plus à toute la table.</p></article>
+        </div>
       </section>
 
-      <section class="contact-section" id="contact">
-        <div>
-          <p class="eyebrow">Contact</p>
-          <h2>Pret pour la prochaine iteration.</h2>
+      <section class="experience" id="experience">
+        <div class="bottle-card"><span>FLAM'S</span><strong>Blanc gourmand</strong></div>
+        <div class="experience-copy">
+          <p class="kicker">L'expérience</p>
+          <h2>Pas besoin d'une grande occasion pour faire une grande table.</h2>
           <p>
-            Donnez les textes, couleurs, photos ou sections souhaitees, et le site evoluera
-            version apres version.
+            Flam's garde l'ADN populaire et joyeux de la flammekueche, avec une image plus actuelle,
+            plus désirable, et prête à devenir un réflexe pour les jeunes adultes qui veulent se retrouver.
+          </p>
+          <div class="pill-row"><span>Convivial</span><span>Généreux</span><span>Accessible</span><span>Simple</span></div>
+        </div>
+      </section>
+
+      <section class="group-section" id="groupes">
+        <div class="ornament-row" aria-hidden="true"><span>🔥</span><span>🍷</span><span>▰</span><span>🍷</span><span>🔥</span></div>
+        <div class="group-content">
+          <p class="kicker">Groupes</p>
+          <h2>Un anniversaire, un afterwork, une table de douze qui devient quinze.</h2>
+          <p>
+            On aime quand ça vit. Les grandes tablées sont au cœur de Flam's : fluides, bruyantes juste ce qu'il faut,
+            et pensées pour partager sans compter les parts.
           </p>
         </div>
-        <a class="button primary" href="mailto:contact@example.com">contact@example.com</a>
+      </section>
+
+      <section class="visit-section" id="venir">
+        <div><p class="kicker">Venir</p><h2>On garde une place au chaud ?</h2></div>
+        <a class="big-link magnetic" href="mailto:contact@example.com">Réserver une table <span>→</span></a>
       </section>
     </main>
 
     <footer class="site-footer">
-      <span>SFLM</span>
-      <span>Site en construction active.</span>
+      <strong>FLAM'S</strong>
+      <span>Parler avec le ventre. Parler avec le cœur.</span>
     </footer>
 
     <script src="./script.js"></script>
