@@ -1,0 +1,127 @@
+[
+  {
+    "path": "assets/web/logo-beige.svg",
+    "type": "web-optimized",
+    "source": "assets/logos/logo-beige.png"
+  },
+  {
+    "path": "assets/web/logo-bordeaux.svg",
+    "type": "web-optimized",
+    "source": "assets/logos/logo-bordeaux.png"
+  },
+  {
+    "path": "assets/web/sauce-flams.svg",
+    "type": "web-optimized",
+    "source": "assets/photos/sauce-flams.png"
+  },
+  {
+    "path": "assets/web/flamme-jaune.svg",
+    "type": "web-optimized",
+    "source": "assets/icons/flamme-jaune.png"
+  },
+  {
+    "path": "assets/web/flamme-bordeaux.svg",
+    "type": "web-optimized",
+    "source": "assets/icons/flamme-bordeaux.png"
+  },
+  {
+    "path": "assets/web/flamme-rouge.svg",
+    "type": "web-optimized",
+    "source": "assets/icons/flamme-rouge.png"
+  },
+  {
+    "path": "assets/web/planche-bordeaux.svg",
+    "type": "web-optimized",
+    "source": "assets/icons/planche-bordeaux.png"
+  },
+  {
+    "path": "assets/web/planche-jaune.svg",
+    "type": "web-optimized",
+    "source": "assets/icons/planche-jaune.png"
+  },
+  {
+    "path": "assets/fonts/ironmonger-extra-condensed.ttf",
+    "type": "font",
+    "source": "Ironmonger Extra Condensed 1.ttf"
+  },
+  {
+    "path": "assets/fonts/ironmonger-extra-condensed.otf",
+    "type": "font",
+    "source": "Ironmonger Extra Condensed 1.otf"
+  },
+  {
+    "path": "assets/logos/logo-bordeaux.png",
+    "type": "logo",
+    "source": "Logo BDX.png"
+  },
+  {
+    "path": "assets/logos/logo-beige.png",
+    "type": "logo",
+    "source": "Logo beige.png"
+  },
+  {
+    "path": "assets/logos/logo-rouge.png",
+    "type": "logo",
+    "source": "LOGO-FLAM'S-ROUGE.png"
+  },
+  {
+    "path": "assets/icons/dragon-bordeaux-large.png",
+    "type": "illustration",
+    "source": "2025-09-FLAMS-Valise-Logo_ILLU-DRAGON-BDX.png"
+  },
+  {
+    "path": "assets/icons/dragon-beige.png",
+    "type": "illustration",
+    "source": "Dragon blanc.png"
+  },
+  {
+    "path": "assets/icons/dragon-bordeaux.png",
+    "type": "illustration",
+    "source": "Dragon bordeaux.png"
+  },
+  {
+    "path": "assets/icons/flamme-bordeaux.png",
+    "type": "illustration",
+    "source": "2025-09-FLAMS-Valise-Logo_ILLU-FLAMME-BDX (1).png"
+  },
+  {
+    "path": "assets/icons/flamme-beige.png",
+    "type": "illustration",
+    "source": "2025-09-FLAMS-Valise-Logo_ILLU-FLAMME-BEIGE (3).png"
+  },
+  {
+    "path": "assets/icons/flamme-jaune.png",
+    "type": "illustration",
+    "source": "2025-09-FLAMS-Valise-Logo_ILLU-FLAMME-JAUNE (1).png"
+  },
+  {
+    "path": "assets/icons/flamme-rouge.png",
+    "type": "illustration",
+    "source": "2025-09-FLAMS-Valise-Logo_ILLU-FLAMME-ROUGE (1).png"
+  },
+  {
+    "path": "assets/icons/planche-bordeaux.png",
+    "type": "illustration",
+    "source": "2025-09-FLAMS-Valise-Logo_ILLU-PLANCHE-BDX.png"
+  },
+  {
+    "path": "assets/icons/planche-beige.png",
+    "type": "illustration",
+    "source": "2025-09-FLAMS-Valise-Logo_ILLU-PLANCHE-BEIGE (1).png"
+  },
+  {
+    "path": "assets/icons/planche-jaune.png",
+    "type": "illustration",
+    "source": "2025-09-FLAMS-Valise-Logo_ILLU-PLANCHE-JAUNE.png"
+  },
+  {
+    "path": "assets/icons/planche-rouge.png",
+    "type": "illustration",
+    "source": "2025-09-FLAMS-Valise-Logo_ILLU-PLANCHE-ROUGE.png"
+  },
+  {
+    "path": "assets/photos/sauce-flams.png",
+    "type": "photo",
+    "source": "Capture d'écran 2025-09-11 173844.png"
+  }
+]
