@@ -5,7 +5,7 @@ const progress = document.querySelector("[data-progress]");
 const revealItems = document.querySelectorAll(".reveal");
 const magneticItems = document.querySelectorAll(".magnetic");
 const tickerTrack = document.querySelector(".ticker-track");
-const photoSlots = document.querySelectorAll(".photo-slot");
+const imageFrames = document.querySelectorAll(".image-frame");
 const floatAssets = document.querySelectorAll(".float-asset");
 
 if (tickerTrack) {
@@ -56,7 +56,7 @@ magneticItems.forEach((item) => {
   });
 });
 
-photoSlots.forEach((slot) => {
+imageFrames.forEach((slot) => {
   slot.addEventListener("pointermove", (event) => {
     const rect = slot.getBoundingClientRect();
     const rx = ((event.clientY - rect.top) / rect.height - 0.5) * -5;
