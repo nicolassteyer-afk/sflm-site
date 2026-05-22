@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Flam's, restaurant vitrine moderne autour de la flammekueche, des grandes tablées et des soirées qui durent."
+      content="Flam's, restaurant vitrine moderne autour de la flammekueche, du feu, du partage et des grandes tables."
     />
-    <title>Flam's - Restaurant de grandes tablées</title>
+    <title>Flam's - Restaurant de grandes tables</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -19,11 +19,11 @@
         <img src="./assets/web/logo-beige.svg" alt="Flam's" />
       </a>
       <nav class="site-nav" aria-label="Navigation principale" data-nav>
-        <a href="#restaurant">Restaurant</a>
-        <a href="#carte">Carte</a>
-        <a href="#moments">Moments</a>
-        <a href="#venir">Réserver</a>
+        <a href="#restaurant">Le lieu</a>
+        <a href="#carte">La carte</a>
+        <a href="#ambiance">Ambiance</a>
       </nav>
+      <a class="reserve-link magnetic" href="#venir">Réserver</a>
       <button class="menu-toggle" type="button" aria-label="Ouvrir le menu" data-menu-toggle>
         <span></span>
         <span></span>
@@ -37,25 +37,29 @@
         <img class="float-asset board board-one" src="./assets/web/planche-bordeaux.svg" alt="" aria-hidden="true" />
 
         <div class="hero-copy reveal">
-          <p class="eyebrow">Flammekueches, vins & grandes tablées</p>
-          <h1>Le feu passe à table.</h1>
+          <p class="eyebrow">Flammekueches, vins, copains</p>
+          <h1>La table qui chauffe la soirée.</h1>
           <p>
-            Flam's, c'est l'adresse où l'on commande pour partager, où les verres
-            circulent, où la pâte fine croustille et où la soirée refuse de finir trop tôt.
+            Une adresse simple, généreuse, pleine de relief. On partage une flamme,
+            on fait tourner les plats, on reste plus longtemps que prévu.
           </p>
           <div class="hero-actions">
-            <a class="button primary magnetic" href="#carte">Découvrir la carte</a>
-            <a class="button ghost magnetic" href="#venir">Réserver</a>
+            <a class="button primary magnetic" href="#carte">Voir la carte</a>
+            <a class="button ghost magnetic" href="#ambiance">Sentir l'ambiance</a>
           </div>
         </div>
 
         <div class="hero-stage reveal">
-          <figure class="sauce-card magnetic">
-            <img src="./assets/web/sauce-flams.svg" alt="Sauce Flam's" />
-          </figure>
-          <figure class="photo-slot photo-main" data-label="Photo ambiance restaurant">
+          <figure class="image-frame main-visual magnetic" data-label="Photo hero">
             <span>visuel à fournir</span>
           </figure>
+          <figure class="product-sticker magnetic">
+            <img src="./assets/web/sauce-flams.svg" alt="Sauce Flam's" />
+          </figure>
+          <div class="round-badge" aria-hidden="true">
+            <span>feu doux</span>
+            <span>table pleine</span>
+          </div>
         </div>
 
         <a class="scroll-cue" href="#restaurant" aria-label="Descendre">↓</a>
@@ -67,33 +71,40 @@
           <span>ça trinque</span>
           <span>ça partage</span>
           <span>ça croustille</span>
-          <span>ça reste tard</span>
+          <span>ça recommence</span>
         </div>
       </section>
 
-      <section class="story section reveal" id="restaurant" data-theme="light">
-        <div class="section-heading">
-          <p class="eyebrow">Le restaurant</p>
-          <h2>Un repaire chaud, simple et franchement vivant.</h2>
+      <section class="intro section reveal" id="restaurant" data-theme="light">
+        <div class="intro-title">
+          <p class="eyebrow">Le lieu</p>
+          <h2>Un repaire de table, pas un décor figé.</h2>
         </div>
-        <div class="story-grid">
-          <figure class="photo-slot tall" data-label="Photo salle / bois / matière">
+        <div class="intro-copy">
+          <p>
+            La direction artistique suggère le feu sans l'étaler : rouge profond,
+            traces de chaleur, matière crème, touches de bois et signes graphiques.
+            Le site doit donner envie d'entrer avant même d'avoir toutes les photos.
+          </p>
+          <a class="text-link magnetic" href="#venir">Réserver une table <span>→</span></a>
+        </div>
+      </section>
+
+      <section class="showcase section" data-theme="light">
+        <div class="showcase-grid">
+          <figure class="image-frame tall reveal" data-label="Salle / lumière">
             <span>visuel à fournir</span>
           </figure>
-          <article class="story-card">
+          <article class="brand-card reveal">
             <img src="./assets/web/flamme-bordeaux.svg" alt="" aria-hidden="true" />
+            <p class="eyebrow">Signature</p>
+            <h3>Chaud, net, vivant.</h3>
             <p>
-              L'univers suggère la chaleur sans tomber dans le décor. Des traces, des
-              textures, du rouge profond, une matière presque brûlée : juste assez pour
-              sentir que quelque chose crépite.
+              Une vitrine moderne avec un ton direct : moins de bla-bla,
+              plus de rythme, plus de matière, plus de faim.
             </p>
-            <ul>
-              <li>Une navigation courte et lisible.</li>
-              <li>Des effets au survol qui donnent du relief.</li>
-              <li>Des espaces prêts pour tes prochaines photos.</li>
-            </ul>
           </article>
-          <figure class="photo-slot wide" data-label="Photo tablée / partage">
+          <figure class="image-frame wide reveal" data-label="Grande table">
             <span>visuel à fournir</span>
           </figure>
         </div>
@@ -103,40 +114,40 @@
         <img class="float-asset flame flame-two" src="./assets/web/flamme-rouge.svg" alt="" aria-hidden="true" />
         <div class="section-heading">
           <p class="eyebrow">La carte</p>
-          <h2>Des classiques à partager, des envies qui tournent.</h2>
+          <h2>Une carte courte, lisible, faite pour tourner.</h2>
         </div>
         <div class="menu-list">
           <article class="menu-item magnetic">
             <span>01</span>
-            <h3>Flammekueches</h3>
-            <p>Traditionnelles, généreuses, fines et brûlantes, pensées pour arriver au centre.</p>
+            <h3>Flammes</h3>
+            <p>Les classiques, les recettes de saison, le croustillant au centre de la table.</p>
           </article>
           <article class="menu-item magnetic">
             <span>02</span>
-            <h3>Vins & bulles</h3>
-            <p>Des accords accessibles, francs, faits pour accompagner une table qui parle fort.</p>
+            <h3>Verres</h3>
+            <p>Vins, bulles, jus et petites envies fraîches pour accompagner le feu.</p>
           </article>
           <article class="menu-item magnetic">
             <span>03</span>
-            <h3>À finir</h3>
-            <p>Desserts, cafés, dernière tournée : le petit prétexte pour ne pas partir.</p>
+            <h3>Sucré</h3>
+            <p>Le dessert comme prétexte officiel pour ne pas quitter la table.</p>
           </article>
         </div>
       </section>
 
-      <section class="moments section reveal" id="moments" data-theme="light">
+      <section class="ambiance section reveal" id="ambiance" data-theme="light">
         <div class="section-heading">
-          <p class="eyebrow">Moments</p>
-          <h2>Chaque bloc attend son vrai souvenir.</h2>
+          <p class="eyebrow">Ambiance</p>
+          <h2>Des blocs prêts pour tes vrais visuels.</h2>
         </div>
         <div class="moments-grid">
-          <figure class="photo-slot" data-label="Photo groupe">
+          <figure class="image-frame" data-label="Plat signature">
             <span>visuel à fournir</span>
           </figure>
-          <figure class="photo-slot" data-label="Photo cuisine">
+          <figure class="image-frame" data-label="Equipe / geste">
             <span>visuel à fournir</span>
           </figure>
-          <figure class="photo-slot" data-label="Photo vin / dessert">
+          <figure class="image-frame" data-label="Soirée / verres">
             <span>visuel à fournir</span>
           </figure>
         </div>
@@ -155,7 +166,7 @@
 
     <footer class="site-footer">
       <img src="./assets/web/logo-beige.svg" alt="Flam's" />
-      <span>Site vitrine en construction visuelle.</span>
+      <span>Vitrine restaurant en construction visuelle.</span>
     </footer>
 
     <script src="./script.js"></script>
