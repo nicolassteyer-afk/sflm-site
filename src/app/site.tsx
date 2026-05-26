@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import Lenis from "lenis";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const colors: Record<string, string> = {
   wine: "#65131a",
@@ -16,25 +16,18 @@ const colors: Record<string, string> = {
 };
 
 type Restaurant = { name: string; slug: string; mood: string; address: string };
-type City = { name: string; slug: string; restaurants: Restaurant[]; tone: string[] };
-type Country = { name: string; slug: string; cities: City[] };
+type City = { name: string; slug: string; country: string; restaurants: Restaurant[]; tone: string[] };
 
-const countries: Country[] = [
-  {
-    name: "France",
-    slug: "france",
-    cities: [
-      city("Paris", ["Grand Boulevard", "Rive Gauche", "Bastille"], ["wine", "ember", "saffron"]),
-      city("Bordeaux", ["Chartrons"], ["cacao", "wine", "ember"]),
-      city("Lyon", ["Presqu'ile"], ["ink", "cacao", "wine"]),
-      city("Lille", ["Vieux Lille"], ["wine", "cacao", "saffron"]),
-      city("Nice", ["Massena"], ["saffron", "ember", "wine"]),
-      city("Marseille", ["Panier"], ["cacao", "ember", "saffron"]),
-      city("Strasbourg", ["Cathedrale"], ["wine", "cacao", "bone"]),
-    ],
-  },
-  { name: "Belgique", slug: "belgique", cities: [city("Bruxelles", ["Sainte-Catherine"], ["cacao", "wine", "ember"])] },
-  { name: "Royaume-Uni", slug: "royaume-uni", cities: [city("Londres", ["Shoreditch"], ["ink", "wine", "ember"])] },
+const cities: City[] = [
+  city("Paris", "France", ["Grand Boulevard", "Rive Gauche", "Bastille"], ["wine", "ember", "saffron"]),
+  city("Bordeaux", "France", ["Chartrons"], ["cacao", "wine", "ember"]),
+  city("Lyon", "France", ["Presqu'ile"], ["ink", "cacao", "wine"]),
+  city("Lille", "France", ["Vieux Lille"], ["wine", "cacao", "saffron"]),
+  city("Nice", "France", ["Massena"], ["saffron", "ember", "wine"]),
+  city("Marseille", "France", ["Panier"], ["cacao", "ember", "saffron"]),
+  city("Strasbourg", "France", ["Cathedrale"], ["wine", "cacao", "bone"]),
+  city("Bruxelles", "Belgique", ["Sainte-Catherine"], ["cacao", "wine", "ember"]),
+  city("Londres", "Royaume-Uni", ["Shoreditch"], ["ink", "wine", "ember"]),
 ];
 
 const navLinks = [
@@ -48,6 +41,8 @@ const navLinks = [
 export function Site({ slug }: { slug: string[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const page = slug[0] ?? "home";
+  const currentCity = page === "restaurants" ? findCity(slug[1]) : undefined;
+  const currentRestaurant = currentCity?.restaurants.find((item) => item.slug === slug[2]);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -68,7 +63,10 @@ export function Site({ slug }: { slug: string[] }) {
     <>
       <Header onOpen={() => setMenuOpen(true)} />
       <FullscreenMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
-      <main>{page === "home" || page === "en" ? <Home /> : <Interior page={page} city={slug[1]} restaurant={slug[2]} />}</main>
+      <main>
+        {page === "home" || page === "en" ? <Home /> : currentRestaurant ? <RestaurantPage cityItem={currentCity!} restaurant={currentRestaurant} /> : currentCity ? <CityPage cityItem={currentCity} /> : <Interior page={page} />}
+      </main>
+      {currentRestaurant ? <FloatingMenuButton /> : null}
       <Footer />
     </>
   );
@@ -89,8 +87,6 @@ function Header({ onOpen }: { onOpen: () => void }) {
 }
 
 function Home() {
-  const [activeCity, setActiveCity] = useState(countries[0].cities[0]);
-
   return (
     <>
       <section className="relative grid min-h-screen place-items-center overflow-hidden bg-cacao px-5 py-28 text-bone">
@@ -98,60 +94,33 @@ function Home() {
           <Visual label="hero image placeholder" tone={["wine", "cacao", "ember"]} className="h-full min-h-screen rounded-none opacity-80" />
         </motion.div>
         <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center text-center">
-          <p className="mb-5 text-xs font-black uppercase tracking-[.24em] text-saffron">Restaurants de grandes tables</p>
+          <Reveal><p className="mb-5 text-xs font-black uppercase tracking-[.24em] text-saffron">Restaurant de grandes tablees</p></Reveal>
           <Title text="Flam's" huge />
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-bone/75">Choisissez votre ville, trouvez votre table, gardez la soiree chaude.</p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link className="rounded-full bg-bone px-8 py-5 text-xs font-black uppercase tracking-[.18em] text-cacao transition hover:bg-saffron" href="/reservation">Reserver</Link>
-            <Link className="rounded-full border border-bone/35 px-8 py-5 text-xs font-black uppercase tracking-[.18em] text-bone transition hover:bg-bone hover:text-cacao" href="#restaurants">Voir les restaurants</Link>
-          </div>
+          <Reveal delay={0.25}><p className="mt-6 max-w-2xl text-lg leading-8 text-bone/75">Un lieu chaud, direct, joyeux. On vient pour manger, on reste pour la table, le bruit, les verres, les copains.</p></Reveal>
+          <Reveal delay={0.35}><div className="mt-8 flex flex-wrap justify-center gap-3"><Link className="rounded-full bg-bone px-8 py-5 text-xs font-black uppercase tracking-[.18em] text-cacao transition hover:bg-saffron" href="/reservation">Reserver</Link><Link className="rounded-full border border-bone/35 px-8 py-5 text-xs font-black uppercase tracking-[.18em] text-bone transition hover:bg-bone hover:text-cacao" href="/menu">Voir la carte</Link></div></Reveal>
         </div>
         <div className="absolute bottom-7 left-1/2 z-10 -translate-x-1/2 text-xs font-black uppercase tracking-[.22em] text-bone/65">Scroll</div>
       </section>
 
-      <section id="restaurants" className="bg-cream px-5 py-20 text-cacao md:px-10 lg:px-16">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[.72fr_1.28fr]">
-          <div className="lg:sticky lg:top-28 lg:self-start">
-            <p className="mb-5 text-xs font-black uppercase tracking-[.22em] text-ember">Choisir un restaurant</p>
-            <Title text="Pays. villes. tables." dark />
-            <p className="mt-6 max-w-md text-lg leading-8 text-cacao/65">La home sert d'aiguillage principal : le visiteur arrive, choisit une ville, puis accede a l'adresse ou a la reservation.</p>
-          </div>
-          <div className="grid gap-7">
-            {countries.map((country) => (
-              <div key={country.slug} className="border-t border-cacao/20 pt-5">
-                <p className="mb-4 text-sm font-black uppercase tracking-[.22em] text-ember">{country.name}</p>
-                <div className="grid gap-3 md:grid-cols-2">
-                  {country.cities.map((cityItem) => (
-                    <Link key={cityItem.slug} href={`/restaurants/${cityItem.slug}`} onMouseEnter={() => setActiveCity(cityItem)} className="group grid grid-cols-[1fr_auto] items-center gap-4 border-b border-cacao/15 py-4 transition hover:border-ember">
-                      <span className="font-display text-5xl uppercase leading-none transition group-hover:translate-x-2 group-hover:text-ember">{cityItem.name}</span>
-                      <span className="rounded-full border border-cacao/20 px-3 py-1 text-xs font-black uppercase tracking-[.16em]">{cityItem.restaurants.length}</span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            ))}
-            <motion.div key={activeCity.slug} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid gap-5 bg-cacao p-5 text-bone md:grid-cols-[.9fr_1.1fr] md:p-8">
-              <Visual label={`preview ${activeCity.name}`} tone={activeCity.tone} className="min-h-[330px]" />
-              <div className="flex flex-col justify-between gap-8">
-                <div>
-                  <p className="mb-3 text-xs font-black uppercase tracking-[.22em] text-saffron">{activeCity.name}</p>
-                  <h2 className="font-display text-6xl uppercase leading-none">Adresses</h2>
-                  <div className="mt-6 grid gap-3">{activeCity.restaurants.map((restaurant) => <Link key={restaurant.slug} href={`/restaurants/${activeCity.slug}/${restaurant.slug}`} className="border-b border-bone/15 py-3 text-xl font-black uppercase transition hover:text-saffron">Flam's {restaurant.name}</Link>)}</div>
-                </div>
-                <Link className="w-fit rounded-full bg-bone px-7 py-4 text-xs font-black uppercase tracking-[.18em] text-cacao transition hover:bg-saffron" href="/reservation">Reserver</Link>
-              </div>
-            </motion.div>
-          </div>
+      <EditorialBlock eyebrow="L'esprit" title="Une maison qui chauffe la salle avant meme l'assiette." body="Ici, tout est pense pour la convivialite : une lumiere basse, du bois, une carte courte, des flammes qui arrivent vite et des tables qui se remplissent naturellement." />
+
+      <section className="grid min-h-screen bg-bone text-cacao lg:grid-cols-2">
+        <Parallax label="ambiance restaurant placeholder" tone={["saffron", "ember", "wine"]} />
+        <div className="flex flex-col justify-center px-5 py-24 md:px-10 lg:px-16">
+          <Reveal><p className="mb-5 text-xs font-black uppercase tracking-[.22em] text-ember">La carte</p></Reveal>
+          <Title text="Simple. chaud. a partager." dark />
+          <Reveal delay={0.2}><p className="mt-7 max-w-xl text-lg leading-8 text-cacao/65">Des recettes franches, des boissons qui suivent, des desserts pour prolonger. Le contenu final arrivera, mais l'architecture est la.</p></Reveal>
+          <Reveal delay={0.3}><Link className="mt-8 w-fit rounded-full border border-cacao/25 px-8 py-5 text-xs font-black uppercase tracking-[.18em] transition hover:bg-cacao hover:text-bone" href="/menu">Decouvrir la carte</Link></Reveal>
         </div>
       </section>
 
-      <section className="grid min-h-screen bg-bone text-cacao lg:grid-cols-2">
-        <Parallax label="menu image placeholder" tone={["saffron", "ember", "wine"]} />
-        <div className="flex flex-col justify-center px-5 py-24 md:px-10 lg:px-16">
-          <p className="mb-5 text-xs font-black uppercase tracking-[.22em] text-ember">La carte</p>
-          <Title text="A partager sans trop reflechir." dark />
-          <p className="mt-7 max-w-xl text-lg leading-8 text-cacao/65">Un bloc court comme sur une home de restaurant : donner envie, puis envoyer vers la carte ou la reservation.</p>
-          <Link className="mt-8 w-fit rounded-full border border-cacao/25 px-8 py-5 text-xs font-black uppercase tracking-[.18em] transition hover:bg-cacao hover:text-bone" href="/menu">Voir la carte</Link>
+      <section className="bg-cream px-5 py-24 text-cacao md:px-10 lg:px-16">
+        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[.9fr_1.1fr] lg:items-end">
+          <div>
+            <Reveal><p className="mb-5 text-xs font-black uppercase tracking-[.22em] text-ember">Bientot</p></Reveal>
+            <Title text="Le store locator arrive ici." dark />
+          </div>
+          <Reveal delay={0.2}><p className="max-w-xl text-lg leading-8 text-cacao/65">Cette zone remplacera la liste des restaurants : recherche par ville, filtre, carte et acces rapide aux reservations. Pour l'instant, on garde la home propre et orientee marque.</p></Reveal>
         </div>
       </section>
 
@@ -161,9 +130,7 @@ function Home() {
 }
 
 function FullscreenMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [activeCountry, setActiveCountry] = useState(countries[0]);
-  const [activeCity, setActiveCity] = useState(countries[0].cities[0]);
-  const cityList = activeCountry.cities;
+  const [activeCity, setActiveCity] = useState(cities[0]);
 
   return (
     <AnimatePresence>
@@ -171,11 +138,10 @@ function FullscreenMenu({ open, onClose }: { open: boolean; onClose: () => void 
         <motion.div role="dialog" aria-modal="true" className="fixed inset-0 z-50 overflow-y-auto bg-cacao text-bone" initial={{ y: "-100%" }} animate={{ y: 0 }} exit={{ y: "-100%" }} transition={{ duration: .72, ease: [.16,1,.3,1] }}>
           <div className="flex min-h-screen flex-col px-5 py-5 md:px-10 lg:px-16">
             <div className="grid grid-cols-[1fr_auto_1fr] items-center"><Link href="/" onClick={onClose} className="font-display text-5xl uppercase">Flam's</Link><p className="hidden text-xs font-black uppercase tracking-[.22em] text-bone/45 md:block">Navigation</p><button onClick={onClose} className="justify-self-end rounded-full border border-bone/30 px-6 py-3 text-xs font-black uppercase tracking-[.18em] transition hover:bg-bone hover:text-cacao">Fermer</button></div>
-            <div className="grid flex-1 gap-10 py-14 lg:grid-cols-[.55fr_.75fr_1fr_.85fr] lg:items-end">
+            <div className="grid flex-1 gap-10 py-14 lg:grid-cols-[.65fr_1fr_.95fr] lg:items-end">
               <nav className="grid content-end gap-3">{navLinks.map(([href, label], index) => <motion.div key={href} initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .1 + index * .055 }}><Link href={href} onClick={onClose} className="block font-display text-5xl uppercase leading-none text-bone/65 transition hover:translate-x-3 hover:text-saffron md:text-7xl">{label}</Link></motion.div>)}</nav>
-              <div><p className="mb-5 text-xs font-black uppercase tracking-[.22em] text-saffron">Pays</p><div className="grid gap-2">{countries.map((country) => <button key={country.slug} onMouseEnter={() => { setActiveCountry(country); setActiveCity(country.cities[0]); }} onClick={() => { setActiveCountry(country); setActiveCity(country.cities[0]); }} className={`border-b border-bone/15 py-3 text-left font-display text-5xl uppercase leading-none transition hover:text-saffron ${activeCountry.slug === country.slug ? "text-saffron" : "text-bone"}`}>{country.name}</button>)}</div></div>
-              <div><p className="mb-5 text-xs font-black uppercase tracking-[.22em] text-saffron">Villes</p><div className="grid gap-2">{cityList.map((cityItem) => <Link key={cityItem.slug} href={`/restaurants/${cityItem.slug}`} onMouseEnter={() => setActiveCity(cityItem)} onClick={onClose} className={`group flex items-center justify-between border-b border-bone/15 py-3 transition hover:text-saffron ${activeCity.slug === cityItem.slug ? "text-saffron" : "text-bone"}`}><span className="font-display text-5xl uppercase leading-none md:text-6xl">{cityItem.name}</span><span className="text-xs font-black opacity-50">{cityItem.restaurants.length}</span></Link>)}</div></div>
-              <motion.div key={activeCity.slug} initial={{ opacity: 0, scale: 1.03 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: .45 }} className="grid gap-5"><Visual label={activeCity.name} tone={activeCity.tone} className="min-h-[340px]" /><div><p className="mb-2 text-xs font-black uppercase tracking-[.22em] text-saffron">Restaurants</p>{activeCity.restaurants.map((restaurant) => <Link key={restaurant.slug} href={`/restaurants/${activeCity.slug}/${restaurant.slug}`} onClick={onClose} className="block border-b border-bone/15 py-3 text-lg font-black uppercase transition hover:text-saffron">Flam's {restaurant.name}</Link>)}</div></motion.div>
+              <div><p className="mb-5 text-xs font-black uppercase tracking-[.22em] text-saffron">Restaurants</p><div className="grid gap-2 md:grid-cols-2 lg:grid-cols-1">{cities.map((cityItem) => <Link key={cityItem.slug} href={`/restaurants/${cityItem.slug}`} onMouseEnter={() => setActiveCity(cityItem)} onClick={onClose} className={`group flex items-center justify-between border-b border-bone/15 py-3 transition hover:text-saffron ${activeCity.slug === cityItem.slug ? "text-saffron" : "text-bone"}`}><span><span className="block font-display text-5xl uppercase leading-none md:text-6xl">{cityItem.name}</span><span className="text-[10px] font-black uppercase tracking-[.18em] opacity-45">{cityItem.country}</span></span><span className="text-xs font-black opacity-50">{cityItem.restaurants.length}</span></Link>)}</div></div>
+              <motion.div key={activeCity.slug} initial={{ opacity: 0, scale: 1.03 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: .45 }} className="grid gap-5"><Visual label={activeCity.name} tone={activeCity.tone} className="min-h-[340px]" /><div><p className="mb-2 text-xs font-black uppercase tracking-[.22em] text-saffron">Adresses</p>{activeCity.restaurants.map((restaurant) => <Link key={restaurant.slug} href={`/restaurants/${activeCity.slug}/${restaurant.slug}`} onClick={onClose} className="block border-b border-bone/15 py-3 text-lg font-black uppercase transition hover:text-saffron">Flam's {restaurant.name}</Link>)}</div></motion.div>
             </div>
             <div className="flex flex-wrap justify-between gap-4 border-t border-bone/15 pt-5 text-xs font-black uppercase tracking-[.18em]"><div className="flex gap-4"><Link href="/" onClick={onClose}>FR</Link><Link href="/en" onClick={onClose}>EN</Link></div><div className="flex gap-5"><Link href="/credits" onClick={onClose}>Credits</Link><Link href="/contact" onClick={onClose}>Contact</Link></div></div>
           </div>
@@ -185,25 +151,60 @@ function FullscreenMenu({ open, onClose }: { open: boolean; onClose: () => void 
   );
 }
 
-function Interior({ page, city: citySlug, restaurant }: { page: string; city?: string; restaurant?: string }) {
-  const cityItem = findCity(citySlug);
-  const title = restaurant ? clean(restaurant) : cityItem?.name ?? pageTitle(page);
+function CityPage({ cityItem }: { cityItem: City }) {
   return (
     <>
-      <section className="grid min-h-screen gap-8 bg-cream px-5 pb-16 pt-32 md:px-10 lg:grid-cols-[.9fr_1.1fr] lg:px-16"><div className="flex flex-col justify-end"><p className="mb-5 text-xs font-black uppercase tracking-[.22em] text-ember">{page}</p><Title text={title} dark /><p className="mt-7 max-w-xl text-lg leading-8 text-cacao/65">Structure posee pour la page. Les contenus detailles, photos et modules de reservation seront ajustes ensuite.</p></div><Visual label={title} tone={cityItem?.tone ?? ["wine", "cacao", "ember"]} className="min-h-[70vh]" /></section>
-      <section className="bg-bone px-5 py-24 md:px-10 lg:px-16">{page === "restaurants" || cityItem ? <Directory active={cityItem} /> : <RestaurantCards />}</section>
-      <CTA />
+      <section className="relative grid min-h-screen place-items-end overflow-hidden bg-cacao px-5 pb-14 pt-32 text-bone md:px-10 lg:px-16">
+        <Visual label={`${cityItem.name} hero placeholder`} tone={cityItem.tone} className="absolute inset-0 h-full min-h-screen rounded-none opacity-75" />
+        <div className="relative z-10 mx-auto grid w-full max-w-7xl gap-8 lg:grid-cols-[1.1fr_.9fr] lg:items-end">
+          <div><Reveal><p className="mb-5 text-xs font-black uppercase tracking-[.22em] text-saffron">Flam's {cityItem.name}</p></Reveal><Title text="Ici ca chauffe." huge /><Reveal delay={0.2}><p className="mt-7 max-w-xl text-lg leading-8 text-bone/75">Une adresse pensee pour les grandes faims, les tables qui s'allongent et les soirees qui commencent tot sans finir trop vite.</p></Reveal></div>
+          <Reveal delay={0.35}><div className="grid gap-3 rounded-sm bg-bone p-5 text-cacao md:grid-cols-3"><Info label="Service" value="12h - 23h30" /><Info label="Ambiance" value="Tablees, feu doux" /><Info label="Acces" value="Centre-ville" /></div></Reveal>
+        </div>
+      </section>
+
+      <EditorialBlock eyebrow="Hola la table" title={`La salle de ${cityItem.name}, version Flam's.`} body="Du bois, du bruit juste comme il faut, des assiettes qui circulent, des verres qui restent sur la table. Ce faux contenu sert a voir les rythmes de lecture, les titres et les animations." />
+
+      <section className="bg-cacao py-10 text-bone"><Marquee text={`Flam's ${cityItem.name} - Reserver - Carte - Grande table - Soiree chaude - `} /></section>
+
+      <section className="grid min-h-screen bg-bone text-cacao lg:grid-cols-2">
+        <Parallax label="food city placeholder" tone={["saffron", "ember", "wine"]} />
+        <div className="flex flex-col justify-center px-5 py-24 md:px-10 lg:px-16"><Reveal><p className="mb-5 text-xs font-black uppercase tracking-[.22em] text-ember">Dans l'assiette</p></Reveal><Title text="Des flammes, des verres, du rythme." dark /><Reveal delay={0.2}><p className="mt-7 max-w-xl text-lg leading-8 text-cacao/65">Une carte courte pour commander vite et partager longtemps. Ici on posera les vrais plats, les signatures et les offres locales.</p></Reveal><Reveal delay={0.3}><Link className="mt-8 w-fit rounded-full border border-cacao/25 px-8 py-5 text-xs font-black uppercase tracking-[.18em] transition hover:bg-cacao hover:text-bone" href="/menu">Voir la carte</Link></Reveal></div>
+      </section>
+
+      <Gallery cityItem={cityItem} />
+
+      <section className="grid gap-8 bg-cream px-5 py-24 text-cacao md:px-10 lg:grid-cols-3 lg:px-16">
+        <TextCard title="Reserver" body="Un dejeuner rapide, une table de dix, une soiree qui s'improvise : le module de reservation viendra ici." href="/reservation" />
+        <TextCard title="Groupes" body="Privatisation, anniversaire, grande table, equipe : cette zone servira a pousser les demandes groupe." href="/contact" />
+        <TextCard title="Infos" body={`${cityItem.restaurants.length} adresse(s), horaires indicatifs, acces, contact et informations pratiques.`} href={`/restaurants/${cityItem.slug}`} />
+      </section>
     </>
   );
 }
 
-function Directory({ active }: { active?: City }) {
-  const cities = active ? [active] : countries.flatMap((country) => country.cities);
-  return <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-2">{cities.map((cityItem) => <div key={cityItem.slug}><Visual label={cityItem.name} tone={cityItem.tone} className="min-h-[360px]" /><h2 className="mt-5 font-display text-6xl uppercase leading-none text-cacao">{cityItem.name}</h2>{cityItem.restaurants.map((restaurant) => <Link key={restaurant.slug} href={`/restaurants/${cityItem.slug}/${restaurant.slug}`} className="block border-b border-cacao/15 py-3 text-lg font-black uppercase text-cacao/75 transition hover:text-ember">Flam's {restaurant.name}</Link>)}</div>)}</div>;
+function RestaurantPage({ cityItem, restaurant }: { cityItem: City; restaurant: Restaurant }) {
+  return (
+    <>
+      <section className="grid min-h-screen gap-8 bg-cream px-5 pb-16 pt-32 md:px-10 lg:grid-cols-[.9fr_1.1fr] lg:px-16"><div className="flex flex-col justify-end"><Reveal><p className="mb-5 text-xs font-black uppercase tracking-[.22em] text-ember">Flam's {cityItem.name}</p></Reveal><Title text={restaurant.name} dark /><Reveal delay={0.2}><p className="mt-7 max-w-xl text-lg leading-8 text-cacao/65">{restaurant.mood} Page detail en attente du contenu final : galerie, horaires, adresse, module reservation et acces carte.</p></Reveal></div><Visual label={restaurant.name} tone={cityItem.tone} className="min-h-[70vh]" /></section>
+      <CityPage cityItem={cityItem} />
+    </>
+  );
 }
 
-function RestaurantCards() {
-  return <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-2">{countries.flatMap((country) => country.cities).slice(0, 4).map((cityItem) => <Link key={cityItem.slug} href={`/restaurants/${cityItem.slug}`} className="group"><Visual label={cityItem.name} tone={cityItem.tone} className="min-h-[390px] transition group-hover:scale-[.985]" /><h3 className="mt-5 font-display text-5xl uppercase leading-none text-cacao">{cityItem.name}</h3></Link>)}</div>;
+function Interior({ page }: { page: string }) {
+  return <><section className="grid min-h-screen gap-8 bg-cream px-5 pb-16 pt-32 md:px-10 lg:grid-cols-[.9fr_1.1fr] lg:px-16"><div className="flex flex-col justify-end"><Reveal><p className="mb-5 text-xs font-black uppercase tracking-[.22em] text-ember">{page}</p></Reveal><Title text={pageTitle(page)} dark /><Reveal delay={0.2}><p className="mt-7 max-w-xl text-lg leading-8 text-cacao/65">Faux contenu pour visualiser l'architecture de page, les textes animes, les respirations et les appels a l'action.</p></Reveal></div><Visual label={pageTitle(page)} tone={["wine", "cacao", "ember"]} className="min-h-[70vh]" /></section><EditorialBlock eyebrow="Contenu" title="Une section editoriale pour donner du rythme." body="On posera ici les vrais textes, les vrais modules et les visuels definitifs. Pour l'instant, tout sert a valider la structure." /><CTA /></>;
+}
+
+function EditorialBlock({ eyebrow, title, body }: { eyebrow: string; title: string; body: string }) {
+  return <section className="bg-cream px-5 py-24 text-cacao md:px-10 lg:px-16"><div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[.9fr_1.1fr] lg:items-end"><div><Reveal><p className="mb-5 text-xs font-black uppercase tracking-[.22em] text-ember">{eyebrow}</p></Reveal><Title text={title} dark /></div><Reveal delay={0.2}><p className="max-w-xl text-lg leading-8 text-cacao/65">{body}</p></Reveal></div></section>;
+}
+
+function Gallery({ cityItem }: { cityItem: City }) {
+  return <section className="bg-cacao px-5 py-24 text-bone md:px-10 lg:px-16"><div className="mx-auto max-w-7xl"><Reveal><p className="mb-5 text-xs font-black uppercase tracking-[.22em] text-saffron">Ambiance</p></Reveal><Title text="Ca vit, ca parle, ca partage." /><div className="mt-12 grid gap-5 md:grid-cols-3"><Parallax label="salle placeholder" tone={cityItem.tone} /><Visual label="table placeholder" tone={["ink", "wine", "ember"]} className="min-h-[58vh]" /><Parallax label="verres placeholder" tone={["saffron", "ember", "wine"]} /></div></div></section>;
+}
+
+function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  return <motion.div initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-8% 0px" }} transition={{ duration: .7, delay, ease: [.16,1,.3,1] }}>{children}</motion.div>;
 }
 
 function Title({ text, dark = false, huge = false }: { text: string; dark?: boolean; huge?: boolean }) {
@@ -222,32 +223,15 @@ function Parallax(props: { label: string; tone: string[] }) {
   return <div ref={ref} className="min-h-[58vh] overflow-hidden lg:min-h-screen"><motion.div style={{ y, scale }}><Visual {...props} className="min-h-[inherit]" /></motion.div></div>;
 }
 
-function CTA() {
-  return <section className="bg-ember px-5 py-20 text-bone md:px-10 lg:px-16"><div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between"><Title text="On garde une table ?" /><Link href="/reservation" className="rounded-full bg-bone px-8 py-5 text-xs font-black uppercase tracking-[.18em] text-cacao transition hover:bg-cacao hover:text-bone">Reserver</Link></div></section>;
-}
+function Info({ label, value }: { label: string; value: string }) { return <div><p className="text-[10px] font-black uppercase tracking-[.18em] text-ember">{label}</p><p className="mt-2 font-black uppercase">{value}</p></div>; }
+function TextCard({ title, body, href }: { title: string; body: string; href: string }) { return <Reveal><Link href={href} className="block border-t border-cacao/20 pt-5 transition hover:text-ember"><h3 className="font-display text-6xl uppercase leading-none">{title}</h3><p className="mt-5 text-lg leading-8 text-cacao/65">{body}</p></Link></Reveal>; }
+function Marquee({ text }: { text: string }) { return <div className="overflow-hidden whitespace-nowrap"><motion.div animate={{ x: [0, -600] }} transition={{ repeat: Infinity, duration: 16, ease: "linear" }} className="font-display text-6xl uppercase md:text-8xl">{text.repeat(8)}</motion.div></div>; }
+function CTA() { return <section className="bg-ember px-5 py-20 text-bone md:px-10 lg:px-16"><div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between"><Title text="On garde une table ?" /><Link href="/reservation" className="rounded-full bg-bone px-8 py-5 text-xs font-black uppercase tracking-[.18em] text-cacao transition hover:bg-cacao hover:text-bone">Reserver</Link></div></section>; }
+function FloatingMenuButton() { return <Link href="/menu" className="fixed bottom-5 left-1/2 z-40 -translate-x-1/2 rounded-full bg-cacao px-8 py-5 text-xs font-black uppercase tracking-[.18em] text-bone shadow-soft transition hover:bg-ember">Voir la carte</Link>; }
+function Footer() { return <footer className="bg-ink px-5 py-14 text-bone md:px-10 lg:px-16"><div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between"><div><p className="font-display text-6xl uppercase">Flam's</p><p className="mt-3 text-bone/55">Restaurant finder, carte, reservation, recrutement, contact.</p></div><div className="flex flex-wrap gap-5 text-xs font-black uppercase tracking-[.16em]"><Link href="/menu">Carte</Link><Link href="/restaurants">Restaurants</Link><Link href="/credits">Credits</Link><Link href="/en">EN</Link></div></div></footer>; }
 
-function Footer() {
-  return <footer className="bg-ink px-5 py-14 text-bone md:px-10 lg:px-16"><div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between"><div><p className="font-display text-6xl uppercase">Flam's</p><p className="mt-3 text-bone/55">Restaurant finder, carte, reservation, recrutement, contact.</p></div><div className="flex flex-wrap gap-5 text-xs font-black uppercase tracking-[.16em]"><Link href="/menu">Carte</Link><Link href="/restaurants">Restaurants</Link><Link href="/credits">Credits</Link><Link href="/en">EN</Link></div></div></footer>;
-}
-
-function city(name: string, names: string[], tone: string[]): City {
-  return { name, slug: slugify(name), tone, restaurants: names.map((restaurantName, index) => ({ name: restaurantName, slug: slugify(restaurantName), mood: "Table chaude, rythme vif, ambiance de bande.", address: `${index + 1} rue des Tables` })) };
-}
-
-function findCity(slug?: string) {
-  if (!slug) return undefined;
-  return countries.flatMap((country) => country.cities).find((cityItem) => cityItem.slug === slug);
-}
-
-function pageTitle(page: string) {
-  const titles: Record<string, string> = { menu: "La carte", restaurants: "Nos restaurants", reservation: "Reserver", recrutement: "Recrutement", "a-propos": "A propos", contact: "Contact", credits: "Credits" };
-  return titles[page] ?? "Flam's";
-}
-
-function slugify(value: string) {
-  return value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-}
-
-function clean(value: string) {
-  return value.split("-").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
-}
+function city(name: string, country: string, names: string[], tone: string[]): City { return { name, country, slug: slugify(name), tone, restaurants: names.map((restaurantName, index) => ({ name: restaurantName, slug: slugify(restaurantName), mood: "Table chaude, rythme vif, ambiance de bande.", address: `${index + 1} rue des Tables` })) }; }
+function findCity(slug?: string) { return slug ? cities.find((cityItem) => cityItem.slug === slug) : undefined; }
+function pageTitle(page: string) { const titles: Record<string, string> = { menu: "La carte", restaurants: "Nos restaurants", reservation: "Reserver", recrutement: "Recrutement", "a-propos": "A propos", contact: "Contact", credits: "Credits" }; return titles[page] ?? "Flam's"; }
+function slugify(value: string) { return value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
+function clean(value: string) { return value.split("-").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" "); }
