@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; }
+html { background: #11100d; scroll-behavior: auto; }
+body { margin: 0; overflow-x: hidden; background: #f5ead2; color: #2a1511; font-family: Arial, Helvetica, sans-serif; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+::selection { color: #fff7df; background: #ef3c19; }
+.texture::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .18; background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,.35) 0 1px, transparent 1px); background-size: 18px 18px; mix-blend-mode: multiply; }
+.clip-visual { clip-path: polygon(0 8%, 100% 0, 100% 92%, 0 100%); }
+.warm-button { position: relative; overflow: hidden; isolation: isolate; }
+.warm-button::before { content: ""; position: absolute; inset: auto auto -80% -15%; z-index: -1; width: 130%; height: 160%; border-radius: 999px; background: #ef3c19; transform: translateY(65%); transition: transform 420ms cubic-bezier(.2,.8,.2,1); }
+.warm-button:hover::before { transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; scroll-behavior: auto !important; } }
