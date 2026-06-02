@@ -9,6 +9,8 @@ type VisualPlaceholderProps = {
   src?: string;
   alt?: string;
   imageClassName?: string;
+  clipped?: boolean;
+  showLabel?: boolean;
 };
 
 export function VisualPlaceholder({
@@ -18,6 +20,8 @@ export function VisualPlaceholder({
   src,
   alt,
   imageClassName = "",
+  clipped = true,
+  showLabel = true,
 }: VisualPlaceholderProps) {
   const [imageLoaded, setImageLoaded] = useState(Boolean(src));
 
@@ -27,7 +31,9 @@ export function VisualPlaceholder({
 
   return (
     <div
-      className={`texture clip-visual relative min-h-[360px] overflow-hidden rounded-sm ${className}`}
+      className={`texture relative min-h-[360px] overflow-hidden rounded-sm ${
+        clipped ? "clip-visual" : ""
+      } ${className}`}
       style={{ background: toneBackground(tone) }}
     >
       {src && imageLoaded ? (
@@ -40,9 +46,11 @@ export function VisualPlaceholder({
         />
       ) : null}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,rgba(255,247,223,.18),transparent_24%),linear-gradient(180deg,rgba(17,16,13,.05),rgba(17,16,13,.36))]" />
-      <div className="absolute bottom-5 left-5 rounded-full border border-bone/35 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-bone">
-        {label}
-      </div>
+      {showLabel ? (
+        <div className="absolute bottom-5 left-5 rounded-full border border-bone/35 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-bone">
+          {label}
+        </div>
+      ) : null}
     </div>
   );
 }
