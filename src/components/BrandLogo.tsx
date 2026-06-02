@@ -8,8 +8,12 @@ type BrandLogoProps = {
 };
 
 export function BrandLogo({ tone = "cream", className = "" }: BrandLogoProps) {
+  const sources =
+    tone === "cream"
+      ? ["/assets/flams/logo-beige.png", "/assets/flams/logo-beige.svg"]
+      : ["/assets/flams/logo-bdx.png", "/assets/flams/logo-beige.png"];
+  const [sourceIndex, setSourceIndex] = useState(0);
   const [showImage, setShowImage] = useState(true);
-  const src = tone === "cream" ? "/assets/flams/logo-beige.svg" : "/assets/flams/logo-bdx.png";
   const textColor = tone === "cream" ? "text-bone" : "text-wine";
 
   return (
@@ -25,8 +29,14 @@ export function BrandLogo({ tone = "cream", className = "" }: BrandLogoProps) {
           alt=""
           aria-hidden="true"
           className="absolute inset-0 h-full w-full object-contain"
-          src={src}
-          onError={() => setShowImage(false)}
+          src={sources[sourceIndex]}
+          onError={() => {
+            if (sourceIndex < sources.length - 1) {
+              setSourceIndex(sourceIndex + 1);
+              return;
+            }
+            setShowImage(false);
+          }}
         />
       ) : null}
     </span>
