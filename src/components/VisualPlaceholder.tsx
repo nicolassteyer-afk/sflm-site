@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 type VisualPlaceholderProps = {
   label: string;
   tone?: string;
@@ -15,16 +19,23 @@ export function VisualPlaceholder({
   alt,
   imageClassName = "",
 }: VisualPlaceholderProps) {
+  const [imageLoaded, setImageLoaded] = useState(Boolean(src));
+
+  useEffect(() => {
+    setImageLoaded(Boolean(src));
+  }, [src]);
+
   return (
     <div
       className={`texture clip-visual relative min-h-[360px] overflow-hidden rounded-sm ${className}`}
       style={{ background: toneBackground(tone) }}
     >
-      {src ? (
+      {src && imageLoaded ? (
         <img
           alt={alt ?? label}
           className={`absolute inset-0 h-full w-full object-cover ${imageClassName}`}
           loading="lazy"
+          onError={() => setImageLoaded(false)}
           src={src}
         />
       ) : null}
