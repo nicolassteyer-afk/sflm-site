@@ -10,8 +10,14 @@ type BrandLogoProps = {
 export function BrandLogo({ tone = "cream", className = "" }: BrandLogoProps) {
   const sources =
     tone === "cream"
-      ? ["/assets/flams/logo-beige.png", "/assets/flams/logo-beige.svg"]
-      : ["/assets/flams/logo-bdx.png", "/assets/flams/logo-beige.png"];
+      ? [
+          "/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-BEIGE.svg",
+          "/assets/flams/logo-beige.svg",
+        ]
+      : [
+          "/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-BDX.svg",
+          "/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-BEIGE.svg",
+        ];
   const [sourceIndex, setSourceIndex] = useState(0);
   const [showImage, setShowImage] = useState(true);
   const textColor = tone === "cream" ? "text-bone" : "text-wine";
