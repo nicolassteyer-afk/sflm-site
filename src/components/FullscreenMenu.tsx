@@ -2,12 +2,16 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useState } from "react";
-import { allCities } from "@/data/restaurants";
-import { mainLinks } from "@/lib/navigation";
-import { BrandLogo } from "./BrandLogo";
+import { useMemo, useState } from "react";
+import { countries, type City } from "@/data/restaurants";
 import { LanguageSwitcher } from "./LanguageSwitcher";
-import { VisualPlaceholder } from "./VisualPlaceholder";
+
+const footerLinks = [
+  { href: "/recrutement", label: "Recrutement" },
+  { href: "/a-propos", label: "A propos" },
+  { href: "/contact", label: "Contact" },
+  { href: "/credits", label: "Credits" },
+];
 
 export function FullscreenMenu({
   open,
@@ -16,116 +20,186 @@ export function FullscreenMenu({
   open: boolean;
   onClose: () => void;
 }) {
-  const [preview, setPreview] = useState(allCities[0]);
+  const menuCountries = useMemo(() => {
+    const order = ["royaume-uni", "france", "belgique"];
+    return [...countries].sort(
+      (a, b) => order.indexOf(a.slug) - order.indexOf(b.slug),
+    );
+  }, []);
+  const [hoveredCity, setHoveredCity] = useState<City | null>(null);
+  const activeRestaurants =
+    hoveredCity && hoveredCity.restaurants.length > 1
+      ? hoveredCity.restaurants
+      : [];
 
   return (
     <AnimatePresence>
       {open ? (
         <motion.div
           aria-modal="true"
-          className="fixed inset-0 z-50 overflow-y-auto bg-cacao text-bone"
-          initial={{ clipPath: "inset(0 0 100% 0)" }}
+          className="fixed inset-0 z-50 overflow-hidden bg-ink/55 text-bone"
           role="dialog"
-          animate={{ clipPath: "inset(0 0 0% 0)" }}
-          exit={{ clipPath: "inset(0 0 100% 0)" }}
-          transition={{ duration: 0.72, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.35 }}
         >
-          <div className="flex min-h-screen flex-col px-5 py-5 md:px-10 lg:px-16">
-            <div className="flex items-center justify-between">
-              <Link className="block" href="/" onClick={onClose} aria-label="Accueil Flam's">
-                <BrandLogo className="h-14 w-40" tone="cream" />
-              </Link>
+          <motion.aside
+            className="relative z-10 flex h-screen w-full max-w-[920px] flex-col overflow-y-auto bg-wine px-6 py-7 md:px-10 lg:w-[58vw]"
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="mb-10 flex items-center justify-between">
               <button
                 aria-label="Fermer le menu de navigation"
-                className="rounded-full border border-bone/30 px-6 py-3 text-xs font-black uppercase tracking-[0.18em] transition hover:bg-bone hover:text-cacao"
+                className="group grid h-12 w-12 place-items-center"
                 onClick={onClose}
                 type="button"
               >
-                Fermer
+                <span className="relative h-5 w-5" aria-hidden="true">
+                  <span className="absolute left-0 top-1/2 h-[2px] w-full -translate-y-1/2 rotate-45 bg-current transition group-hover:rotate-[35deg]" />
+                  <span className="absolute left-0 top-1/2 h-[2px] w-full -translate-y-1/2 -rotate-45 bg-current transition group-hover:-rotate-[35deg]" />
+                </span>
               </button>
+              <Link
+                className="warm-button px-3 py-2 text-xs font-black uppercase tracking-[0.18em] md:hidden"
+                href="/reservation"
+                onClick={onClose}
+              >
+                Reserver
+              </Link>
             </div>
 
-            <div className="grid flex-1 gap-12 py-16 lg:grid-cols-[1fr_.82fr] lg:items-end">
-              <div>
-                <nav className="mb-12 grid gap-3">
-                  {mainLinks.map((link, index) => (
-                    <motion.div
-                      key={link.href}
-                      initial={{ opacity: 0, x: -28 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.18 + index * 0.06 }}
-                    >
-                      <Link
-                        className="block font-display text-6xl uppercase leading-none text-bone transition hover:translate-x-4 hover:text-saffron md:text-8xl"
-                        href={link.href}
-                        onClick={onClose}
-                      >
-                        {link.label}
-                      </Link>
-                    </motion.div>
-                  ))}
-                </nav>
-
-                <div>
-                  <p className="mb-4 text-xs font-black uppercase tracking-[0.22em] text-saffron">
-                    Choisir une ville
+            <nav className="flex-1">
+              {menuCountries.map((country, countryIndex) => (
+                <motion.div
+                  className="mb-8 last:mb-0"
+                  key={country.slug}
+                  initial={{ opacity: 0, x: -28 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + countryIndex * 0.08 }}
+                >
+                  <p className="mb-4 text-[0.78rem] font-black uppercase tracking-[0.12em] text-bone/55">
+                    {country.name}
                   </p>
-                  <div className="grid gap-x-8 gap-y-2 md:grid-cols-2">
-                    {allCities.map((city) => (
-                      <div key={city.slug}>
-                        <Link
-                          className="group flex items-center justify-between border-b border-bone/15 py-2 text-xl font-black uppercase transition hover:border-saffron hover:text-saffron"
-                          href={`/restaurants/${city.slug}`}
-                          onClick={onClose}
-                          onMouseEnter={() => setPreview(city)}
+                  <div className="grid gap-2">
+                    {country.cities.map((city, cityIndex) => {
+                      const hasMany = city.restaurants.length > 1;
+                      const isHovered = hoveredCity?.slug === city.slug;
+
+                      return (
+                        <motion.div
+                          key={city.slug}
+                          initial={{ opacity: 0, y: 14 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            delay: 0.18 + countryIndex * 0.08 + cityIndex * 0.045,
+                          }}
+                          onMouseEnter={() => setHoveredCity(city)}
+                          onMouseLeave={() => {
+                            if (!hasMany) setHoveredCity(null);
+                          }}
                         >
-                          {city.name}
-                          <span className="text-xs opacity-45">{city.restaurants.length}</span>
+                          <Link
+                            className={`block origin-left font-display text-[clamp(3rem,5.3vw,5.4rem)] uppercase leading-[0.82] transition duration-300 ${
+                              isHovered
+                                ? "translate-x-2 -rotate-1 text-saffron"
+                                : "text-bone hover:text-saffron"
+                            }`}
+                            href={
+                              hasMany
+                                ? `/restaurants/${city.slug}`
+                                : `/restaurants/${city.slug}/${city.restaurants[0].slug}`
+                            }
+                            onClick={onClose}
+                          >
+                            {city.name}
+                          </Link>
+                          {hasMany ? (
+                            <div className="mt-2 grid gap-1 border-l border-bone/20 pl-4 lg:hidden">
+                              {city.restaurants.map((restaurant) => (
+                                <Link
+                                  className="text-sm font-black uppercase tracking-[0.08em] text-bone/70"
+                                  href={`/restaurants/${city.slug}/${restaurant.slug}`}
+                                  key={restaurant.slug}
+                                  onClick={onClose}
+                                >
+                                  {restaurantLabel(restaurant.name, city.name)}
+                                </Link>
+                              ))}
+                            </div>
+                          ) : null}
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              ))}
+            </nav>
+
+            <div className="mt-10 flex flex-wrap items-center justify-between gap-5">
+              <div className="flex flex-wrap gap-x-7 gap-y-3">
+                {footerLinks.map((link) => (
+                  <Link
+                    className="text-sm font-black uppercase tracking-[0.08em] transition hover:text-saffron"
+                    href={link.href}
+                    key={link.href}
+                    onClick={onClose}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+              <LanguageSwitcher />
+            </div>
+          </motion.aside>
+
+          <AnimatePresence>
+            {activeRestaurants.length > 0 ? (
+              <motion.div
+                className="fixed bottom-0 left-[58vw] top-0 z-0 hidden w-[38vw] bg-cacao px-16 py-28 lg:block"
+                initial={{ x: -48, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -48, opacity: 0 }}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className="flex h-full flex-col justify-center">
+                  <p className="mb-8 text-xs font-black uppercase tracking-[0.16em] text-saffron">
+                    {hoveredCity?.name}
+                  </p>
+                  <div className="grid gap-6">
+                    {activeRestaurants.map((restaurant, index) => (
+                      <motion.div
+                        key={restaurant.slug}
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.08 }}
+                      >
+                        <Link
+                          className="group block font-display text-[clamp(2.2rem,3.2vw,4rem)] uppercase leading-[0.86] text-bone transition hover:translate-x-3 hover:text-saffron"
+                          href={`/restaurants/${hoveredCity?.slug}/${restaurant.slug}`}
+                          onClick={onClose}
+                        >
+                          {restaurantLabel(restaurant.name, hoveredCity?.name ?? "")}
                         </Link>
-                        <div className="hidden gap-2 py-2 pl-4 lg:grid">
-                          {city.restaurants.map((restaurant) => (
-                            <Link
-                              className="text-sm font-bold text-bone/55 transition hover:text-bone"
-                              href={`/restaurants/${city.slug}/${restaurant.slug}`}
-                              key={restaurant.slug}
-                              onClick={onClose}
-                            >
-                              {restaurant.name}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
+                        <p className="mt-2 text-sm font-bold uppercase tracking-[0.08em] text-bone/45">
+                          {restaurant.address}
+                        </p>
+                      </motion.div>
                     ))}
                   </div>
                 </div>
-              </div>
-
-              <motion.div
-                key={preview.slug}
-                initial={{ opacity: 0, scale: 1.04 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.45 }}
-                className="hidden lg:block"
-              >
-                <VisualPlaceholder
-                  className="min-h-[68vh]"
-                  label={preview.name}
-                  src={preview.restaurants[0]?.mediaSrc}
-                  alt={`Ambiance Flam's ${preview.name}`}
-                  tone={preview.previewTone}
-                />
               </motion.div>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-bone/15 pt-5">
-              <LanguageSwitcher />
-              <Link className="text-xs font-black uppercase tracking-[0.18em] text-bone/60" href="/credits" onClick={onClose}>
-                Credits
-              </Link>
-            </div>
-          </div>
+            ) : null}
+          </AnimatePresence>
         </motion.div>
       ) : null}
     </AnimatePresence>
   );
+}
+
+function restaurantLabel(name: string, city: string) {
+  return name.replace(/^Flam's\s*/i, "").replace(new RegExp(`^${city}\\s*`, "i"), "");
 }
