@@ -19,6 +19,16 @@ export type City = {
   restaurants: Restaurant[];
 };
 
+const flamAssets = {
+  biere: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-BIERE-BEIGE.svg",
+  dragon: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-DRAGON-BEIGE.svg",
+  flamme: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-FLAMME-BEIGE.svg",
+  frise: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-FRISE-1-BEIGE.svg",
+  fut: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-FUT-BEIGE.svg",
+  planche: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-PLANCHE-BEIGE.svg",
+  vin: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-VIN-BEIGE.svg",
+};
+
 export type Country = {
   slug: string;
   name: string;
@@ -36,7 +46,7 @@ const restaurantsByCity: Record<string, Restaurant[]> = {
       hours: "Tous les jours, 12h - 23h30",
       mood: "Grande salle, service vif, tables qui s'allongent.",
       heroTone: "from-wine via-cacao to-ember",
-      mediaSrc: "/assets/flams/table-partage.png",
+      mediaSrc: flamAssets.frise,
     },
     {
       slug: "rive-gauche",
@@ -47,7 +57,7 @@ const restaurantsByCity: Record<string, Restaurant[]> = {
       hours: "Lundi au samedi, 12h - 00h",
       mood: "Adresse plus intime, lumiere basse et verres qui tournent.",
       heroTone: "from-cacao via-wine to-saffron",
-      mediaSrc: "/assets/flams/table-flam.png",
+      mediaSrc: flamAssets.vin,
     },
   ],
   bordeaux: [
@@ -60,7 +70,7 @@ const restaurantsByCity: Record<string, Restaurant[]> = {
       hours: "Mardi au dimanche, 12h - 23h",
       mood: "Bois sombre, banquettes chaudes, grandes tablees.",
       heroTone: "from-wine via-ember to-cacao",
-      mediaSrc: "/assets/flams/rouge-croquant.png",
+      mediaSrc: flamAssets.planche,
     },
   ],
   lyon: [
@@ -73,7 +83,7 @@ const restaurantsByCity: Record<string, Restaurant[]> = {
       hours: "Tous les jours, 11h30 - 23h30",
       mood: "Le midi file, le soir s'attarde.",
       heroTone: "from-cacao via-wine to-ember",
-      mediaSrc: "/assets/flams/table-flam.png",
+      mediaSrc: flamAssets.flamme,
     },
   ],
   lille: [
@@ -86,7 +96,7 @@ const restaurantsByCity: Record<string, Restaurant[]> = {
       hours: "Mercredi au dimanche, 12h - 00h",
       mood: "Brut, chaleureux, parfait pour arriver nombreux.",
       heroTone: "from-wine via-cacao to-saffron",
-      mediaSrc: "/assets/flams/biere-flams.png",
+      mediaSrc: flamAssets.biere,
     },
   ],
   nice: [
@@ -99,7 +109,7 @@ const restaurantsByCity: Record<string, Restaurant[]> = {
       hours: "Tous les jours, 12h - 23h",
       mood: "Energie sud, aperitif long, plats partages.",
       heroTone: "from-saffron via-ember to-wine",
-      mediaSrc: "/assets/flams/sauce-piquante.png",
+      mediaSrc: flamAssets.flamme,
     },
   ],
   marseille: [
@@ -112,7 +122,7 @@ const restaurantsByCity: Record<string, Restaurant[]> = {
       hours: "Jeudi au lundi, 12h - 00h",
       mood: "Texture pierre, feu franc, esprit de bande.",
       heroTone: "from-cacao via-ember to-wine",
-      mediaSrc: "/assets/flams/punchline-generosite.png",
+      mediaSrc: flamAssets.planche,
     },
   ],
   strasbourg: [
@@ -125,7 +135,7 @@ const restaurantsByCity: Record<string, Restaurant[]> = {
       hours: "Tous les jours, 11h30 - 23h",
       mood: "Clin d'oeil alsacien, version contemporaine.",
       heroTone: "from-wine via-cacao to-bone",
-      mediaSrc: "/assets/flams/table-partage.png",
+      mediaSrc: flamAssets.dragon,
     },
   ],
   bruxelles: [
@@ -138,7 +148,7 @@ const restaurantsByCity: Record<string, Restaurant[]> = {
       hours: "Mardi au dimanche, 12h - 23h",
       mood: "Restaurant compact, vivant, ouvert aux longues soirees.",
       heroTone: "from-cacao via-wine to-ember",
-      mediaSrc: "/assets/flams/blanc-gourmand.png",
+      mediaSrc: flamAssets.fut,
     },
   ],
   londres: [
@@ -151,7 +161,7 @@ const restaurantsByCity: Record<string, Restaurant[]> = {
       hours: "Wednesday to Sunday, 12pm - 11pm",
       mood: "Warm room, sharp drinks, late table energy.",
       heroTone: "from-ink via-cacao to-ember",
-      mediaSrc: "/assets/flams/cookie-gourmand.png",
+      mediaSrc: flamAssets.vin,
     },
   ],
 };
