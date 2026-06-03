@@ -12,18 +12,18 @@ export function Header() {
   const background = useTransform(
     scrollY,
     [0, 120],
-    ["rgba(42,21,17,0.16)", "rgba(42,21,17,0.86)"],
+    ["rgba(255,247,223,0.78)", "rgba(255,247,223,0.92)"],
   );
   const borderColor = useTransform(
     scrollY,
     [0, 120],
-    ["rgba(255,247,223,0.22)", "rgba(255,247,223,0.14)"],
+    ["rgba(42,21,17,0.18)", "rgba(42,21,17,0.22)"],
   );
 
   return (
     <>
       <motion.header
-        className="fixed left-0 right-0 top-0 z-40 grid h-[86px] grid-cols-[1fr_auto_1fr] items-center px-5 text-bone md:px-10 lg:px-14"
+        className="fixed left-0 right-0 top-0 z-40 grid h-[86px] grid-cols-[1fr_auto_1fr] items-center px-5 text-cacao md:px-10 lg:px-14"
         style={{
           background,
           borderBottom: "1px solid",
@@ -46,15 +46,15 @@ export function Header() {
           </span>
         </button>
         <Link
-          className="h-12 w-36 justify-self-center md:h-14 md:w-44"
+          className="flex h-14 w-44 items-center justify-center justify-self-center md:h-16 md:w-52"
           href="/"
           aria-label="Accueil Flam's"
         >
-          <BrandLogo className="h-full w-full" tone="cream" />
+          <BrandLogo className="h-full w-full" tone="bordeaux" />
         </Link>
         <div className="flex items-center justify-end gap-4">
           <Link
-            className="warm-button hidden px-2 py-2 text-xs font-black uppercase tracking-[0.16em] text-bone md:block"
+            className="warm-button hidden px-2 py-2 text-xs font-black uppercase tracking-[0.16em] text-cacao md:block"
             href="/reservation"
           >
             Reserver
