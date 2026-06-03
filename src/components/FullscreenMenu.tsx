@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { countries, type City } from "@/data/restaurants";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
@@ -32,6 +32,17 @@ export function FullscreenMenu({
       ? hoveredCity.restaurants
       : [];
 
+  useEffect(() => {
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
+
   return (
     <AnimatePresence>
       {open ? (
@@ -45,13 +56,14 @@ export function FullscreenMenu({
           transition={{ duration: 0.35 }}
         >
           <motion.aside
-            className="relative z-10 flex h-screen w-full max-w-[920px] flex-col overflow-y-auto bg-wine px-6 py-7 md:px-10 lg:w-[58vw]"
+            className="relative z-10 flex h-screen w-full max-w-[920px] flex-col overflow-y-auto overscroll-contain bg-wine px-6 py-6 md:px-10 lg:w-[58vw]"
+            onWheel={(event) => event.stopPropagation()}
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="mb-10 flex items-center justify-between">
+            <div className="mb-6 flex items-center justify-between">
               <button
                 aria-label="Fermer le menu de navigation"
                 className="group grid h-12 w-12 place-items-center"
@@ -75,16 +87,16 @@ export function FullscreenMenu({
             <nav className="flex-1">
               {menuCountries.map((country, countryIndex) => (
                 <motion.div
-                  className="mb-8 last:mb-0"
+                  className="mb-5 last:mb-0"
                   key={country.slug}
                   initial={{ opacity: 0, x: -28 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 + countryIndex * 0.08 }}
                 >
-                  <p className="mb-4 text-[0.78rem] font-black uppercase tracking-[0.12em] text-bone/55">
+                  <p className="mb-3 text-[0.72rem] font-black uppercase tracking-[0.12em] text-bone/55">
                     {country.name}
                   </p>
-                  <div className="grid gap-2">
+                  <div className="grid gap-1.5">
                     {country.cities.map((city, cityIndex) => {
                       const hasMany = city.restaurants.length > 1;
                       const isHovered = hoveredCity?.slug === city.slug;
@@ -103,16 +115,12 @@ export function FullscreenMenu({
                           }}
                         >
                           <Link
-                            className={`block origin-left font-display text-[clamp(3rem,5.3vw,5.4rem)] uppercase leading-[0.82] transition duration-300 ${
+                            className={`block origin-left font-display text-[clamp(2.65rem,4.4vw,4.8rem)] uppercase leading-[0.82] transition duration-300 ${
                               isHovered
                                 ? "translate-x-2 -rotate-1 text-saffron"
                                 : "text-bone hover:text-saffron"
                             }`}
-                            href={
-                              hasMany
-                                ? `/restaurants/${city.slug}`
-                                : `/restaurants/${city.slug}/${city.restaurants[0].slug}`
-                            }
+                            href={`/restaurants/${city.slug}`}
                             onClick={onClose}
                           >
                             {city.name}
@@ -139,7 +147,7 @@ export function FullscreenMenu({
               ))}
             </nav>
 
-            <div className="mt-10 flex flex-wrap items-center justify-between gap-5">
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-5">
               <div className="flex flex-wrap gap-x-7 gap-y-3">
                 {footerLinks.map((link) => (
                   <Link
