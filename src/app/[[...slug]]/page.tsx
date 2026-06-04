@@ -33,9 +33,13 @@ export default function Page() {
             <p className="mb-5 w-fit rounded-full border border-bone/25 px-4 py-2 text-xs font-black uppercase tracking-[.22em] text-saffron backdrop-blur-sm">
               Restaurant de grandes tables
             </p>
-            <h1 className="font-display text-[27vw] uppercase leading-[.76] md:text-[19vw] lg:text-[13vw]">
-              Flam's
-            </h1>
+            <h1 className="sr-only">Flam's</h1>
+            <img
+              alt="Dragon Flam's"
+              className="h-auto w-[min(76vw,620px)] drop-shadow-[0_30px_80px_rgba(0,0,0,.36)]"
+              draggable={false}
+              src="/assets/flams/dragon-beige.png"
+            />
             <div className="mt-6 grid gap-6 lg:grid-cols-[.95fr_1fr] lg:items-end">
               <p className="max-w-2xl text-lg leading-8 text-bone/85 md:text-2xl md:leading-9">
                 Un lieu chaud, direct, joyeux. On vient pour manger, on reste
