@@ -2,13 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --font-display: "Thunder";
+  --font-body: "Arial";
+  --noise: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.22) 0 1px, transparent 1px);
+}
+
+@font-face {
+  font-family: "Thunder";
+  src: url("/fonts/thunder/Thunder-BlackLC.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: "Thunder";
+  src: url("/fonts/thunder/Thunder-BoldLC.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Thunder";
+  src: url("/fonts/thunder/Thunder-SemiBoldLC.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 600;
+}
+
 * { box-sizing: border-box; }
 html { background: #11100d; scroll-behavior: auto; }
-body { margin: 0; overflow-x: hidden; background: #f5ead2; color: #2a1511; font-family: Arial, Helvetica, sans-serif; }
+body { margin: 0; overflow-x: hidden; background: #f5ead2; color: #2a1511; font-family: var(--font-body), Arial, Helvetica, sans-serif; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; }
 ::selection { color: #fff7df; background: #ef3c19; }
-.texture::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .18; background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,.35) 0 1px, transparent 1px); background-size: 18px 18px; mix-blend-mode: multiply; }
+.texture::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .18; background-image: var(--noise); background-size: 18px 18px; mix-blend-mode: multiply; }
 .clip-visual { clip-path: polygon(0 8%, 100% 0, 100% 92%, 0 100%); }
 .warm-button { position: relative; overflow: hidden; isolation: isolate; }
 .warm-button::before { content: ""; position: absolute; inset: auto auto -80% -15%; z-index: -1; width: 130%; height: 160%; border-radius: 999px; background: #ef3c19; transform: translateY(65%); transition: transform 420ms cubic-bezier(.2,.8,.2,1); }
