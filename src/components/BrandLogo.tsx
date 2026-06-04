@@ -13,10 +13,19 @@ export function BrandLogo({ tone = "cream", className = "" }: BrandLogoProps) {
       ? [
           "/assets/flams/logo-beige.png?v=20260604",
           "/assets/flams/logo-beige.svg?v=20260604",
+          "/assets/flams/Logo%20beige.png?v=20260604",
+          "/assets/flams/Logo%20beige.svg?v=20260604",
+          "/Logo%20beige.png?v=20260604",
+          "/Logo%20beige.svg?v=20260604",
         ]
       : [
           "/assets/flams/logo-bdx.png?v=20260604",
+          "/assets/flams/Logo%20BDX.png?v=20260604",
+          "/Logo%20BDX.png?v=20260604",
+          "/assets/flams/LOGO-FLAM%27S-ROUGE.png?v=20260604",
+          "/LOGO-FLAM%27S-ROUGE.png?v=20260604",
           "/assets/flams/logo-beige.png?v=20260604",
+          "/assets/flams/Logo%20beige.png?v=20260604",
         ];
   const [sourceIndex, setSourceIndex] = useState(0);
   const [showImage, setShowImage] = useState(true);
