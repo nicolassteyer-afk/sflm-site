@@ -34,12 +34,19 @@ export default function Page() {
               Restaurant de grandes tables
             </p>
             <h1 className="sr-only">Flam's</h1>
-            <img
-              alt="Dragon Flam's"
+            <object
+              aria-label="Dragon Flam's"
               className="h-auto w-[min(76vw,620px)] drop-shadow-[0_30px_80px_rgba(0,0,0,.36)]"
-              draggable={false}
-              src="/assets/flams/dragon-beige.png"
-            />
+              data="/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-DRAGON-BEIGE.svg"
+              type="image/svg+xml"
+            >
+              <img
+                alt="Logo Flam's"
+                className="h-auto w-[min(76vw,620px)]"
+                draggable={false}
+                src="/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-BEIGE.png"
+              />
+            </object>
             <div className="mt-6 grid gap-6 lg:grid-cols-[.95fr_1fr] lg:items-end">
               <p className="max-w-2xl text-lg leading-8 text-bone/85 md:text-2xl md:leading-9">
                 Un lieu chaud, direct, joyeux. On vient pour manger, on reste
