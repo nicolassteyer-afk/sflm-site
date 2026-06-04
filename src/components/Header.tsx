@@ -12,12 +12,12 @@ export function Header() {
   const background = useTransform(
     scrollY,
     [0, 120],
-    ["rgba(255,247,223,0.78)", "rgba(255,247,223,0.92)"],
+    ["rgba(255,247,223,0)", "rgba(255,247,223,0.94)"],
   );
   const borderColor = useTransform(
     scrollY,
     [0, 120],
-    ["rgba(42,21,17,0.18)", "rgba(42,21,17,0.22)"],
+    ["rgba(42,21,17,0)", "rgba(42,21,17,0.22)"],
   );
 
   return (
