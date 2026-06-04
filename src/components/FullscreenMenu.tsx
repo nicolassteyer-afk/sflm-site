@@ -56,14 +56,14 @@ export function FullscreenMenu({
           transition={{ duration: 0.35 }}
         >
           <motion.aside
-            className="relative z-10 flex h-screen w-full max-w-[920px] flex-col overflow-y-auto overscroll-contain bg-wine px-6 py-6 md:px-10 lg:w-[58vw]"
+            className="relative z-10 flex h-screen w-full max-w-[920px] flex-col overflow-y-auto overscroll-contain bg-wine px-6 py-5 md:px-10 lg:w-[50vw] lg:max-w-none"
             onWheel={(event) => event.stopPropagation()}
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-4 flex items-center justify-between">
               <button
                 aria-label="Fermer le menu de navigation"
                 className="group grid h-12 w-12 place-items-center"
@@ -87,16 +87,16 @@ export function FullscreenMenu({
             <nav className="flex-1">
               {menuCountries.map((country, countryIndex) => (
                 <motion.div
-                  className="mb-5 last:mb-0"
+                  className="mb-4 last:mb-0"
                   key={country.slug}
                   initial={{ opacity: 0, x: -28 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 + countryIndex * 0.08 }}
                 >
-                  <p className="mb-3 text-[0.72rem] font-black uppercase tracking-[0.12em] text-bone/55">
+                  <p className="mb-2 text-[0.68rem] font-black uppercase tracking-[0.12em] text-bone/55">
                     {country.name}
                   </p>
-                  <div className="grid gap-1.5">
+                  <div className="grid gap-1">
                     {country.cities.map((city, cityIndex) => {
                       const hasMany = city.restaurants.length > 1;
                       const isHovered = hoveredCity?.slug === city.slug;
@@ -115,7 +115,7 @@ export function FullscreenMenu({
                           }}
                         >
                           <Link
-                            className={`block origin-left font-display text-[clamp(2.65rem,4.4vw,4.8rem)] uppercase leading-[0.82] transition duration-300 ${
+                            className={`block origin-left font-display text-[clamp(2.25rem,3.7vw,4.15rem)] uppercase leading-[0.8] transition duration-300 ${
                               isHovered
                                 ? "translate-x-2 -rotate-1 text-saffron"
                                 : "text-bone hover:text-saffron"
@@ -147,7 +147,7 @@ export function FullscreenMenu({
               ))}
             </nav>
 
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-5">
+            <div className="mt-5 flex flex-wrap items-center justify-between gap-5">
               <div className="flex flex-wrap gap-x-7 gap-y-3">
                 {footerLinks.map((link) => (
                   <Link
@@ -167,7 +167,7 @@ export function FullscreenMenu({
           <AnimatePresence>
             {activeRestaurants.length > 0 ? (
               <motion.div
-                className="fixed bottom-0 left-[58vw] top-0 z-0 hidden w-[38vw] bg-cacao px-16 py-28 lg:block"
+                className="fixed bottom-0 left-[50vw] top-0 z-0 hidden w-[34vw] bg-cacao px-14 py-24 lg:block"
                 initial={{ x: -48, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: -48, opacity: 0 }}
