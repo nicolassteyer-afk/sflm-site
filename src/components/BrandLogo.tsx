@@ -9,15 +9,15 @@ type BrandLogoProps = {
 
 const logoSources = {
   cream: [
-    "/assets/PNG/2025-09-FLAMS-Valise-Logo_LOGO-BEIGE.png",
     "/assets/flams/logo-beige.png",
+    "/assets/PNG/2025-09-FLAMS-Valise-Logo_LOGO-BEIGE.png",
     "/assets/flams/logo-beige.svg",
     "/assets/flams/Logo%20beige.png",
     "/assets/flams/Logo%20beige.svg",
   ],
   bordeaux: [
-    "/assets/PNG/2025-09-FLAMS-Valise-Logo_LOGO-BDX.png",
     "/assets/flams/logo-bdx.png",
+    "/assets/PNG/2025-09-FLAMS-Valise-Logo_LOGO-BDX.png",
     "/assets/flams/logo-bdx.svg",
     "/assets/flams/Logo%20BDX.png",
     "/assets/flams/Logo%20BDX.svg",
