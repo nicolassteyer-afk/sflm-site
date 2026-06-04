@@ -9,18 +9,19 @@ type BrandLogoProps = {
 
 const logoSources = {
   cream: [
-    "/assets/flams/logo-beige.svg",
-    "/assets/flams/Logo%20beige.svg",
+    "/assets/PNG/2025-09-FLAMS-Valise-Logo_LOGO-BEIGE.png",
     "/assets/flams/logo-beige.png",
+    "/assets/flams/logo-beige.svg",
     "/assets/flams/Logo%20beige.png",
+    "/assets/flams/Logo%20beige.svg",
   ],
   bordeaux: [
+    "/assets/PNG/2025-09-FLAMS-Valise-Logo_LOGO-BDX.png",
+    "/assets/flams/logo-bdx.png",
     "/assets/flams/logo-bdx.svg",
+    "/assets/flams/Logo%20BDX.png",
     "/assets/flams/Logo%20BDX.svg",
     "/assets/flams/flams-logo-bordeaux.svg",
-    "/assets/flams/logo-bdx.png",
-    "/assets/flams/Logo%20BDX.png",
-    "/assets/flams/logo-beige.svg",
   ],
 } as const;
 
@@ -39,7 +40,7 @@ export function BrandLogo({ tone = "cream", className = "" }: BrandLogoProps) {
   return (
     <span
       aria-label="Flam's"
-      className={`relative inline-flex h-12 w-36 items-center justify-center overflow-hidden ${className}`}
+      className={`relative inline-flex h-14 w-44 items-center justify-center overflow-hidden ${className}`}
     >
       {showImage ? (
         <img
