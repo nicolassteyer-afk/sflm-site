@@ -8,28 +8,30 @@ type BrandLogoProps = {
 };
 
 export function BrandLogo({ tone = "cream", className = "" }: BrandLogoProps) {
+  const cacheVersion = "20260604-logo-exact";
   const sources =
     tone === "cream"
       ? [
-          "/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-BEIGE.png?v=20260604",
-          "/2025-09-FLAMS-Valise-Logo_LOGO-BEIGE.png?v=20260604",
-          "/assets/flams/logo-beige.png?v=20260604",
-          "/assets/flams/logo-beige.svg?v=20260604",
-          "/assets/flams/Logo%20beige.png?v=20260604",
-          "/assets/flams/Logo%20beige.svg?v=20260604",
-          "/Logo%20beige.png?v=20260604",
-          "/Logo%20beige.svg?v=20260604",
+          `/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-BEIGE.png?v=${cacheVersion}`,
+          `/2025-09-FLAMS-Valise-Logo_LOGO-BEIGE.png?v=${cacheVersion}`,
+          `/assets/flams/logo-beige.png?v=${cacheVersion}`,
+          `/assets/flams/logo-beige.svg?v=${cacheVersion}`,
+          `/assets/flams/Logo%20beige.png?v=${cacheVersion}`,
+          `/assets/flams/Logo%20beige.svg?v=${cacheVersion}`,
+          `/Logo%20beige.png?v=${cacheVersion}`,
+          `/Logo%20beige.svg?v=${cacheVersion}`,
         ]
       : [
-          "/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-BDX.png?v=20260604",
-          "/2025-09-FLAMS-Valise-Logo_LOGO-BDX.png?v=20260604",
-          "/assets/flams/logo-bdx.png?v=20260604",
-          "/assets/flams/Logo%20BDX.png?v=20260604",
-          "/Logo%20BDX.png?v=20260604",
-          "/assets/flams/LOGO-FLAM%27S-ROUGE.png?v=20260604",
-          "/LOGO-FLAM%27S-ROUGE.png?v=20260604",
-          "/assets/flams/logo-beige.png?v=20260604",
-          "/assets/flams/Logo%20beige.png?v=20260604",
+          `/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-BDX.png?v=${cacheVersion}`,
+          `/2025-09-FLAMS-Valise-Logo_LOGO-BDX.png?v=${cacheVersion}`,
+          `/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-ROUGE.png?v=${cacheVersion}`,
+          `/assets/flams/logo-bdx.png?v=${cacheVersion}`,
+          `/assets/flams/Logo%20BDX.png?v=${cacheVersion}`,
+          `/Logo%20BDX.png?v=${cacheVersion}`,
+          `/assets/flams/LOGO-FLAM%27S-ROUGE.png?v=${cacheVersion}`,
+          `/LOGO-FLAM%27S-ROUGE.png?v=${cacheVersion}`,
+          `/assets/flams/logo-beige.png?v=${cacheVersion}`,
+          `/assets/flams/Logo%20beige.png?v=${cacheVersion}`,
         ];
   const [sourceIndex, setSourceIndex] = useState(0);
   const [showImage, setShowImage] = useState(true);
