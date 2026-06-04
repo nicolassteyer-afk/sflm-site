@@ -11,6 +11,8 @@ export function BrandLogo({ tone = "cream", className = "" }: BrandLogoProps) {
   const sources =
     tone === "cream"
       ? [
+          "/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-BEIGE.png?v=20260604",
+          "/2025-09-FLAMS-Valise-Logo_LOGO-BEIGE.png?v=20260604",
           "/assets/flams/logo-beige.png?v=20260604",
           "/assets/flams/logo-beige.svg?v=20260604",
           "/assets/flams/Logo%20beige.png?v=20260604",
@@ -19,6 +21,8 @@ export function BrandLogo({ tone = "cream", className = "" }: BrandLogoProps) {
           "/Logo%20beige.svg?v=20260604",
         ]
       : [
+          "/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-BDX.png?v=20260604",
+          "/2025-09-FLAMS-Valise-Logo_LOGO-BDX.png?v=20260604",
           "/assets/flams/logo-bdx.png?v=20260604",
           "/assets/flams/Logo%20BDX.png?v=20260604",
           "/Logo%20BDX.png?v=20260604",
