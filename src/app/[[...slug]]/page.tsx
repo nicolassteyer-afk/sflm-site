@@ -36,13 +36,13 @@ export default function Page() {
             <h1 className="sr-only">Flam's</h1>
             <object
               aria-label="Dragon Flam's"
-              className="h-auto w-[min(76vw,620px)] drop-shadow-[0_30px_80px_rgba(0,0,0,.36)]"
+              className="h-auto w-[min(54vw,280px)] drop-shadow-[0_26px_68px_rgba(0,0,0,.34)] sm:w-[min(42vw,340px)] lg:w-[min(28vw,380px)]"
               data="/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-DRAGON-BEIGE.svg"
               type="image/svg+xml"
             >
               <img
                 alt="Logo Flam's"
-                className="h-auto w-[min(76vw,620px)]"
+                className="h-auto w-[min(54vw,280px)] sm:w-[min(42vw,340px)] lg:w-[min(28vw,380px)]"
                 draggable={false}
                 src="/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-BEIGE.png"
               />
