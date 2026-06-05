@@ -20,13 +20,13 @@ export type City = {
 };
 
 const flamAssets = {
-  biere: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-BIERE-BEIGE.svg",
-  dragon: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-DRAGON-BEIGE.svg",
-  flamme: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-FLAMME-BEIGE.svg",
-  frise: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-FRISE-1-BEIGE.svg",
-  fut: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-FUT-BEIGE.svg",
-  planche: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-PLANCHE-BEIGE.svg",
-  vin: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-VIN-BEIGE.svg",
+  biere: "/assets/flams/biere-flams.png",
+  dragon: "/assets/flams/dragon-beige.png",
+  flamme: "/assets/flams/flamme-beige.png",
+  frise: "/assets/flams/annonce-da.png",
+  fut: "/assets/flams/table-flam.png",
+  planche: "/assets/flams/table-partage.png",
+  vin: "/assets/flams/punchline-vin-retrouvailles.jpg",
 };
 
 export type Country = {
