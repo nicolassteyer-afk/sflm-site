@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { BrandDragon } from "@/components/BrandDragon";
+
 const cities = [
   "Paris",
   "Bordeaux",
@@ -34,12 +36,7 @@ export default function Page() {
               Restaurant de grandes tables
             </p>
             <h1 className="sr-only">Flam's</h1>
-            <img
-              alt="Dragon Flam's"
-              className="h-auto w-[min(52vw,260px)] drop-shadow-[0_24px_62px_rgba(0,0,0,.34)] sm:w-[min(38vw,320px)] lg:w-[min(25vw,360px)]"
-              draggable={false}
-              src="/assets/flams/dragon-beige.png"
-            />
+            <BrandDragon className="h-auto w-[min(42vw,160px)] max-w-full drop-shadow-[0_18px_48px_rgba(0,0,0,.32)] sm:w-[min(28vw,210px)] md:w-[min(22vw,240px)] lg:w-[min(16vw,260px)] xl:w-[min(14vw,280px)]" />
             <div className="mt-6 grid gap-6 lg:grid-cols-[.95fr_1fr] lg:items-end">
               <p className="max-w-2xl text-lg leading-8 text-bone/85 md:text-2xl md:leading-9">
                 Un lieu chaud, direct, joyeux. On vient pour manger, on reste
