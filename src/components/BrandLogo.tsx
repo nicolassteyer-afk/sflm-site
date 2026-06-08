@@ -16,6 +16,7 @@ const logoSources = {
   ],
   bordeaux: [
     `/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-BDX.png?v=${cacheVersion}`,
+    `/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-ROUGE.png?v=${cacheVersion}`,
     `/assets/flams/logo-bdx.png?v=${cacheVersion}`,
   ],
 } satisfies Record<NonNullable<BrandLogoProps["tone"]>, string[]>;
