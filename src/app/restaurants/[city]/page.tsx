@@ -1,11 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
-import {
-  BordeauxIconRow,
-  HeroIconColumn,
-  ScrollIconFrieze,
-} from "@/components/ScrollIconFrieze";
+import { ScrollIconFrieze } from "@/components/ScrollIconFrieze";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import { WaveText } from "@/components/WaveText";
 import { allCities, getCity } from "@/data/restaurants";
@@ -29,8 +25,6 @@ export default async function CityPage({
       {isStrasbourg ? <ScrollIconFrieze /> : null}
 
       <section className="relative grid min-h-screen bg-bone lg:grid-cols-2">
-        {isStrasbourg ? <HeroIconColumn /> : null}
-
         <div className="relative min-h-[52vh] overflow-hidden bg-cacao lg:min-h-screen">
           {isStrasbourg ? (
             <iframe
@@ -69,7 +63,6 @@ export default async function CityPage({
       {isStrasbourg ? (
         <>
           <section className="relative grid min-h-screen overflow-hidden bg-cacao text-bone lg:grid-cols-2">
-            <BordeauxIconRow />
             <div className="relative min-h-[58vh] overflow-hidden lg:min-h-screen">
               <VisualPlaceholder
                 alt="Table Flam's Strasbourg"
