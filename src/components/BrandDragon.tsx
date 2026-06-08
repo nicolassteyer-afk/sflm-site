@@ -11,6 +11,7 @@ type BrandDragonProps = {
 const cacheVersion = "20260605-uploaded-flams-assets";
 const dragonSources = {
   beige: [
+    `/assets/flams/dragon-beige-site.jpg?v=${cacheVersion}`,
     `/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-DRAGON-BEIGE.png?v=${cacheVersion}`,
     `/assets/flams/dragon-beige.png?v=${cacheVersion}`,
     `/assets/flams/Dragon%20blanc.png?v=${cacheVersion}`,
