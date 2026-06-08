@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
+import { ScrollIconFrieze } from "@/components/ScrollIconFrieze";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import { WaveText } from "@/components/WaveText";
 import { allCities, getCity } from "@/data/restaurants";
@@ -21,6 +22,8 @@ export default async function CityPage({
 
   return (
     <main className="relative min-h-screen bg-bone">
+      {isStrasbourg ? <ScrollIconFrieze /> : null}
+
       <section className="grid min-h-screen bg-bone lg:grid-cols-2">
         <div className="relative min-h-[52vh] overflow-hidden bg-cacao lg:min-h-screen">
           {isStrasbourg ? (
@@ -59,30 +62,6 @@ export default async function CityPage({
 
       {isStrasbourg ? (
         <>
-          <section className="relative overflow-hidden bg-bone px-5 py-24 text-cacao md:px-10 lg:px-16">
-            <div className="pointer-events-none absolute -right-24 top-10 h-[420px] w-[420px] opacity-[0.07]">
-              <img
-                alt=""
-                className="h-full w-full object-contain"
-                src="/assets/flams/flamme-bordeaux.png"
-              />
-            </div>
-            <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
-              <div>
-                <p className="mb-5 text-xs font-black uppercase tracking-[0.22em] text-ember">
-                  Strasbourg sauce Flam's
-                </p>
-                <h2 className="font-display text-7xl uppercase leading-[0.86] md:text-9xl">
-                  Ici, l'Alsace claque a table.
-                </h2>
-              </div>
-              <WaveText
-                className="max-w-3xl text-3xl font-black leading-[1.08] md:text-5xl lg:text-6xl"
-                text="On arrive pour une flammekueche croustillante, on reste pour le bruit des copains, les verres qui circulent et cette chaleur simple qui transforme un diner en vraie soiree."
-              />
-            </div>
-          </section>
-
           <section className="grid min-h-screen bg-cacao text-bone lg:grid-cols-2">
             <div className="relative min-h-[58vh] overflow-hidden lg:min-h-screen">
               <VisualPlaceholder
@@ -115,6 +94,30 @@ export default async function CityPage({
                 <span className="border-t border-bone/20 pt-4">Soir bruyant</span>
                 <span className="border-t border-bone/20 pt-4">Tables a partager</span>
               </div>
+            </div>
+          </section>
+
+          <section className="relative overflow-hidden bg-bone px-5 py-24 text-cacao md:px-10 lg:px-16">
+            <div className="pointer-events-none absolute -right-24 top-10 h-[420px] w-[420px] opacity-[0.07]">
+              <img
+                alt=""
+                className="h-full w-full object-contain"
+                src="/assets/flams/flamme-bordeaux.png"
+              />
+            </div>
+            <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
+              <div>
+                <p className="mb-5 text-xs font-black uppercase tracking-[0.22em] text-ember">
+                  Strasbourg sauce Flam's
+                </p>
+                <h2 className="font-display text-7xl uppercase leading-[0.86] md:text-9xl">
+                  Ici, l'Alsace claque a table.
+                </h2>
+              </div>
+              <WaveText
+                className="max-w-3xl text-3xl font-black leading-[1.08] md:text-5xl lg:text-6xl"
+                text="On arrive pour une flammekueche croustillante, on reste pour le bruit des copains, les verres qui circulent et cette chaleur simple qui transforme un diner en vraie soiree."
+              />
             </div>
           </section>
         </>
