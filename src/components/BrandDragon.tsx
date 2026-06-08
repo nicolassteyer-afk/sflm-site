@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 type BrandDragonProps = {
   alt?: string;
@@ -8,68 +8,57 @@ type BrandDragonProps = {
   tone?: "beige" | "bordeaux" | "jaune" | "rouge";
 };
 
-const cacheVersion = "20260605-official-dragon-assets";
+const cacheVersion = "20260605-uploaded-flams-assets";
+const dragonSources = {
+  beige: [
+    `/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-DRAGON-BEIGE.png?v=${cacheVersion}`,
+    `/assets/flams/dragon-beige.png?v=${cacheVersion}`,
+    `/assets/flams/Dragon%20blanc.png?v=${cacheVersion}`,
+  ],
+  bordeaux: [
+    `/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-DRAGON-BDX.png?v=${cacheVersion}`,
+    `/assets/flams/dragon-bordeaux.png?v=${cacheVersion}`,
+    `/assets/flams/Dragon%20bordeaux.png?v=${cacheVersion}`,
+  ],
+  jaune: [
+    `/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-DRAGON-JAUNE.png?v=${cacheVersion}`,
+  ],
+  rouge: [
+    `/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-DRAGON-ROUGE.png?v=${cacheVersion}`,
+  ],
+} satisfies Record<NonNullable<BrandDragonProps["tone"]>, string[]>;
 
 export function BrandDragon({
   alt = "Dragon Flam's",
   className = "",
   tone = "beige",
 }: BrandDragonProps) {
-  const sources = useMemo(() => {
-    const officialTone = tone.toUpperCase();
-    const legacyByTone = {
-      beige: ["dragon-beige.png", "Dragon%20blanc.png"],
-      bordeaux: ["dragon-bordeaux.png", "Dragon%20bordeaux.png"],
-      jaune: ["dragon-beige.png"],
-      rouge: ["dragon-bordeaux.png"],
-    };
-
-    return [
-      `/2025-09-FLAMS-Valise-Logo_ILLU-DRAGON-${officialTone}.png?v=${cacheVersion}`,
-      `/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-DRAGON-${officialTone}.png?v=${cacheVersion}`,
-      ...legacyByTone[tone].flatMap((name) => [
-        `/assets/flams/${name}?v=${cacheVersion}`,
-        `/${name}?v=${cacheVersion}`,
-      ]),
-    ];
-  }, [tone]);
-
   const [sourceIndex, setSourceIndex] = useState(0);
-  const [status, setStatus] = useState<"loading" | "loaded" | "failed">("loading");
+  const [failed, setFailed] = useState(false);
+  const sources = dragonSources[tone];
 
   useEffect(() => {
     setSourceIndex(0);
-    setStatus("loading");
+    setFailed(false);
   }, [tone]);
 
-  if (status === "failed") {
-    return (
-      <span
-        aria-label={alt}
-        className={`inline-block font-display uppercase leading-none text-bone ${className}`}
-      >
-        Flam&apos;s
-      </span>
-    );
+  if (failed) {
+    return null;
   }
 
   return (
     <img
       alt={alt}
-      className={`${className} transition-opacity duration-300 ${
-        status === "loaded" ? "opacity-100" : "opacity-0"
-      }`}
+      className={className}
       draggable={false}
       key={`${tone}-${sourceIndex}`}
       src={sources[sourceIndex]}
-      onLoad={() => setStatus("loaded")}
       onError={() => {
         if (sourceIndex < sources.length - 1) {
           setSourceIndex(sourceIndex + 1);
-          setStatus("loading");
           return;
         }
-        setStatus("failed");
+        setFailed(true);
       }}
     />
   );
