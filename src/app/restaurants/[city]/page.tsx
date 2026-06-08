@@ -1,7 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
-import { ScrollIconFrieze } from "@/components/ScrollIconFrieze";
+import {
+  BordeauxIconRow,
+  HeroIconColumn,
+  ScrollIconFrieze,
+} from "@/components/ScrollIconFrieze";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import { WaveText } from "@/components/WaveText";
 import { allCities, getCity } from "@/data/restaurants";
@@ -24,7 +28,9 @@ export default async function CityPage({
     <main className="relative min-h-screen bg-bone">
       {isStrasbourg ? <ScrollIconFrieze /> : null}
 
-      <section className="grid min-h-screen bg-bone lg:grid-cols-2">
+      <section className="relative grid min-h-screen bg-bone lg:grid-cols-2">
+        {isStrasbourg ? <HeroIconColumn /> : null}
+
         <div className="relative min-h-[52vh] overflow-hidden bg-cacao lg:min-h-screen">
           {isStrasbourg ? (
             <iframe
@@ -62,7 +68,8 @@ export default async function CityPage({
 
       {isStrasbourg ? (
         <>
-          <section className="grid min-h-screen bg-cacao text-bone lg:grid-cols-2">
+          <section className="relative grid min-h-screen overflow-hidden bg-cacao text-bone lg:grid-cols-2">
+            <BordeauxIconRow />
             <div className="relative min-h-[58vh] overflow-hidden lg:min-h-screen">
               <VisualPlaceholder
                 alt="Table Flam's Strasbourg"
@@ -76,7 +83,7 @@ export default async function CityPage({
               />
               <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(17,16,13,.1),rgba(17,16,13,.5))]" />
             </div>
-            <div className="flex flex-col justify-center px-5 py-24 md:px-10 lg:px-16">
+            <div className="relative z-10 flex flex-col justify-center px-5 py-24 md:px-10 lg:px-16">
               <p className="mb-5 text-xs font-black uppercase tracking-[0.22em] text-saffron">
                 Le rituel
               </p>
