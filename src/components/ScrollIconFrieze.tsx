@@ -10,8 +10,8 @@ const icons = iconNames.map((name) => ({
   beige: `https://raw.githubusercontent.com/nicolassteyer-afk/sflm-site/main/public/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-${name}-BEIGE.svg`,
 }));
 
-const verticalOffsets = [-220, -110, 0, 110, 220];
-const horizontalOffsets = [-360, -180, 0, 180, 360];
+const verticalOffsets = [-210, -105, 0, 105, 210];
+const horizontalOffsets = [-320, -160, 0, 160, 320];
 
 function FriezeIcon({
   icon,
@@ -21,11 +21,11 @@ function FriezeIcon({
   index: number;
 }) {
   const { scrollY } = useScroll();
-  const x = useTransform(scrollY, [0, 280, 940], [0, 0, horizontalOffsets[index]]);
-  const y = useTransform(scrollY, [0, 280, 940], [verticalOffsets[index], verticalOffsets[index] + 120, 0]);
-  const rotate = useTransform(scrollY, [0, 840], [-8 + index * 4, 0]);
-  const bdxOpacity = useTransform(scrollY, [0, 720, 940], [1, 1, 0]);
-  const beigeOpacity = useTransform(scrollY, [0, 720, 940], [0, 0, 1]);
+  const x = useTransform(scrollY, [0, 420, 960], [0, 0, horizontalOffsets[index]]);
+  const y = useTransform(scrollY, [0, 420, 960], [verticalOffsets[index], verticalOffsets[index] + 80, 0]);
+  const rotate = useTransform(scrollY, [0, 960], [-7 + index * 3.5, 0]);
+  const bdxOpacity = useTransform(scrollY, [0, 650, 860], [1, 1, 0]);
+  const beigeOpacity = useTransform(scrollY, [0, 650, 860], [0, 0, 1]);
 
   return (
     <motion.div
@@ -52,14 +52,14 @@ function FriezeIcon({
 
 export function ScrollIconFrieze() {
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 280, 940], [0, 120, 770]);
-  const opacity = useTransform(scrollY, [0, 80, 1180, 1420], [1, 1, 1, 0]);
-  const scale = useTransform(scrollY, [0, 940], [0.9, 1]);
+  const y = useTransform(scrollY, [0, 420, 960], ["46vh", "66vh", "112vh"]);
+  const opacity = useTransform(scrollY, [0, 80, 1250, 1500], [1, 1, 1, 0]);
+  const scale = useTransform(scrollY, [0, 960], [0.9, 1]);
 
   return (
     <motion.div
       aria-hidden="true"
-      className="pointer-events-none absolute left-1/2 top-[48vh] z-[60] hidden h-0 w-0 lg:block"
+      className="pointer-events-none absolute left-1/2 top-0 z-[60] hidden h-0 w-0 -translate-x-1/2 lg:block"
       style={{ opacity, scale, y }}
     >
       {icons.map((icon, index) => (
