@@ -6,16 +6,16 @@ import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 export function StrasbourgRitualSection() {
   return (
     <motion.section
-      className="grid min-h-screen overflow-hidden bg-cacao text-bone lg:grid-cols-2"
-      initial={{ y: 120 }}
-      whileInView={{ y: 0 }}
-      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-      viewport={{ amount: 0.18, once: false }}
+      className="relative z-10 grid min-h-screen overflow-hidden bg-cacao text-bone lg:grid-cols-2"
+      initial={{ y: "22vh" }}
+      whileInView={{ y: "0vh" }}
+      transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ amount: 0.08, once: false }}
     >
       <motion.div
         className="relative min-h-[58vh] overflow-hidden lg:min-h-screen"
-        initial={{ x: "-10%", opacity: 0.75 }}
-        whileInView={{ x: "0%", opacity: 1 }}
+        initial={{ opacity: 0.82 }}
+        whileInView={{ opacity: 1 }}
         transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
         viewport={{ amount: 0.18, once: false }}
       >
@@ -33,9 +33,9 @@ export function StrasbourgRitualSection() {
       </motion.div>
       <motion.div
         className="flex flex-col justify-center px-5 py-28 md:px-10 lg:px-16 lg:pt-40"
-        initial={{ x: "12%", opacity: 0 }}
-        whileInView={{ x: "0%", opacity: 1 }}
-        transition={{ duration: 0.9, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.9, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
         viewport={{ amount: 0.22, once: false }}
       >
         <p className="mb-5 text-xs font-black uppercase tracking-[0.22em] text-saffron">
