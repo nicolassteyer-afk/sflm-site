@@ -2,28 +2,13 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 
-const icons = [
-  {
-    alt: "Biere Flam's",
-    src: "https://raw.githubusercontent.com/nicolassteyer-afk/sflm-site/main/public/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-BIERE-BEIGE.svg",
-  },
-  {
-    alt: "Flamme Flam's",
-    src: "https://raw.githubusercontent.com/nicolassteyer-afk/sflm-site/main/public/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-FLAMME-BEIGE.svg",
-  },
-  {
-    alt: "Fut Flam's",
-    src: "https://raw.githubusercontent.com/nicolassteyer-afk/sflm-site/main/public/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-FUT-BEIGE.svg",
-  },
-  {
-    alt: "Planche Flam's",
-    src: "https://raw.githubusercontent.com/nicolassteyer-afk/sflm-site/main/public/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-PLANCHE-BEIGE.svg",
-  },
-  {
-    alt: "Vin Flam's",
-    src: "https://raw.githubusercontent.com/nicolassteyer-afk/sflm-site/main/public/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-VIN-BEIGE.svg",
-  },
-];
+const iconNames = ["BIERE", "FLAMME", "FUT", "PLANCHE", "VIN"];
+
+const icons = iconNames.map((name) => ({
+  alt: `${name.toLowerCase()} Flam's`,
+  bdx: `https://raw.githubusercontent.com/nicolassteyer-afk/sflm-site/main/public/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-${name}-BDX.svg`,
+  beige: `https://raw.githubusercontent.com/nicolassteyer-afk/sflm-site/main/public/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-${name}-BEIGE.svg`,
+}));
 
 const verticalOffsets = [-220, -110, 0, 110, 220];
 const horizontalOffsets = [-360, -180, 0, 180, 360];
@@ -39,15 +24,29 @@ function FriezeIcon({
   const x = useTransform(scrollY, [0, 280, 940], [0, 0, horizontalOffsets[index]]);
   const y = useTransform(scrollY, [0, 280, 940], [verticalOffsets[index], verticalOffsets[index] + 120, 0]);
   const rotate = useTransform(scrollY, [0, 840], [-8 + index * 4, 0]);
+  const bdxOpacity = useTransform(scrollY, [0, 720, 940], [1, 1, 0]);
+  const beigeOpacity = useTransform(scrollY, [0, 720, 940], [0, 0, 1]);
 
   return (
-    <motion.img
-      alt={icon.alt}
-      className="absolute h-16 w-16 -translate-x-1/2 -translate-y-1/2 object-contain drop-shadow-[0_16px_32px_rgba(0,0,0,.2)] xl:h-20 xl:w-20"
-      draggable={false}
-      src={icon.src}
+    <motion.div
+      className="absolute h-20 w-20 -translate-x-1/2 -translate-y-1/2 xl:h-24 xl:w-24"
       style={{ x, y, rotate }}
-    />
+    >
+      <motion.img
+        alt={icon.alt}
+        className="absolute inset-0 h-full w-full object-contain drop-shadow-[0_16px_32px_rgba(0,0,0,.2)]"
+        draggable={false}
+        src={icon.bdx}
+        style={{ opacity: bdxOpacity }}
+      />
+      <motion.img
+        alt=""
+        className="absolute inset-0 h-full w-full object-contain drop-shadow-[0_16px_32px_rgba(0,0,0,.2)]"
+        draggable={false}
+        src={icon.beige}
+        style={{ opacity: beigeOpacity }}
+      />
+    </motion.div>
   );
 }
 
@@ -60,11 +59,11 @@ export function ScrollIconFrieze() {
   return (
     <motion.div
       aria-hidden="true"
-      className="pointer-events-none absolute left-1/2 top-[50vh] z-30 hidden h-0 w-0 lg:block"
+      className="pointer-events-none absolute left-1/2 top-[48vh] z-[60] hidden h-0 w-0 lg:block"
       style={{ opacity, scale, y }}
     >
       {icons.map((icon, index) => (
-        <FriezeIcon icon={icon} index={index} key={icon.src} />
+        <FriezeIcon icon={icon} index={index} key={icon.bdx} />
       ))}
     </motion.div>
   );
