@@ -10,8 +10,9 @@ const icons = iconNames.map((name) => ({
   beige: `https://raw.githubusercontent.com/nicolassteyer-afk/sflm-site/main/public/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-${name}-BEIGE.svg`,
 }));
 
-const verticalOffsets = [-210, -105, 0, 105, 210];
-const horizontalOffsets = [-320, -160, 0, 160, 320];
+const verticalOffsets = ["-18rem", "-9rem", "0rem", "9rem", "18rem"];
+const midVerticalOffsets = ["-12rem", "-6rem", "0rem", "6rem", "12rem"];
+const horizontalOffsets = ["-34vw", "-17vw", "0vw", "17vw", "34vw"];
 
 function FriezeIcon({
   icon,
@@ -21,15 +22,15 @@ function FriezeIcon({
   index: number;
 }) {
   const { scrollY } = useScroll();
-  const x = useTransform(scrollY, [0, 420, 960], [0, 0, horizontalOffsets[index]]);
-  const y = useTransform(scrollY, [0, 420, 960], [verticalOffsets[index], verticalOffsets[index] + 80, 0]);
-  const rotate = useTransform(scrollY, [0, 960], [-7 + index * 3.5, 0]);
-  const bdxOpacity = useTransform(scrollY, [0, 650, 860], [1, 1, 0]);
-  const beigeOpacity = useTransform(scrollY, [0, 650, 860], [0, 0, 1]);
+  const x = useTransform(scrollY, [0, 520, 1120], ["0vw", "0vw", horizontalOffsets[index]]);
+  const y = useTransform(scrollY, [0, 520, 1120], [verticalOffsets[index], midVerticalOffsets[index], "0rem"]);
+  const rotate = useTransform(scrollY, [0, 1120], [-7 + index * 3.5, 0]);
+  const bdxOpacity = useTransform(scrollY, [0, 780, 1020], [1, 1, 0]);
+  const beigeOpacity = useTransform(scrollY, [0, 780, 1020], [0, 0, 1]);
 
   return (
     <motion.div
-      className="absolute h-20 w-20 -translate-x-1/2 -translate-y-1/2 xl:h-24 xl:w-24"
+      className="absolute h-[clamp(3.2rem,6vw,5.8rem)] w-[clamp(3.2rem,6vw,5.8rem)] -translate-x-1/2 -translate-y-1/2"
       style={{ x, y, rotate }}
     >
       <motion.img
@@ -52,14 +53,14 @@ function FriezeIcon({
 
 export function ScrollIconFrieze() {
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 420, 960], ["46vh", "66vh", "112vh"]);
-  const opacity = useTransform(scrollY, [0, 80, 1250, 1500], [1, 1, 1, 0]);
-  const scale = useTransform(scrollY, [0, 960], [0.9, 1]);
+  const y = useTransform(scrollY, [0, 520, 1120], ["50vh", "78vh", "134vh"]);
+  const opacity = useTransform(scrollY, [0, 80, 1430, 1660], [1, 1, 1, 0]);
+  const scale = useTransform(scrollY, [0, 1120], [0.82, 1]);
 
   return (
     <motion.div
       aria-hidden="true"
-      className="pointer-events-none absolute left-1/2 top-0 z-[60] hidden h-0 w-0 -translate-x-1/2 lg:block"
+      className="pointer-events-none absolute left-1/2 top-0 z-30 hidden h-0 w-0 -translate-x-1/2 md:block"
       style={{ opacity, scale, y }}
     >
       {icons.map((icon, index) => (
