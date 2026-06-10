@@ -85,15 +85,15 @@ export function StrasbourgRitualSectionV2() {
               className="absolute inset-0 bg-repeat"
               style={{
                 backgroundImage: `url("${flamePatternSrc}")`,
-                backgroundSize: "clamp(152px, 15vw, 248px) clamp(152px, 15vw, 248px)",
+                backgroundSize: "clamp(190px, 19vw, 310px) clamp(190px, 19vw, 310px)",
               }}
             />
             <div
               className="absolute inset-0 bg-repeat"
               style={{
                 backgroundImage: `url("${flamePatternSrc}")`,
-                backgroundSize: "clamp(152px, 15vw, 248px) clamp(152px, 15vw, 248px)",
-                transform: "translate(clamp(76px, 7.5vw, 124px), clamp(76px, 7.5vw, 124px))",
+                backgroundSize: "clamp(190px, 19vw, 310px) clamp(190px, 19vw, 310px)",
+                transform: "translate(clamp(95px, 9.5vw, 155px), clamp(95px, 9.5vw, 155px))",
               }}
             />
           </motion.div>
