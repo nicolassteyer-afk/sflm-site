@@ -38,10 +38,10 @@ export function StrasbourgRitualSectionV2() {
   });
   const wallpaperOpacity = useTransform(
     scrollYProgress,
-    [0, 0.48, 0.62, 1],
-    [0, 0, 0.18, 0.36],
+    [0, 0.46, 0.6, 1],
+    [0, 0, 0.14, 0.3],
   );
-  const wallpaperY = useTransform(scrollYProgress, [0, 0.48, 1], [170, 170, -34]);
+  const wallpaperY = useTransform(scrollYProgress, [0, 0.46, 1], ["104%", "104%", "-10%"]);
   const wallpaperScale = useTransform(scrollYProgress, [0.48, 1], [1.1, 1]);
 
   return (
@@ -74,7 +74,7 @@ export function StrasbourgRitualSectionV2() {
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(17,16,13,.1),rgba(17,16,13,.5))]" />
           <motion.div
             aria-hidden="true"
-            className="absolute inset-x-[-12%] bottom-[-18%] top-[18%] z-10"
+            className="absolute inset-x-[-10%] bottom-[-10%] top-0 z-10"
             style={{
               opacity: wallpaperOpacity,
               scale: wallpaperScale,
@@ -85,15 +85,15 @@ export function StrasbourgRitualSectionV2() {
               className="absolute inset-0 bg-repeat"
               style={{
                 backgroundImage: `url("${flamePatternSrc}")`,
-                backgroundSize: "clamp(96px, 10vw, 154px) clamp(96px, 10vw, 154px)",
+                backgroundSize: "clamp(152px, 15vw, 248px) clamp(152px, 15vw, 248px)",
               }}
             />
             <div
               className="absolute inset-0 bg-repeat"
               style={{
                 backgroundImage: `url("${flamePatternSrc}")`,
-                backgroundSize: "clamp(96px, 10vw, 154px) clamp(96px, 10vw, 154px)",
-                transform: "translate(clamp(48px, 5vw, 77px), clamp(48px, 5vw, 77px))",
+                backgroundSize: "clamp(152px, 15vw, 248px) clamp(152px, 15vw, 248px)",
+                transform: "translate(clamp(76px, 7.5vw, 124px), clamp(76px, 7.5vw, 124px))",
               }}
             />
           </motion.div>
