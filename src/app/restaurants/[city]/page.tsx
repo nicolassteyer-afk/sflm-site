@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
+import { StrasbourgHorizontalStory } from "@/components/StrasbourgHorizontalStory";
 import { StrasbourgRitualSectionV2 } from "@/components/StrasbourgRitualSectionV2";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import { WaveText } from "@/components/WaveText";
@@ -85,6 +86,8 @@ export default async function CityPage({
               />
             </div>
           </section>
+
+          <StrasbourgHorizontalStory />
         </>
       ) : null}
 
