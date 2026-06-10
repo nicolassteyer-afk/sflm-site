@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
-import { ScrollIconFriezeV2 } from "@/components/ScrollIconFriezeV2";
 import { StrasbourgRitualSectionV2 } from "@/components/StrasbourgRitualSectionV2";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import { WaveText } from "@/components/WaveText";
@@ -23,8 +22,6 @@ export default async function CityPage({
 
   return (
     <main className="relative min-h-screen bg-bone">
-      {isStrasbourg ? <ScrollIconFriezeV2 /> : null}
-
       <section className="grid min-h-screen bg-bone lg:grid-cols-2">
         <div className="relative min-h-[52vh] overflow-hidden bg-cacao lg:min-h-screen">
           {isStrasbourg ? (
