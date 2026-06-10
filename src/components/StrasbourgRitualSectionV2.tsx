@@ -1,7 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
+
+const flamePatternSrc =
+  "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-FLAMME-BEIGE.svg";
 
 const ritualIcons = [
   {
@@ -27,6 +31,15 @@ const ritualIcons = [
 ];
 
 export function StrasbourgRitualSectionV2() {
+  const imageRef = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: imageRef,
+    offset: ["start 72%", "end 24%"],
+  });
+  const wallpaperOpacity = useTransform(scrollYProgress, [0, 0.38, 1], [0, 0.16, 0.34]);
+  const wallpaperY = useTransform(scrollYProgress, [0, 1], [54, -30]);
+  const wallpaperScale = useTransform(scrollYProgress, [0, 1], [1.08, 1]);
+
   return (
     <section className="relative z-10 min-h-screen overflow-hidden bg-cacao text-bone">
       <motion.div
@@ -38,6 +51,7 @@ export function StrasbourgRitualSectionV2() {
       >
         <motion.div
           className="relative min-h-[58vh] overflow-hidden lg:min-h-screen"
+          ref={imageRef}
           initial={{ opacity: 0.82 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
@@ -54,6 +68,31 @@ export function StrasbourgRitualSectionV2() {
             tone="from-wine via-cacao to-ember"
           />
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(17,16,13,.1),rgba(17,16,13,.5))]" />
+          <motion.div
+            aria-hidden="true"
+            className="absolute inset-[-12%] z-10"
+            style={{
+              opacity: wallpaperOpacity,
+              scale: wallpaperScale,
+              y: wallpaperY,
+            }}
+          >
+            <div
+              className="absolute inset-0 bg-repeat"
+              style={{
+                backgroundImage: `url("${flamePatternSrc}")`,
+                backgroundSize: "clamp(96px, 10vw, 154px) clamp(96px, 10vw, 154px)",
+              }}
+            />
+            <div
+              className="absolute inset-0 bg-repeat"
+              style={{
+                backgroundImage: `url("${flamePatternSrc}")`,
+                backgroundSize: "clamp(96px, 10vw, 154px) clamp(96px, 10vw, 154px)",
+                transform: "translate(clamp(48px, 5vw, 77px), clamp(48px, 5vw, 77px))",
+              }}
+            />
+          </motion.div>
         </motion.div>
         <motion.div
           className="relative flex flex-col justify-center px-5 py-28 md:px-10 lg:px-16 lg:pt-40"
