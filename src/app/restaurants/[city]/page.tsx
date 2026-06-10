@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
-import { ScrollIconFrieze } from "@/components/ScrollIconFrieze";
-import { StrasbourgRitualSection } from "@/components/StrasbourgRitualSection";
+import { ScrollIconFriezeV2 } from "@/components/ScrollIconFriezeV2";
+import { StrasbourgRitualSectionV2 } from "@/components/StrasbourgRitualSectionV2";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import { WaveText } from "@/components/WaveText";
 import { allCities, getCity } from "@/data/restaurants";
@@ -23,7 +23,7 @@ export default async function CityPage({
 
   return (
     <main className="relative min-h-screen bg-bone">
-      {isStrasbourg ? <ScrollIconFrieze /> : null}
+      {isStrasbourg ? <ScrollIconFriezeV2 /> : null}
 
       <section className="grid min-h-screen bg-bone lg:grid-cols-2">
         <div className="relative min-h-[52vh] overflow-hidden bg-cacao lg:min-h-screen">
@@ -63,7 +63,7 @@ export default async function CityPage({
 
       {isStrasbourg ? (
         <>
-          <StrasbourgRitualSection />
+          <StrasbourgRitualSectionV2 />
 
           <section className="relative overflow-hidden bg-bone px-5 py-24 text-cacao md:px-10 lg:px-16">
             <div className="pointer-events-none absolute -right-24 top-10 h-[420px] w-[420px] opacity-[0.07]">
