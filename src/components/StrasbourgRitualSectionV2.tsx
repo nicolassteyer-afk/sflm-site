@@ -50,7 +50,7 @@ export function StrasbourgRitualSectionV2() {
             imageClassName="scale-105 opacity-95"
             label="table Flam's"
             showLabel={false}
-            src="/assets/flams/table-partage.png"
+            src="/assets/flams/shootingf%C3%A9vrier2026-4.webp"
             tone="from-wine via-cacao to-ember"
           />
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(17,16,13,.1),rgba(17,16,13,.5))]" />
