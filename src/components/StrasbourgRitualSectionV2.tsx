@@ -34,11 +34,15 @@ export function StrasbourgRitualSectionV2() {
   const imageRef = useRef<HTMLDivElement | null>(null);
   const { scrollYProgress } = useScroll({
     target: imageRef,
-    offset: ["start 72%", "end 24%"],
+    offset: ["start 80%", "end 18%"],
   });
-  const wallpaperOpacity = useTransform(scrollYProgress, [0, 0.38, 1], [0, 0.16, 0.34]);
-  const wallpaperY = useTransform(scrollYProgress, [0, 1], [54, -30]);
-  const wallpaperScale = useTransform(scrollYProgress, [0, 1], [1.08, 1]);
+  const wallpaperOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.48, 0.62, 1],
+    [0, 0, 0.18, 0.36],
+  );
+  const wallpaperY = useTransform(scrollYProgress, [0, 0.48, 1], [170, 170, -34]);
+  const wallpaperScale = useTransform(scrollYProgress, [0.48, 1], [1.1, 1]);
 
   return (
     <section className="relative z-10 min-h-screen overflow-hidden bg-cacao text-bone">
@@ -70,7 +74,7 @@ export function StrasbourgRitualSectionV2() {
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(17,16,13,.1),rgba(17,16,13,.5))]" />
           <motion.div
             aria-hidden="true"
-            className="absolute inset-[-12%] z-10"
+            className="absolute inset-x-[-12%] bottom-[-18%] top-[18%] z-10"
             style={{
               opacity: wallpaperOpacity,
               scale: wallpaperScale,
