@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { VariableProximity } from "@/components/VariableProximity";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 
 const panels = [
@@ -73,19 +72,15 @@ export function StrasbourgHorizontalStory() {
                 >
                   0{index + 1} / {panel.eyebrow}
                 </motion.p>
-                <motion.div
-                  className="max-w-4xl"
+                <motion.h2
+                  className="font-display max-w-4xl text-5xl uppercase leading-[0.92] md:text-6xl xl:text-7xl"
                   initial={{ y: 42, opacity: 0 }}
                   whileInView={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
                   viewport={{ amount: 0.45, once: false }}
                 >
-                  <VariableProximity
-                    className="text-5xl uppercase leading-[0.92] md:text-6xl xl:text-7xl"
-                    label={panel.title}
-                    radius={190}
-                  />
-                </motion.div>
+                  {panel.title}
+                </motion.h2>
                 <motion.p
                   className="mt-8 max-w-xl text-lg leading-8 text-cacao/70"
                   initial={{ y: 26, opacity: 0 }}
