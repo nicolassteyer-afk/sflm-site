@@ -81,9 +81,9 @@ export function StrasbourgHorizontalStory() {
                   viewport={{ amount: 0.45, once: false }}
                 >
                   <VariableProximity
-                    className="text-5xl font-black uppercase leading-[0.92] md:text-6xl xl:text-7xl"
+                    className="text-5xl uppercase leading-[0.92] md:text-6xl xl:text-7xl"
                     label={panel.title}
-                    radius={170}
+                    radius={190}
                   />
                 </motion.div>
                 <motion.p
