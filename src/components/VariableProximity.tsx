@@ -29,8 +29,8 @@ export function VariableProximity({
   className = "",
   radius = 150,
   falloff = "gaussian",
-  fromFontVariationSettings = "'wght' 650, 'opsz' 24",
-  toFontVariationSettings = "'wght' 1000, 'opsz' 100",
+  fromFontVariationSettings = "'wght' 220, 'wdth' 86, 'GRAD' -150, 'opsz' 14",
+  toFontVariationSettings = "'wght' 1000, 'wdth' 112, 'GRAD' 150, 'opsz' 100",
 }: VariableProximityProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const letterRefs = useRef<Array<HTMLSpanElement | null>>([]);
@@ -69,6 +69,11 @@ export function VariableProximity({
           : falloff === "exponential"
             ? normalized ** 2
             : normalized;
+      const weightAxis = settings.find(({ axis }) => axis === "wght");
+      const weight = weightAxis
+        ? weightAxis.fromValue +
+          (weightAxis.toValue - weightAxis.fromValue) * strength
+        : 400 + strength * 600;
 
       letter.style.fontVariationSettings = settings
         .map(
@@ -76,7 +81,9 @@ export function VariableProximity({
             `'${axis}' ${fromValue + (toValue - fromValue) * strength}`,
         )
         .join(", ");
-      letter.style.transform = `scale(${1 + strength * 0.16}, ${1 + strength * 0.08})`;
+      letter.style.fontWeight = `${Math.round(weight)}`;
+      letter.style.webkitTextStroke = `${strength * 0.65}px currentColor`;
+      letter.style.transform = `scale(${1 + strength * 0.06}, ${1 + strength * 0.025})`;
       letter.style.color = `color-mix(in srgb, currentColor ${100 - strength * 45}%, #e79a19 ${strength * 45}%)`;
     });
 
@@ -109,7 +116,10 @@ export function VariableProximity({
   let letterIndex = 0;
 
   return (
-    <div className={styles.container} ref={containerRef}>
+    <div
+      className={styles.container}
+      ref={containerRef}
+    >
       <span aria-hidden="true" className={`${styles.text} ${className}`}>
         {label.split(" ").map((word, wordIndex, words) => (
           <span className={styles.word} key={`${word}-${wordIndex}`}>
@@ -122,7 +132,10 @@ export function VariableProximity({
                   ref={(element) => {
                     letterRefs.current[currentIndex] = element;
                   }}
-                  style={{ fontVariationSettings: fromFontVariationSettings }}
+                  style={{
+                    fontVariationSettings: fromFontVariationSettings,
+                    fontWeight: 220,
+                  }}
                 >
                   {letter}
                 </motion.span>
