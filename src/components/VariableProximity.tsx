@@ -76,39 +76,40 @@ export function VariableProximity({
             `'${axis}' ${fromValue + (toValue - fromValue) * strength}`,
         )
         .join(", ");
+      letter.style.transform = `scale(${1 + strength * 0.16}, ${1 + strength * 0.08})`;
+      letter.style.color = `color-mix(in srgb, currentColor ${100 - strength * 45}%, #e79a19 ${strength * 45}%)`;
     });
 
     frameRef.current = requestAnimationFrame(updateLetters);
   }, [falloff, radius, settings]);
 
   useEffect(() => {
+    const updatePointer = (clientX: number, clientY: number) => {
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      pointerRef.current = { x: clientX - rect.left, y: clientY - rect.top };
+    };
+    const handleMouseMove = (event: MouseEvent) =>
+      updatePointer(event.clientX, event.clientY);
+    const handleTouchMove = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (touch) updatePointer(touch.clientX, touch.clientY);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
     frameRef.current = requestAnimationFrame(updateLetters);
     return () => {
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("touchmove", handleTouchMove);
     };
   }, [updateLetters]);
-
-  const updatePointer = (clientX: number, clientY: number) => {
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    pointerRef.current = { x: clientX - rect.left, y: clientY - rect.top };
-  };
 
   let letterIndex = 0;
 
   return (
-    <div
-      className={styles.container}
-      onMouseLeave={() => {
-        pointerRef.current = { x: -1000, y: -1000 };
-      }}
-      onMouseMove={(event) => updatePointer(event.clientX, event.clientY)}
-      onTouchMove={(event) => {
-        const touch = event.touches[0];
-        if (touch) updatePointer(touch.clientX, touch.clientY);
-      }}
-      ref={containerRef}
-    >
+    <div className={styles.container} ref={containerRef}>
       <span aria-hidden="true" className={`${styles.text} ${className}`}>
         {label.split(" ").map((word, wordIndex, words) => (
           <span className={styles.word} key={`${word}-${wordIndex}`}>
