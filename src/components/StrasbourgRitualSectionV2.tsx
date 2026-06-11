@@ -6,6 +6,7 @@ import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 
 const flamePatternSrc =
   "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-FLAMME-BEIGE.svg";
+const wallpaperFlames = Array.from({ length: 30 }, (_, index) => index);
 
 const ritualIcons = [
   {
@@ -81,21 +82,19 @@ export function StrasbourgRitualSectionV2() {
               y: wallpaperY,
             }}
           >
-            <div
-              className="absolute inset-0 bg-repeat"
-              style={{
-                backgroundImage: `url("${flamePatternSrc}")`,
-                backgroundSize: "clamp(190px, 19vw, 310px) clamp(190px, 19vw, 310px)",
-              }}
-            />
-            <div
-              className="absolute inset-0 bg-repeat"
-              style={{
-                backgroundImage: `url("${flamePatternSrc}")`,
-                backgroundSize: "clamp(190px, 19vw, 310px) clamp(190px, 19vw, 310px)",
-                transform: "translate(clamp(95px, 9.5vw, 155px), clamp(95px, 9.5vw, 155px))",
-              }}
-            />
+            <div className="grid min-h-[130%] grid-cols-3 place-items-center gap-x-16 gap-y-20 px-8 py-12 sm:grid-cols-4 sm:gap-x-20 sm:gap-y-24 lg:grid-cols-3 xl:grid-cols-4">
+              {wallpaperFlames.map((flame) => (
+                <img
+                  alt=""
+                  className={`h-auto w-14 object-contain sm:w-16 lg:w-[4.5rem] ${
+                    Math.floor(flame / 3) % 2 === 1 ? "translate-x-8" : ""
+                  }`}
+                  draggable={false}
+                  key={flame}
+                  src={flamePatternSrc}
+                />
+              ))}
+            </div>
           </motion.div>
         </motion.div>
         <motion.div
