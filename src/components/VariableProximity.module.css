@@ -17,10 +17,13 @@
 .letter {
   display: inline-block;
   transform-origin: center bottom;
+  paint-order: stroke fill;
   transition:
     transform 80ms linear,
-    color 120ms linear;
-  will-change: transform, font-variation-settings;
+    color 120ms linear,
+    font-weight 80ms linear,
+    -webkit-text-stroke-width 80ms linear;
+  will-change: transform, font-variation-settings, font-weight;
 }
 
 .srOnly {
