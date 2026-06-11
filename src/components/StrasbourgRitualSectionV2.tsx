@@ -82,12 +82,12 @@ export function StrasbourgRitualSectionV2() {
               y: wallpaperY,
             }}
           >
-            <div className="grid min-h-[130%] grid-cols-3 place-items-center gap-2 px-3 py-4 sm:grid-cols-4 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid min-h-[130%] content-start justify-center gap-[10px] px-3 py-4 [grid-template-columns:repeat(auto-fill,3.5rem)] sm:[grid-template-columns:repeat(auto-fill,4rem)] lg:[grid-template-columns:repeat(auto-fill,4.5rem)]">
               {wallpaperFlames.map((flame) => (
                 <img
                   alt=""
                   className={`h-auto w-14 object-contain sm:w-16 lg:w-[4.5rem] ${
-                    Math.floor(flame / 3) % 2 === 1 ? "translate-x-2" : ""
+                    Math.floor(flame / 3) % 2 === 1 ? "translate-x-[5px]" : ""
                   }`}
                   draggable={false}
                   key={flame}
