@@ -16,6 +16,11 @@
 
 .letter {
   display: inline-block;
+  transform-origin: center bottom;
+  transition:
+    transform 80ms linear,
+    color 120ms linear;
+  will-change: transform, font-variation-settings;
 }
 
 .srOnly {
