@@ -4,6 +4,7 @@ import { AnimatedTitle } from "@/components/AnimatedTitle";
 import { StrasbourgHorizontalStory } from "@/components/StrasbourgHorizontalStory";
 import { StrasbourgRitualSectionV2 } from "@/components/StrasbourgRitualSectionV2";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
+import { WaveText } from "@/components/WaveText";
 import { allCities, getCity } from "@/data/restaurants";
 
 export function generateStaticParams() {
@@ -62,6 +63,23 @@ export default async function CityPage({
         <>
           <StrasbourgRitualSectionV2 />
           <StrasbourgHorizontalStory />
+
+          <section className="relative overflow-hidden bg-bone px-5 py-24 text-cacao md:px-10 lg:px-16">
+            <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
+              <div>
+                <p className="mb-5 text-xs font-black uppercase tracking-[0.22em] text-ember">
+                  Strasbourg sauce Flam&apos;s
+                </p>
+                <h2 className="font-display text-7xl uppercase leading-[0.86] md:text-9xl">
+                  Ici, l&apos;Alsace claque a table.
+                </h2>
+              </div>
+              <WaveText
+                className="max-w-3xl text-3xl font-black leading-[1.08] md:text-5xl lg:text-6xl"
+                text="On arrive pour une flammekueche croustillante, on reste pour le bruit des copains, les verres qui circulent et cette chaleur simple qui transforme un diner en vraie soiree."
+              />
+            </div>
+          </section>
         </>
       ) : null}
 
