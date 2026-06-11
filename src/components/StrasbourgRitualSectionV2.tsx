@@ -6,7 +6,7 @@ import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 
 const flamePatternSrc =
   "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-FLAMME-BEIGE.svg";
-const wallpaperFlames = Array.from({ length: 30 }, (_, index) => index);
+const wallpaperFlames = Array.from({ length: 180 }, (_, index) => index);
 
 const ritualIcons = [
   {
