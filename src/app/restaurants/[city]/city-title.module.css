@@ -13,5 +13,11 @@
   font-kerning: normal;
   font-feature-settings: "kern" 1;
   letter-spacing: 0.065em;
-  line-height: 0.94;
+  line-height: 1.08;
+  padding-block: 0.12em;
+}
+
+.title > span {
+  overflow: visible;
+  padding-block: 0.08em;
 }
