@@ -54,7 +54,15 @@ export default async function CityPage({
             Comment ca flambe ?
           </p>
           <TextPressure
-            className={`${styles.title} w-full max-w-[min(90vw,54rem)] overflow-visible px-4 text-[clamp(3rem,5.25vw,6.5rem)] uppercase text-cacao`}
+            className={`${styles.title} h-[clamp(8rem,15vw,14rem)] w-full max-w-[min(90vw,54rem)] overflow-visible px-4`}
+            flex={false}
+            alpha={false}
+            stroke={false}
+            width
+            weight
+            italic={false}
+            textColor="#2a1511"
+            minFontSize={36}
             text={city.name}
           />
         </div>
