@@ -23,12 +23,5 @@
 }
 
 .title {
-  font-family: "Thunder City", Impact, Haettenschweiler, "Arial Narrow Bold",
-    sans-serif;
-  font-weight: 600;
-  font-kerning: normal;
-  font-feature-settings: "kern" 1;
-  letter-spacing: 0.035em;
-  line-height: 1.12;
-  padding-block: 0.16em;
+  contain: layout;
 }
