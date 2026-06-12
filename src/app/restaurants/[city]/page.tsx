@@ -6,6 +6,7 @@ import { StrasbourgRitualSectionV2 } from "@/components/StrasbourgRitualSectionV
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import { WaveText } from "@/components/WaveText";
 import { allCities, getCity } from "@/data/restaurants";
+import styles from "./city-title.module.css";
 
 export function generateStaticParams() {
   return allCities.map((city) => ({ city: city.slug }));
@@ -53,7 +54,7 @@ export default async function CityPage({
             Comment ca flambe ?
           </p>
           <AnimatedTitle
-            className="max-w-full whitespace-nowrap px-[0.04em] text-[clamp(3.5rem,6vw,7.25rem)] font-bold tracking-[0.025em] text-cacao"
+            className={`${styles.title} max-w-full whitespace-nowrap px-[0.08em] text-[clamp(3.25rem,5.6vw,6.75rem)] text-cacao`}
             text={city.name}
           />
         </div>
