@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
+import { HorizontalDragon } from "@/components/HorizontalDragon";
 
 const panels = [
   {
@@ -94,6 +95,7 @@ export function StrasbourgHorizontalStory() {
             </article>
           ))}
         </motion.div>
+        <HorizontalDragon />
       </div>
     </section>
   );
