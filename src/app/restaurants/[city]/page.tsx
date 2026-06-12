@@ -64,18 +64,44 @@ export default async function CityPage({
       {isStrasbourg ? (
         <>
           <section className="flex min-h-screen items-center justify-center overflow-hidden bg-wine px-5 py-24 text-bone md:px-10">
-            <TextPressure
-              className="h-[clamp(12rem,34vw,28rem)] w-full max-w-[min(94vw,92rem)] overflow-visible"
-              flex={false}
-              alpha={false}
-              stroke={false}
-              width
-              weight
-              italic={false}
-              textColor="#fff7df"
-              minFontSize={34}
-              text="A TABLE"
-            />
+            <div className="flex w-full max-w-[96rem] flex-col items-center gap-0">
+              <TextPressure
+                className="h-[clamp(8rem,18vw,16rem)] w-full overflow-visible"
+                flex={false}
+                alpha={false}
+                stroke={false}
+                width
+                weight
+                italic={false}
+                textColor="#fff7df"
+                minFontSize={28}
+                text="ON VIENT POUR"
+              />
+              <TextPressure
+                className="h-[clamp(8rem,18vw,16rem)] w-full overflow-visible"
+                flex={false}
+                alpha={false}
+                stroke={false}
+                width
+                weight
+                italic={false}
+                textColor="#fff7df"
+                minFontSize={28}
+                text="LA FLAMME"
+              />
+              <TextPressure
+                className="h-[clamp(8rem,18vw,16rem)] w-full overflow-visible"
+                flex={false}
+                alpha={false}
+                stroke={false}
+                width
+                weight
+                italic={false}
+                textColor="#f3b12a"
+                minFontSize={28}
+                text="ON RESTE A TABLE"
+              />
+            </div>
           </section>
           <StrasbourgRitualSectionV2 />
           <StrasbourgHorizontalStory />
