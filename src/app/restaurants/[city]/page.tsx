@@ -66,7 +66,7 @@ export default async function CityPage({
           <section className="flex min-h-screen items-center justify-center overflow-hidden bg-wine px-5 py-24 text-bone md:px-10">
             <div className="flex w-full max-w-[96rem] flex-col items-center gap-0">
               <TextPressure
-                className="h-[clamp(8rem,18vw,16rem)] w-full overflow-visible"
+                className="h-[clamp(5.5rem,11vw,10rem)] w-full overflow-visible"
                 flex={false}
                 alpha={false}
                 stroke={false}
@@ -74,11 +74,11 @@ export default async function CityPage({
                 weight
                 italic={false}
                 textColor="#fff7df"
-                minFontSize={28}
-                text="ON VIENT POUR"
+                minFontSize={24}
+                text="DU BRUIT"
               />
               <TextPressure
-                className="h-[clamp(8rem,18vw,16rem)] w-full overflow-visible"
+                className="-mt-[clamp(1rem,2vw,2rem)] h-[clamp(5.5rem,11vw,10rem)] w-full overflow-visible"
                 flex={false}
                 alpha={false}
                 stroke={false}
@@ -86,11 +86,11 @@ export default async function CityPage({
                 weight
                 italic={false}
                 textColor="#fff7df"
-                minFontSize={28}
-                text="LA FLAMME"
+                minFontSize={24}
+                text="DU DEBORDEMENT"
               />
               <TextPressure
-                className="h-[clamp(8rem,18vw,16rem)] w-full overflow-visible"
+                className="-mt-[clamp(1rem,2vw,2rem)] h-[clamp(5.5rem,11vw,10rem)] w-full overflow-visible"
                 flex={false}
                 alpha={false}
                 stroke={false}
@@ -98,8 +98,8 @@ export default async function CityPage({
                 weight
                 italic={false}
                 textColor="#f3b12a"
-                minFontSize={28}
-                text="ON RESTE A TABLE"
+                minFontSize={24}
+                text="DES RIRES A TABLE"
               />
             </div>
           </section>
