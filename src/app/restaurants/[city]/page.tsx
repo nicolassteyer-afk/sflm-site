@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { AnimatedTitle } from "@/components/AnimatedTitle";
 import { StrasbourgHorizontalStory } from "@/components/StrasbourgHorizontalStory";
 import { StrasbourgRitualSectionV2 } from "@/components/StrasbourgRitualSectionV2";
+import { TextPressure } from "@/components/TextPressure";
 import { VisualPlaceholder } from "@/components/VisualPlaceholder";
 import { WaveText } from "@/components/WaveText";
 import { allCities, getCity } from "@/data/restaurants";
@@ -53,8 +53,8 @@ export default async function CityPage({
           <p className="mb-10 text-xs font-black uppercase tracking-[0.18em] text-cacao">
             Comment ca flambe ?
           </p>
-          <AnimatedTitle
-            className={`${styles.title} max-w-full whitespace-nowrap px-[0.08em] text-[clamp(3.25rem,5.6vw,6.75rem)] text-cacao`}
+          <TextPressure
+            className={`${styles.title} w-full max-w-[min(90vw,54rem)] overflow-visible px-4 text-[clamp(3rem,5.25vw,6.5rem)] uppercase text-cacao`}
             text={city.name}
           />
         </div>
