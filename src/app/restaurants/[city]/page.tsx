@@ -53,23 +53,30 @@ export default async function CityPage({
           <p className="mb-10 text-xs font-black uppercase tracking-[0.18em] text-cacao">
             Comment ca flambe ?
           </p>
-          <TextPressure
-            className={`${styles.title} h-[clamp(8rem,15vw,14rem)] w-full max-w-[min(90vw,54rem)] overflow-visible px-4`}
-            flex={false}
-            alpha={false}
-            stroke={false}
-            width
-            weight
-            italic={false}
-            textColor="#2a1511"
-            minFontSize={36}
-            text={city.name}
-          />
+          <h1
+            className={`${styles.title} max-w-full px-4 font-display text-[clamp(4.75rem,11vw,10rem)] uppercase leading-[0.92] text-cacao`}
+          >
+            {city.name}
+          </h1>
         </div>
       </section>
 
       {isStrasbourg ? (
         <>
+          <section className="flex min-h-screen items-center justify-center overflow-hidden bg-wine px-5 py-24 text-bone md:px-10">
+            <TextPressure
+              className="h-[clamp(12rem,34vw,28rem)] w-full max-w-[min(94vw,92rem)] overflow-visible"
+              flex={false}
+              alpha={false}
+              stroke={false}
+              width
+              weight
+              italic={false}
+              textColor="#fff7df"
+              minFontSize={34}
+              text="A TABLE"
+            />
+          </section>
           <StrasbourgRitualSectionV2 />
           <StrasbourgHorizontalStory />
 
