@@ -1,0 +1,17 @@
+@font-face {
+  font-family: "Thunder City";
+  src: url("/fonts/thunder/Thunder-SemiBoldLC.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.title {
+  font-family: "Thunder City", Impact, Haettenschweiler, "Arial Narrow Bold",
+    sans-serif;
+  font-weight: 600;
+  font-kerning: normal;
+  font-feature-settings: "kern" 1;
+  letter-spacing: 0.065em;
+  line-height: 0.94;
+}
