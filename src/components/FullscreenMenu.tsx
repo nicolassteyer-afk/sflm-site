@@ -28,7 +28,7 @@ export function FullscreenMenu({
   }, []);
   const [hoveredCity, setHoveredCity] = useState<City | null>(null);
   const activeRestaurants =
-    hoveredCity && hoveredCity.restaurants.length > 1
+    hoveredCity && cityHasSubmenu(hoveredCity)
       ? hoveredCity.restaurants
       : [];
 
@@ -98,7 +98,7 @@ export function FullscreenMenu({
                   </p>
                   <div className="grid gap-1">
                     {country.cities.map((city, cityIndex) => {
-                      const hasMany = city.restaurants.length > 1;
+                      const hasMany = cityHasSubmenu(city);
                       const isHovered = hoveredCity?.slug === city.slug;
 
                       return (
@@ -210,4 +210,8 @@ export function FullscreenMenu({
 
 function restaurantLabel(name: string, city: string) {
   return name.replace(/^Flam's\s*/i, "").replace(new RegExp(`^${city}\\s*`, "i"), "");
+}
+
+function cityHasSubmenu(city: City) {
+  return city.restaurants.length > 1 || city.slug === "bordeaux";
 }
