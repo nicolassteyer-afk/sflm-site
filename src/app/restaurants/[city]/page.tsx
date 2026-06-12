@@ -53,7 +53,7 @@ export default async function CityPage({
             Comment ca flambe ?
           </p>
           <AnimatedTitle
-            className="max-w-full whitespace-nowrap text-[clamp(4rem,7.2vw,8.5rem)] text-cacao"
+            className="max-w-full whitespace-nowrap px-[0.04em] text-[clamp(3.5rem,6vw,7.25rem)] font-bold tracking-[0.025em] text-cacao"
             text={city.name}
           />
         </div>
