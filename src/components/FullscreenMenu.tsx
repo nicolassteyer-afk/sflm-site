@@ -114,17 +114,31 @@ export function FullscreenMenu({
                             if (!hasMany) setHoveredCity(null);
                           }}
                         >
-                          <Link
-                            className={`block origin-left font-display text-[clamp(2.25rem,3.7vw,4.15rem)] uppercase leading-[0.8] transition duration-300 ${
-                              isHovered
-                                ? "translate-x-2 -rotate-1 text-saffron"
-                                : "text-bone hover:text-saffron"
-                            }`}
-                            href={`/restaurants/${city.slug}`}
-                            onClick={onClose}
-                          >
-                            {city.name}
-                          </Link>
+                          {hasMany ? (
+                            <button
+                              className={`block origin-left text-left font-display text-[clamp(2.25rem,3.7vw,4.15rem)] uppercase leading-[0.8] transition duration-300 ${
+                                isHovered
+                                  ? "translate-x-2 -rotate-1 text-saffron"
+                                  : "text-bone hover:text-saffron"
+                              }`}
+                              onClick={() => setHoveredCity(city)}
+                              type="button"
+                            >
+                              {city.name}
+                            </button>
+                          ) : (
+                            <Link
+                              className={`block origin-left font-display text-[clamp(2.25rem,3.7vw,4.15rem)] uppercase leading-[0.8] transition duration-300 ${
+                                isHovered
+                                  ? "translate-x-2 -rotate-1 text-saffron"
+                                  : "text-bone hover:text-saffron"
+                              }`}
+                              href={`/restaurants/${city.slug}`}
+                              onClick={onClose}
+                            >
+                              {city.name}
+                            </Link>
+                          )}
                           {hasMany ? (
                             <div className="mt-2 grid gap-1 border-l border-bone/20 pl-4 lg:hidden">
                               {city.restaurants.map((restaurant) => (
