@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-} from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 
@@ -20,15 +16,41 @@ const CITY_NAMES: Record<string, string> = {
   nantes: "Nantes",
 };
 
-function getRestaurantCity(pathname: string) {
-  const match = pathname.match(
-    /^\/(?:en\/)?restaurants\/([^/]+)\/([^/]+)\/?$/,
-  );
+const RESTAURANT_NAMES: Record<string, string> = {
+  montparnasse: "Montparnasse",
+  "saint-lazare": "Saint-Lazare",
+  chatelet: "Châtelet",
+  begles: "Bègles",
+  presquile: "Presqu'île",
+  "vieux-lille": "Vieux Lille",
+  "place-austerlitz": "Place d'Austerlitz",
+  "rue-des-freres": "Rue des Frères",
+  "thonon-les-bains": "Thonon-les-Bains",
+  arras: "Arras",
+  selestat: "Sélestat",
+  nantes: "Nantes",
+};
+
+function formatSlug(slug: string) {
+  return slug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+function getRestaurantRoute(pathname: string) {
+  const match = pathname.match(/^\/(?:en\/)?restaurants\/([^/]+)\/([^/]+)\/?$/);
 
   if (!match) return null;
 
-  const slug = decodeURIComponent(match[1]).toLowerCase();
-  return CITY_NAMES[slug] ?? slug.replaceAll("-", " ");
+  const citySlug = decodeURIComponent(match[1]).toLowerCase();
+  const restaurantSlug = decodeURIComponent(match[2]).toLowerCase();
+
+  return {
+    cityName: CITY_NAMES[citySlug] ?? formatSlug(citySlug),
+    restaurantName:
+      RESTAURANT_NAMES[restaurantSlug] ?? formatSlug(restaurantSlug),
+  };
 }
 
 export function PageTransition({ children }: { children: ReactNode }) {
@@ -50,12 +72,14 @@ function RouteTransition({
   children: ReactNode;
   pathname: string;
 }) {
-  const cityName = getRestaurantCity(pathname);
+  const restaurantRoute = getRestaurantRoute(pathname);
+  const cityName = restaurantRoute?.cityName ?? null;
+  const restaurantName = restaurantRoute?.restaurantName ?? null;
   const reduceMotion = useReducedMotion();
-  const [showLoader, setShowLoader] = useState(Boolean(cityName));
+  const [showLoader, setShowLoader] = useState(Boolean(restaurantRoute));
 
   useEffect(() => {
-    if (!cityName) return;
+    if (!cityName || !restaurantName) return;
 
     const timer = window.setTimeout(
       () => setShowLoader(false),
@@ -63,7 +87,7 @@ function RouteTransition({
     );
 
     return () => window.clearTimeout(timer);
-  }, [cityName, reduceMotion]);
+  }, [cityName, restaurantName, reduceMotion]);
 
   useEffect(() => {
     if (!showLoader) return;
@@ -84,8 +108,12 @@ function RouteTransition({
       transition={{ duration: reduceMotion ? 0.1 : 0.32 }}
     >
       <AnimatePresence>
-        {showLoader && cityName ? (
-          <RestaurantLoader cityName={cityName} reduceMotion={reduceMotion} />
+        {showLoader && cityName && restaurantName ? (
+          <RestaurantLoader
+            cityName={cityName}
+            reduceMotion={reduceMotion}
+            restaurantName={restaurantName}
+          />
         ) : null}
       </AnimatePresence>
 
@@ -108,16 +136,20 @@ function RouteTransition({
 
 function RestaurantLoader({
   cityName,
+  restaurantName,
   reduceMotion,
 }: {
   cityName: string;
+  restaurantName: string;
   reduceMotion: boolean | null;
 }) {
   const letters = Array.from(cityName.toUpperCase());
 
   return (
     <motion.div
+      aria-label={`Chargement de ${cityName}, ${restaurantName}`}
       className="fixed inset-0 z-[200] flex min-h-dvh items-center justify-center overflow-hidden bg-wine px-5 text-bone"
+      role="status"
       initial={{ y: 0 }}
       animate={{ y: 0 }}
       exit={reduceMotion ? { opacity: 0 } : { y: "-100%" }}
@@ -125,8 +157,6 @@ function RestaurantLoader({
         duration: reduceMotion ? 0.15 : 0.75,
         ease: [0.76, 0, 0.24, 1],
       }}
-      aria-label={`Chargement de ${cityName}`}
-      role="status"
     >
       <motion.div
         className="absolute inset-x-0 top-0 h-1 bg-saffron"
@@ -189,6 +219,19 @@ function RestaurantLoader({
             </motion.span>
           ))}
         </motion.div>
+
+        <motion.p
+          className="mt-6 text-[clamp(0.95rem,1.5vw,1.3rem)] font-sans uppercase tracking-[0.24em] text-bone/80"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: reduceMotion ? 0 : 0.58,
+            duration: reduceMotion ? 0.1 : 0.45,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+        >
+          {restaurantName}
+        </motion.p>
       </div>
     </motion.div>
   );
