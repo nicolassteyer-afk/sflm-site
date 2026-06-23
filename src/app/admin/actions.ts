@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { clearAdminSession, loginAdmin, requireAdmin } from "@/lib/admin-auth";
 import { getPrisma } from "@/lib/prisma";
 import { slugify } from "@/lib/slug";
+import { allRestaurants } from "@/data/restaurants";
 
 function text(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -309,6 +310,58 @@ export async function saveRestaurantAction(formData: FormData) {
 
   revalidatePath("/restaurants");
   redirect(`/admin/restaurants/${restaurant.id}`);
+}
+
+export async function importStaticRestaurantsAction() {
+  await requireAdmin();
+  const prisma = getPrisma();
+
+  for (const [index, restaurant] of allRestaurants.entries()) {
+    const savedRestaurant = await prisma.restaurant.upsert({
+      where: { slug: restaurant.slug },
+      update: {
+        name: restaurant.name,
+        city: restaurant.city,
+        country: restaurant.country,
+        address: restaurant.address,
+        mainImage: restaurant.mediaSrc,
+        shortDescription: restaurant.mood,
+        displayOrder: index + 1,
+        isActive: true,
+      },
+      create: {
+        name: restaurant.name,
+        city: restaurant.city,
+        slug: restaurant.slug,
+        address: restaurant.address,
+        country: restaurant.country,
+        mainImage: restaurant.mediaSrc,
+        shortDescription: restaurant.mood,
+        longDescription:
+          "Une adresse Flam's faite pour les grandes tablees, les recettes a partager et les soirees qui s'installent.",
+        services: ["sur place", "groupes", "reservation"],
+        displayOrder: index + 1,
+        isActive: true,
+      },
+    });
+
+    const existingHours = await prisma.restaurantHours.count({ where: { restaurantId: savedRestaurant.id } });
+    if (existingHours === 0) {
+      await prisma.restaurantHours.createMany({
+        data: ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"].map((day, dayIndex) => ({
+          restaurantId: savedRestaurant.id,
+          day,
+          opensAt: restaurant.hours.split(", ")[1]?.split(" - ")[0] ?? "12:00",
+          closesAt: restaurant.hours.split(" - ")[1] ?? "23:00",
+          displayOrder: dayIndex,
+        })),
+      });
+    }
+  }
+
+  revalidatePath("/restaurants");
+  revalidatePath("/admin/restaurants");
+  redirect("/admin/restaurants?imported=1");
 }
 
 export async function saveMenuCategoryAction(formData: FormData) {

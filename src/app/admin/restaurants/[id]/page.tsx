@@ -41,12 +41,36 @@ export default async function EditRestaurantPage({
             </form>
           ) : null}
         </header>
-        <RestaurantForm restaurant={restaurant} />
-        <RestaurantPageBuilder
-          blocks={restaurant.pageBlocks}
-          publicUrl={`/restaurants/${slugify(restaurant.city)}/${restaurant.slug}`}
-          restaurantId={restaurant.id}
-        />
+        <section className="grid gap-4" id="page-builder">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-cyan-300">Page builder</p>
+              <h2 className="mt-2 text-3xl font-black text-slate-100">Edition visuelle de la page restaurant</h2>
+              <p className="mt-2 text-sm font-bold text-slate-400">
+                Glisse les blocs, modifie les contenus, puis ouvre la preview publique.
+              </p>
+            </div>
+            <a
+              className="admin-button admin-button-primary"
+              href={`/restaurants/${slugify(restaurant.city)}/${restaurant.slug}`}
+              target="_blank"
+            >
+              Ouvrir la preview
+            </a>
+          </div>
+          <RestaurantPageBuilder
+            blocks={restaurant.pageBlocks}
+            publicUrl={`/restaurants/${slugify(restaurant.city)}/${restaurant.slug}`}
+            restaurantId={restaurant.id}
+          />
+        </section>
+        <section className="grid gap-4">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-cyan-300">Fiche locator</p>
+            <h2 className="mt-2 text-3xl font-black text-slate-100">Informations du point de vente</h2>
+          </div>
+          <RestaurantForm restaurant={restaurant} />
+        </section>
       </div>
     </AdminFrame>
   );

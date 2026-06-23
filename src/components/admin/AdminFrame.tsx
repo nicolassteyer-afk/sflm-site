@@ -6,13 +6,13 @@ import { requireAdmin } from "@/lib/admin-auth";
 
 const navItems = [
   ["Dashboard", "/admin"],
-  ["Pages", "/admin/pages"],
-  ["Restaurants", "/admin/restaurants"],
+  ["Store locator", "/admin/restaurants"],
+  ["Pages site", "/admin/pages"],
   ["Carte", "/admin/menu"],
-  ["Medias", "/admin/media"],
-  ["Navigation", "/admin/navigation"],
+  ["Assets", "/admin/media"],
+  ["Menu site", "/admin/navigation"],
   ["Footer", "/admin/footer"],
-  ["Parametres", "/admin/settings"],
+  ["Settings", "/admin/settings"],
 ];
 
 export async function AdminFrame({ children }: { children: ReactNode }) {
@@ -22,13 +22,16 @@ export async function AdminFrame({ children }: { children: ReactNode }) {
     <div className="admin-shell">
       <div className="admin-layout">
         <aside className="admin-sidebar">
-          <Link className="mb-8 block h-14 w-36" href="/admin" aria-label="Admin Flam's">
-            <BrandLogo className="h-full w-full" tone="cream" />
+          <Link className="mb-8 flex h-14 w-36 items-center" href="/admin" aria-label="Admin Flam's">
+            <BrandLogo className="h-full w-full max-w-[7rem]" tone="cream" />
+            <span className="ml-3 rounded-md border border-cyan-400/20 bg-cyan-400/10 px-2 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-cyan-200">
+              CMS
+            </span>
           </Link>
           <nav className="grid gap-1">
             {navItems.map(([label, href]) => (
               <Link
-                className="rounded-lg px-3 py-3 text-sm font-black uppercase tracking-[0.12em] text-bone/62 transition hover:bg-bone/10 hover:text-bone"
+                className="rounded-md px-3 py-3 text-sm font-black uppercase tracking-[0.08em] text-slate-400 transition hover:bg-cyan-400/10 hover:text-cyan-100"
                 href={href}
                 key={href}
               >
@@ -36,8 +39,8 @@ export async function AdminFrame({ children }: { children: ReactNode }) {
               </Link>
             ))}
           </nav>
-          <div className="mt-10 border-t border-bone/10 pt-5">
-            <p className="text-xs font-bold text-bone/45">{user.email}</p>
+          <div className="mt-10 border-t border-slate-800 pt-5">
+            <p className="text-xs font-bold text-slate-500">{user.email}</p>
             <form action={logoutAction} className="mt-3">
               <button className="admin-button w-full" type="submit">Logout</button>
             </form>
