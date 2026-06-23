@@ -1,0 +1,119 @@
+.admin-shell {
+  min-height: 100vh;
+  background:
+    linear-gradient(140deg, rgba(239, 60, 25, 0.09), transparent 34%),
+    linear-gradient(180deg, #11100d 0%, #19120f 100%);
+  color: #fff7df;
+}
+
+.admin-layout {
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.admin-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  border-right: 1px solid rgba(255, 247, 223, 0.1);
+  padding: 24px 18px;
+  background: rgba(12, 11, 10, 0.72);
+  backdrop-filter: blur(18px);
+}
+
+.admin-main {
+  padding: 32px;
+}
+
+.admin-card {
+  border: 1px solid rgba(255, 247, 223, 0.1);
+  background: rgba(255, 247, 223, 0.055);
+  border-radius: 8px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+}
+
+.admin-input,
+.admin-textarea,
+.admin-select {
+  width: 100%;
+  border: 1px solid rgba(255, 247, 223, 0.14);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.22);
+  color: #fff7df;
+  padding: 12px 13px;
+  outline: none;
+}
+
+.admin-textarea {
+  min-height: 116px;
+  resize: vertical;
+}
+
+.admin-input:focus,
+.admin-textarea:focus,
+.admin-select:focus {
+  border-color: rgba(243, 177, 42, 0.8);
+}
+
+.admin-label {
+  display: grid;
+  gap: 8px;
+  color: rgba(255, 247, 223, 0.64);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.admin-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 247, 223, 0.14);
+  padding: 11px 16px;
+  color: #fff7df;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: 180ms ease;
+}
+
+.admin-button:hover {
+  border-color: rgba(243, 177, 42, 0.8);
+  color: #f3b12a;
+}
+
+.admin-button-primary {
+  border-color: transparent;
+  background: #fff7df;
+  color: #2a1511;
+}
+
+.admin-badge {
+  border: 1px solid rgba(255, 247, 223, 0.12);
+  border-radius: 999px;
+  padding: 4px 9px;
+  color: rgba(255, 247, 223, 0.72);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 920px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    position: relative;
+    height: auto;
+  }
+
+  .admin-main {
+    padding: 20px;
+  }
+}

@@ -10,13 +10,10 @@ type BrandLogoProps = {
 const cacheVersion = "20260605-uploaded-flams-assets";
 const logoSources = {
   cream: [
-    `/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-BEIGE.png?v=${cacheVersion}`,
-    `/assets/flams/logo-beige.png?v=${cacheVersion}`,
     `/assets/flams/logo-beige.svg?v=${cacheVersion}`,
+    `/assets/flams/logo-beige.png?v=${cacheVersion}`,
   ],
   bordeaux: [
-    `/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-BDX.png?v=${cacheVersion}`,
-    `/assets/flams/2025-09-FLAMS-Valise-Logo_LOGO-ROUGE.png?v=${cacheVersion}`,
     `/assets/flams/logo-bdx.png?v=${cacheVersion}`,
   ],
 } satisfies Record<NonNullable<BrandLogoProps["tone"]>, string[]>;

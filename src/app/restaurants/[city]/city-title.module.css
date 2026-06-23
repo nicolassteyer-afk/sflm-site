@@ -23,5 +23,6 @@
 }
 
 .title {
-  contain: layout;
+  overflow: visible;
+  padding-block: 0.12em;
 }

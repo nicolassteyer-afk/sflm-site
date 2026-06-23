@@ -2,11 +2,13 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { BrandLogo } from "./BrandLogo";
 import { FullscreenMenu } from "./FullscreenMenu";
 
 export function Header() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
   const background = useTransform(
@@ -19,6 +21,8 @@ export function Header() {
     [0, 120],
     ["rgba(42,21,17,0)", "rgba(42,21,17,0.22)"],
   );
+
+  if (pathname?.startsWith("/admin")) return null;
 
   return (
     <>

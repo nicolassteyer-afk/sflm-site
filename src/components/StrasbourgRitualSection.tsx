@@ -7,9 +7,9 @@ export function StrasbourgRitualSection() {
   return (
     <motion.section
       className="relative z-10 grid min-h-screen overflow-hidden bg-cacao text-bone lg:grid-cols-2"
-      initial={{ y: "22vh" }}
-      whileInView={{ y: "0vh" }}
-      transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ x: "100vw" }}
+      whileInView={{ x: "0vw" }}
+      transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
       viewport={{ amount: 0.08, once: false }}
     >
       <motion.div
@@ -33,9 +33,9 @@ export function StrasbourgRitualSection() {
       </motion.div>
       <motion.div
         className="flex flex-col justify-center px-5 py-28 md:px-10 lg:px-16 lg:pt-40"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.9, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ x: "14vw", opacity: 0 }}
+        whileInView={{ x: "0vw", opacity: 1 }}
+        transition={{ duration: 0.95, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
         viewport={{ amount: 0.22, once: false }}
       >
         <p className="mb-5 text-xs font-black uppercase tracking-[0.22em] text-saffron">

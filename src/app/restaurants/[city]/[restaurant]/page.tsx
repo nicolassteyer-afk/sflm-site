@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import CityPage from "../page";
+import { CityRestaurantPage } from "../page";
 import { allRestaurants, getRestaurant } from "@/data/restaurants";
 
 export function generateStaticParams() {
@@ -23,13 +23,5 @@ export default async function RestaurantPage({
 
   if (!selectedRestaurant) notFound();
 
-  if (city === "strasbourg" && restaurant === "rue-des-freres") {
-    return <CityPage params={Promise.resolve({ city: "strasbourg" })} />;
-  }
-
-  if (city === "strasbourg" && restaurant === "place-austerlitz") {
-    return <CityPage params={Promise.resolve({ city: "strasbourg" })} />;
-  }
-
-  return <CityPage params={Promise.resolve({ city })} />;
+  return <CityRestaurantPage citySlug={city} restaurantSlug={restaurant} />;
 }
