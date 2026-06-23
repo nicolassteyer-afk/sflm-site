@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { RestaurantCmsPage } from "@/components/RestaurantCmsPage";
-import { CityRestaurantPage } from "../page";
+import CityPage from "../page";
 import { allRestaurants, getRestaurant } from "@/data/restaurants";
 import { getPrisma } from "@/lib/prisma";
 import { slugify } from "@/lib/slug";
@@ -33,7 +33,7 @@ export default async function RestaurantPage({
 
   if (!selectedRestaurant && !cmsRestaurant) notFound();
 
-  return <CityRestaurantPage citySlug={city} restaurantSlug={restaurant} />;
+  return <CityPage params={Promise.resolve({ city })} />;
 }
 
 async function getCmsRestaurant(restaurantSlug: string) {
