@@ -1,4 +1,6 @@
 .admin-shell {
+  position: relative;
+  z-index: 60;
   min-height: 100vh;
   background:
     linear-gradient(140deg, rgba(239, 60, 25, 0.09), transparent 34%),

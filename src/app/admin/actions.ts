@@ -98,6 +98,27 @@ export async function deleteBlockAction(formData: FormData) {
   redirect(`/admin/pages/${pageId}`);
 }
 
+export async function reorderBlocksAction(formData: FormData) {
+  await requireAdmin();
+  const pageId = String(formData.get("pageId") ?? "");
+  const orderedIds = String(formData.get("orderedIds") ?? "")
+    .split(",")
+    .map((id) => id.trim())
+    .filter(Boolean);
+
+  await getPrisma().$transaction(
+    orderedIds.map((id, index) =>
+      getPrisma().pageBlock.update({
+        where: { id },
+        data: { displayOrder: index + 1 },
+      }),
+    ),
+  );
+
+  revalidatePath("/");
+  redirect(`/admin/pages/${pageId}`);
+}
+
 export async function saveRestaurantAction(formData: FormData) {
   await requireAdmin();
   const id = text(formData, "id");

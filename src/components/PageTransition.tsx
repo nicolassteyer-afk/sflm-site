@@ -12,22 +12,22 @@ const CITY_NAMES: Record<string, string> = {
   strasbourg: "Strasbourg",
   "thonon-les-bains": "Thonon-les-Bains",
   arras: "Arras",
-  selestat: "Selestat",
+  selestat: "Sélestat",
   nantes: "Nantes",
 };
 
 const RESTAURANT_NAMES: Record<string, string> = {
   montparnasse: "Montparnasse",
   "saint-lazare": "Saint-Lazare",
-  chatelet: "Chatelet",
-  begles: "Begles",
-  presquile: "Presqu'ile",
+  chatelet: "Châtelet",
+  begles: "Bègles",
+  presquile: "Presqu'île",
   "vieux-lille": "Vieux Lille",
   "place-austerlitz": "Place d'Austerlitz",
-  "rue-des-freres": "Rue des Freres",
+  "rue-des-freres": "Rue des Frères",
   "thonon-les-bains": "Thonon-les-Bains",
   arras: "Arras",
-  selestat: "Selestat",
+  selestat: "Sélestat",
   nantes: "Nantes",
 };
 
