@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
-import CityPage from "../page";
+import { RestaurantCmsPage } from "@/components/RestaurantCmsPage";
+import { CityRestaurantPage } from "../page";
 import { allRestaurants, getRestaurant } from "@/data/restaurants";
+import { getPrisma } from "@/lib/prisma";
+import { slugify } from "@/lib/slug";
 
 export function generateStaticParams() {
   return allRestaurants.map((restaurant) => ({
@@ -20,16 +23,24 @@ export default async function RestaurantPage({
 }) {
   const { city, restaurant } = await params;
   const selectedRestaurant = getRestaurant(city, restaurant);
+  const cmsRestaurant = await getPrisma().restaurant.findFirst({
+    where: {
+      slug: restaurant,
+      isActive: true,
+    },
+    include: {
+      pageBlocks: {
+        where: { isActive: true },
+        orderBy: { displayOrder: "asc" },
+      },
+    },
+  });
 
-  if (!selectedRestaurant) notFound();
-
-  if (city === "strasbourg" && restaurant === "rue-des-freres") {
-    return <CityPage params={Promise.resolve({ city: "strasbourg" })} />;
+  if (cmsRestaurant && slugify(cmsRestaurant.city) === city && cmsRestaurant.pageBlocks.length) {
+    return <RestaurantCmsPage blocks={cmsRestaurant.pageBlocks} restaurant={cmsRestaurant} />;
   }
 
-  if (city === "strasbourg" && restaurant === "place-austerlitz") {
-    return <CityPage params={Promise.resolve({ city: "strasbourg" })} />;
-  }
+  if (!selectedRestaurant && !cmsRestaurant) notFound();
 
-  return <CityPage params={Promise.resolve({ city })} />;
+  return <CityRestaurantPage citySlug={city} restaurantSlug={restaurant} />;
 }

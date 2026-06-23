@@ -96,6 +96,7 @@ async function main() {
     ["Flam's Begles", "Bordeaux", "begles", "Begles", "/assets/flams/table-partage.png"],
     ["Flam's Presqu'ile", "Lyon", "presquile", "4 rue du Four, 69002 Lyon", "/assets/flams/flamme-beige.png"],
     ["Flam's Place d'Austerlitz", "Strasbourg", "place-austerlitz", "Place d'Austerlitz, Strasbourg", "/assets/flams/dragon-beige.png"],
+    ["Flam's Rue des Freres", "Strasbourg", "rue-des-freres", "Rue des Freres, Strasbourg", "/assets/flams/flamme-beige.png"],
   ] as const;
 
   for (const [name, city, slug, address, mainImage] of restaurants) {
