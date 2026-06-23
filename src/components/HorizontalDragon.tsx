@@ -34,7 +34,7 @@ export function HorizontalDragon() {
     const startedAt = performance.now();
 
     const dragonSize = () =>
-      Math.max(110, Math.min(190, stage.clientWidth * 0.14));
+      Math.max(150, Math.min(260, stage.clientWidth * 0.18));
 
     const clampPosition = (nextX: number, nextY: number) => {
       const size = dragonSize();

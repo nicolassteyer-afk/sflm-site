@@ -31,7 +31,33 @@ const ritualIcons = [
   },
 ];
 
-export function StrasbourgRitualSectionV2() {
+type RitualStat = {
+  label: string;
+};
+
+type StrasbourgRitualSectionV2Props = {
+  eyebrow?: string;
+  title?: string;
+  body?: string;
+  stats?: RitualStat[];
+  imageSrc?: string;
+  imageAlt?: string;
+};
+
+const defaultStats: RitualStat[] = [
+  { label: "Midi vif" },
+  { label: "Soir bruyant" },
+  { label: "Tables a partager" },
+];
+
+export function StrasbourgRitualSectionV2({
+  eyebrow = "Le rituel",
+  title = "Grande faim, grande table, zero chichi.",
+  body = "Strasbourg, c'est notre point de depart imaginaire : une pate fine, des bords qui chantent, une planche au milieu et personne qui compte vraiment les parts. Le service va droit au but, la salle reste chaude, et le feu se devine plus qu'il ne se montre.",
+  stats = defaultStats,
+  imageSrc = "/assets/flams/shootingf%C3%A9vrier2026-4.webp",
+  imageAlt = "Table Flam's",
+}: StrasbourgRitualSectionV2Props) {
   const imageRef = useRef<HTMLDivElement | null>(null);
   const { scrollYProgress } = useScroll({
     target: imageRef,
@@ -42,7 +68,11 @@ export function StrasbourgRitualSectionV2() {
     [0, 0.46, 0.6, 1],
     [0, 0, 0.14, 0.3],
   );
-  const wallpaperY = useTransform(scrollYProgress, [0, 0.46, 1], ["104%", "104%", "-10%"]);
+  const wallpaperY = useTransform(
+    scrollYProgress,
+    [0, 0.46, 1],
+    ["104%", "104%", "-10%"],
+  );
   const wallpaperScale = useTransform(scrollYProgress, [0.48, 1], [1.1, 1]);
 
   return (
@@ -63,13 +93,13 @@ export function StrasbourgRitualSectionV2() {
           viewport={{ amount: 0.18, once: false }}
         >
           <VisualPlaceholder
-            alt="Table Flam's Strasbourg"
+            alt={imageAlt}
             className="absolute inset-0 min-h-full rounded-none"
             clipped={false}
             imageClassName="scale-105 opacity-95"
             label="table Flam's"
             showLabel={false}
-            src="/assets/flams/shootingf%C3%A9vrier2026-4.webp"
+            src={imageSrc}
             tone="from-wine via-cacao to-ember"
           />
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(17,16,13,.1),rgba(17,16,13,.5))]" />
@@ -132,9 +162,6 @@ export function StrasbourgRitualSectionV2() {
               >
                 <motion.img
                   alt={icon.alt}
-                  className="h-full w-full object-contain"
-                  draggable={false}
-                  src={icon.src}
                   animate={{
                     y: [0, -6, 0],
                     transition: {
@@ -144,12 +171,15 @@ export function StrasbourgRitualSectionV2() {
                       delay: index * 0.12,
                     },
                   }}
+                  className="h-full w-full object-contain"
+                  draggable={false}
+                  src={icon.src}
                 />
               </motion.div>
             ))}
           </motion.div>
           <p className="mb-5 text-xs font-black uppercase tracking-[0.22em] text-saffron">
-            Le rituel
+            {eyebrow}
           </p>
           <motion.h2
             className="font-display text-7xl uppercase leading-[0.86] md:text-9xl"
@@ -158,7 +188,7 @@ export function StrasbourgRitualSectionV2() {
             transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
             viewport={{ amount: 0.45, once: false }}
           >
-            Grande faim, grande table, zero chichi.
+            {title}
           </motion.h2>
           <motion.p
             className="mt-8 max-w-xl text-lg leading-8 text-bone/70"
@@ -167,10 +197,7 @@ export function StrasbourgRitualSectionV2() {
             transition={{ duration: 0.75, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             viewport={{ amount: 0.45, once: false }}
           >
-            Strasbourg, c'est notre point de depart imaginaire : une pate fine,
-            des bords qui chantent, une planche au milieu et personne qui compte
-            vraiment les parts. Le service va droit au but, la salle reste chaude,
-            et le feu se devine plus qu'il ne se montre.
+            {body}
           </motion.p>
           <motion.div
             className="mt-10 grid gap-5 text-sm font-black uppercase tracking-[0.14em] text-bone/65 sm:grid-cols-3"
@@ -179,9 +206,11 @@ export function StrasbourgRitualSectionV2() {
             transition={{ duration: 0.75, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
             viewport={{ amount: 0.45, once: false }}
           >
-            <span className="border-t border-bone/20 pt-4">Midi vif</span>
-            <span className="border-t border-bone/20 pt-4">Soir bruyant</span>
-            <span className="border-t border-bone/20 pt-4">Tables a partager</span>
+            {stats.map((stat) => (
+              <span className="border-t border-bone/20 pt-4" key={stat.label}>
+                {stat.label}
+              </span>
+            ))}
           </motion.div>
         </motion.div>
       </motion.div>
