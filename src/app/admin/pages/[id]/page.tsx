@@ -1,27 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { deleteBlockAction, saveBlockAction, savePageAction } from "@/app/admin/actions";
+import { savePageAction } from "@/app/admin/actions";
 import { AdminFrame } from "@/components/admin/AdminFrame";
-import { FormField, ToggleField } from "@/components/admin/FormField";
+import { FormField } from "@/components/admin/FormField";
+import { PageBlockBuilder } from "@/components/admin/PageBlockBuilder";
 import { getPrisma } from "@/lib/prisma";
-
-const blockTypes = [
-  "HERO",
-  "EDITORIAL_TEXT",
-  "FULL_WIDTH_IMAGE",
-  "IMAGE_TEXT",
-  "GALLERY",
-  "CTA",
-  "MENU_PREVIEW",
-  "STORE_LOCATOR_PREVIEW",
-  "RESTAURANT_LIST",
-  "RESERVATION",
-  "FAQ",
-  "BRAND_SECTION",
-  "CITY_SECTION",
-  "CONTACT_SECTION",
-  "HTML_EMBED",
-];
 
 export default async function AdminPageEditor({
   params,
@@ -70,56 +53,7 @@ export default async function AdminPageEditor({
           </div>
         </form>
 
-        <section className="grid gap-4">
-          <h2 className="text-2xl font-black text-bone">Blocs</h2>
-          {page.blocks.map((block) => (
-            <form action={saveBlockAction} className="admin-card grid gap-4 p-5" key={block.id}>
-              <input type="hidden" name="id" value={block.id} />
-              <input type="hidden" name="pageId" value={page.id} />
-              <div className="grid gap-4 md:grid-cols-4">
-                <label className="admin-label">
-                  Type
-                  <select className="admin-select" name="type" defaultValue={block.type}>
-                    {blockTypes.map((type) => <option key={type} value={type}>{type}</option>)}
-                  </select>
-                </label>
-                <FormField label="Ordre" name="displayOrder" type="number" defaultValue={block.displayOrder} />
-                <FormField label="Variante" name="variant" defaultValue={block.variant} />
-                <ToggleField label="Actif" name="isActive" defaultChecked={block.isActive} />
-              </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <FormField label="Titre" name="title" defaultValue={block.title} />
-                <FormField label="Sous-titre" name="subtitle" defaultValue={block.subtitle} />
-                <FormField label="Image" name="image" defaultValue={block.image} />
-                <FormField label="Galerie URLs separees par virgules" name="gallery" defaultValue={Array.isArray(block.gallery) ? block.gallery.join(", ") : ""} />
-                <FormField label="CTA label" name="ctaLabel" defaultValue={block.ctaLabel} />
-                <FormField label="CTA URL" name="ctaUrl" defaultValue={block.ctaUrl} />
-              </div>
-              <FormField label="Texte" name="body" textarea defaultValue={block.body} />
-              <div className="flex flex-wrap gap-3">
-                <button className="admin-button admin-button-primary" type="submit">Enregistrer</button>
-                <button className="admin-button" formAction={deleteBlockAction} type="submit">Supprimer</button>
-              </div>
-            </form>
-          ))}
-
-          <form action={saveBlockAction} className="admin-card grid gap-4 p-5">
-            <input type="hidden" name="pageId" value={page.id} />
-            <h3 className="text-xl font-black text-bone">Ajouter un bloc</h3>
-            <div className="grid gap-4 md:grid-cols-3">
-              <label className="admin-label">
-                Type
-                <select className="admin-select" name="type" defaultValue="EDITORIAL_TEXT">
-                  {blockTypes.map((type) => <option key={type} value={type}>{type}</option>)}
-                </select>
-              </label>
-              <FormField label="Titre" name="title" />
-              <FormField label="Ordre" name="displayOrder" type="number" defaultValue={page.blocks.length + 1} />
-            </div>
-            <ToggleField label="Actif" name="isActive" />
-            <button className="admin-button admin-button-primary" type="submit">Ajouter</button>
-          </form>
-        </section>
+        <PageBlockBuilder blocks={page.blocks} pageId={page.id} />
       </div>
     </AdminFrame>
   );

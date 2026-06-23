@@ -61,7 +61,7 @@ const restaurantsByCity: Record<string, Restaurant[]> = {
     },
     {
       slug: "chatelet",
-      name: "Flam's Chatelet",
+      name: "Flam's Châtelet",
       city: "Paris",
       country: "France",
       address: "Paris Chatelet",
@@ -74,10 +74,10 @@ const restaurantsByCity: Record<string, Restaurant[]> = {
   bordeaux: [
     {
       slug: "begles",
-      name: "Flam's Begles",
+      name: "Flam's Bègles",
       city: "Bordeaux",
       country: "France",
-      address: "Begles",
+      address: "Bègles",
       hours: "Mardi au dimanche, 12h - 23h",
       mood: "Bois sombre, banquettes chaudes, grandes tablees.",
       heroTone: "from-wine via-ember to-cacao",
@@ -124,10 +124,10 @@ const restaurantsByCity: Record<string, Restaurant[]> = {
     },
     {
       slug: "rue-des-freres",
-      name: "Flam's Rue des Freres",
+      name: "Flam's Rue des Frères",
       city: "Strasbourg",
       country: "France",
-      address: "Rue des Freres, Strasbourg",
+      address: "Rue des Frères, Strasbourg",
       hours: "Tous les jours, 11h30 - 23h",
       mood: "Une adresse vive au coeur de Strasbourg.",
       heroTone: "from-cacao via-wine to-bone",
@@ -163,10 +163,10 @@ const restaurantsByCity: Record<string, Restaurant[]> = {
   selestat: [
     {
       slug: "selestat",
-      name: "Flam's Selestat",
-      city: "Selestat",
+      name: "Flam's Sélestat",
+      city: "Sélestat",
       country: "France",
-      address: "Selestat",
+      address: "Sélestat",
       hours: "Tous les jours, 12h - 23h",
       mood: "L'Alsace a table, genereuse et sans chichi.",
       heroTone: "from-wine via-cacao to-bone",
@@ -215,7 +215,7 @@ function cityFactory(slug: string, country: string): City {
     strasbourg: "Strasbourg",
     "thonon-les-bains": "Thonon-les-Bains",
     arras: "Arras",
-    selestat: "Selestat",
+    selestat: "Sélestat",
     nantes: "Nantes",
   };
 
