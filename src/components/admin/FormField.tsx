@@ -24,7 +24,7 @@ export function FormField({ label, name, defaultValue, type = "text", textarea, 
 
 export function ToggleField({ label, name, defaultChecked = true }: { label: string; name: string; defaultChecked?: boolean }) {
   return (
-    <label className="flex items-center gap-3 rounded-lg border border-bone/10 p-3 text-sm font-bold text-bone/70">
+    <label className="flex items-center gap-3 rounded-lg border border-slate-700/70 bg-slate-950/20 p-3 text-sm font-bold text-slate-300">
       <input name={name} type="checkbox" defaultChecked={defaultChecked} />
       {label}
     </label>
