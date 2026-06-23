@@ -5,6 +5,8 @@ import { allRestaurants, getRestaurant } from "@/data/restaurants";
 import { getPrisma } from "@/lib/prisma";
 import { slugify } from "@/lib/slug";
 
+export const dynamic = "force-dynamic";
+
 export function generateStaticParams() {
   return allRestaurants.map((restaurant) => ({
     city: restaurant.city
@@ -23,18 +25,7 @@ export default async function RestaurantPage({
 }) {
   const { city, restaurant } = await params;
   const selectedRestaurant = getRestaurant(city, restaurant);
-  const cmsRestaurant = await getPrisma().restaurant.findFirst({
-    where: {
-      slug: restaurant,
-      isActive: true,
-    },
-    include: {
-      pageBlocks: {
-        where: { isActive: true },
-        orderBy: { displayOrder: "asc" },
-      },
-    },
-  });
+  const cmsRestaurant = await getCmsRestaurant(restaurant);
 
   if (cmsRestaurant && slugify(cmsRestaurant.city) === city && cmsRestaurant.pageBlocks.length) {
     return <RestaurantCmsPage blocks={cmsRestaurant.pageBlocks} restaurant={cmsRestaurant} />;
@@ -43,4 +34,24 @@ export default async function RestaurantPage({
   if (!selectedRestaurant && !cmsRestaurant) notFound();
 
   return <CityRestaurantPage citySlug={city} restaurantSlug={restaurant} />;
+}
+
+async function getCmsRestaurant(restaurantSlug: string) {
+  try {
+    return await getPrisma().restaurant.findFirst({
+      where: {
+        slug: restaurantSlug,
+        isActive: true,
+      },
+      include: {
+        pageBlocks: {
+          where: { isActive: true },
+          orderBy: { displayOrder: "asc" },
+        },
+      },
+    });
+  } catch (error) {
+    console.warn("CMS restaurant unavailable, falling back to static page.", error);
+    return null;
+  }
 }
