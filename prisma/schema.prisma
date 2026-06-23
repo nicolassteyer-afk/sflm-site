@@ -18,6 +18,12 @@ enum UserRole {
 
 enum BlockType {
   HERO
+  RESTAURANT_HERO
+  PRESSURE_TEXT
+  RITUAL_SECTION
+  HORIZONTAL_STORY
+  CLOSING_SECTION
+  STICKY_CTA
   EDITORIAL_TEXT
   FULL_WIDTH_IMAGE
   IMAGE_TEXT
@@ -104,8 +110,29 @@ model Restaurant {
   ogImage          String?
   displayOrder     Int                @default(0)
   hours            RestaurantHours[]
+  pageBlocks       RestaurantPageBlock[]
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
+}
+
+model RestaurantPageBlock {
+  id           String     @id @default(cuid())
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  type         BlockType  @default(EDITORIAL_TEXT)
+  title        String?
+  subtitle     String?
+  body         String?
+  image        String?
+  gallery      Json?
+  ctaLabel     String?
+  ctaUrl       String?
+  variant      String?
+  displayOrder Int        @default(0)
+  isActive     Boolean    @default(true)
+  settings     Json?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 model RestaurantHours {
