@@ -1,10 +1,40 @@
-# SFLM Site
+# Flam's site
 
-Site internet SFLM, code depuis Codex et deployable sur Vercel.
+Site vitrine Next.js pour Flam's avec back-office CMS.
 
-## Structure
+## Installation
 
-- `index.html` : page principale
-- `styles.css` : design responsive
-- `script.js` : interactions legeres
-- `vercel.json` : configuration de publication
+```bash
+npm install
+cp .env.example .env
+npm run prisma:generate
+npm run prisma:migrate
+npm run db:seed
+npm run dev
+```
+
+Le site sera disponible sur `http://localhost:3000`.
+
+## Variables
+
+- `DATABASE_URL`: connexion PostgreSQL.
+- `ADMIN_SESSION_SECRET`: secret long pour signer les sessions admin.
+- `ADMIN_EMAIL` et `ADMIN_PASSWORD`: identifiants utilises par le seed et la creation admin.
+
+## Back-office
+
+Le CMS est disponible sur `/admin`.
+
+Pour creer ou reinitialiser un administrateur:
+
+```bash
+ADMIN_EMAIL="admin@flams.fr" ADMIN_PASSWORD="mot-de-passe-solide" npm run admin:create
+```
+
+Le back-office permet de gerer pages, blocs, restaurants, horaires, carte,
+medias, navigation, footer, SEO et parametres globaux.
+
+## Contenus publics
+
+Les pages publiques principales lisent les donnees CMS quand la base est
+configuree et gardent les contenus statiques actuels en secours.

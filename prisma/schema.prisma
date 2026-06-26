@@ -1,0 +1,238 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum UserRole {
+  ADMIN
+}
+
+enum BlockType {
+  HERO
+  RESTAURANT_HERO
+  PRESSURE_TEXT
+  RITUAL_SECTION
+  HORIZONTAL_STORY
+  CLOSING_SECTION
+  STICKY_CTA
+  EDITORIAL_TEXT
+  FULL_WIDTH_IMAGE
+  IMAGE_TEXT
+  GALLERY
+  CTA
+  MENU_PREVIEW
+  STORE_LOCATOR_PREVIEW
+  RESTAURANT_LIST
+  RESERVATION
+  FAQ
+  BRAND_SECTION
+  CITY_SECTION
+  CONTACT_SECTION
+  HTML_EMBED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  role         UserRole @default(ADMIN)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Page {
+  id              String        @id @default(cuid())
+  internalTitle   String
+  displayTitle    String
+  slug            String        @unique
+  metaTitle       String?
+  metaDescription String?
+  ogImage         String?
+  status          ContentStatus @default(DRAFT)
+  displayOrder    Int           @default(0)
+  blocks          PageBlock[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model PageBlock {
+  id          String    @id @default(cuid())
+  pageId      String
+  page        Page      @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  type        BlockType @default(EDITORIAL_TEXT)
+  title       String?
+  subtitle    String?
+  body        String?
+  image       String?
+  gallery     Json?
+  ctaLabel    String?
+  ctaUrl      String?
+  variant     String?
+  displayOrder Int      @default(0)
+  isActive    Boolean   @default(true)
+  settings    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Restaurant {
+  id               String             @id @default(cuid())
+  name             String
+  city             String
+  slug             String             @unique
+  address          String
+  postalCode       String?
+  country          String             @default("France")
+  phone            String?
+  email            String?
+  reservationUrl   String?
+  googleMapsUrl    String?
+  latitude         Float?
+  longitude        Float?
+  mainImage        String?
+  gallery          Json?
+  shortDescription String?
+  longDescription  String?
+  services         Json?
+  isActive         Boolean            @default(true)
+  metaTitle        String?
+  metaDescription  String?
+  ogImage          String?
+  displayOrder     Int                @default(0)
+  hours            RestaurantHours[]
+  pageBlocks       RestaurantPageBlock[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+}
+
+model RestaurantPageBlock {
+  id           String     @id @default(cuid())
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  type         BlockType  @default(EDITORIAL_TEXT)
+  title        String?
+  subtitle     String?
+  body         String?
+  image        String?
+  gallery      Json?
+  ctaLabel     String?
+  ctaUrl       String?
+  variant      String?
+  displayOrder Int        @default(0)
+  isActive     Boolean    @default(true)
+  settings     Json?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model RestaurantHours {
+  id           String     @id @default(cuid())
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  day          String
+  opensAt      String?
+  closesAt     String?
+  isClosed     Boolean    @default(false)
+  note         String?
+  displayOrder Int        @default(0)
+}
+
+model MenuCategory {
+  id             String     @id @default(cuid())
+  name           String
+  slug           String     @unique
+  description    String?
+  image          String?
+  displayOrder   Int        @default(0)
+  isActive       Boolean    @default(true)
+  items          MenuItem[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model MenuItem {
+  id           String       @id @default(cuid())
+  categoryId   String
+  category     MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name         String
+  description  String?
+  price        Decimal?     @db.Decimal(8, 2)
+  image        String?
+  allergens    Json?
+  tags         Json?
+  displayOrder Int          @default(0)
+  isActive     Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  url       String   @unique
+  filename  String
+  altText   String?
+  mimeType  String?
+  size      Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSettings {
+  id                    String   @id @default("site")
+  siteName              String
+  globalDescription     String?
+  contactEmail          String?
+  globalPhone           String?
+  globalReservationUrl  String?
+  socialLinks           Json?
+  favicon               String?
+  lightLogo             String?
+  darkLogo              String?
+  defaultOgImage        String?
+  analyticsScripts      String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model NavigationItem {
+  id            String   @id @default(cuid())
+  label         String
+  url           String
+  displayOrder  Int      @default(0)
+  isVisible     Boolean  @default(true)
+  openInNewTab  Boolean  @default(false)
+  isPrimaryCta  Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model FooterColumn {
+  id           String       @id @default(cuid())
+  title        String
+  displayOrder Int          @default(0)
+  links        FooterLink[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model FooterLink {
+  id            String       @id @default(cuid())
+  columnId      String
+  column        FooterColumn @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  label         String
+  url           String
+  displayOrder  Int          @default(0)
+  openInNewTab  Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
