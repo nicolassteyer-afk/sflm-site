@@ -22,7 +22,7 @@ type City = {
 };
 
 const youtubeEmbed =
-  "https://www.youtube.com/embed/c9hFNqVftPs?autoplay=1&mute=1&loop=1&playlist=c9hFNqVftPs&controls=0&modestbranding=1&playsinline=1&rel=0";
+  "https://www.youtube.com/embed/0pPdjm650bo?autoplay=1&mute=1&loop=1&playlist=0pPdjm650bo&controls=0&modestbranding=1&playsinline=1&rel=0";
 
 const cities: City[] = [
   city("Paris", ["Grand Boulevard", "Rive Gauche"], "La table qui allonge les soirees."),
