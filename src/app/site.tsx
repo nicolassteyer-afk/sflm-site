@@ -166,12 +166,14 @@ function VideoSection() {
           transition={{ duration: 0.35 }}
         >
           <iframe
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
+            allow="autoplay; encrypted-media"
+            aria-hidden="true"
             className="pointer-events-none absolute inset-0 h-full w-full"
             src={youtubeEmbed}
+            tabIndex={-1}
             title="Video Flam's"
           />
+          <div aria-hidden="true" className="absolute inset-0 z-10" />
         </motion.div>
       </div>
     </section>

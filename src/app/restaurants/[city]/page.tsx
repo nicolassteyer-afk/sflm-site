@@ -220,8 +220,10 @@ export function CityRestaurantPage({
             <iframe
               allow="autoplay; encrypted-media; picture-in-picture"
               aria-label="Ambiance Flam's Strasbourg"
+              aria-hidden="true"
               className="pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 scale-125 border-0"
               src="https://www.youtube.com/embed/0pPdjm650bo?autoplay=1&mute=1&controls=0&loop=1&playlist=0pPdjm650bo&playsinline=1&rel=0&modestbranding=1&disablekb=1&fs=0&iv_load_policy=3"
+              tabIndex={-1}
               title="Video Flam's Strasbourg"
             />
           ) : (
@@ -236,6 +238,7 @@ export function CityRestaurantPage({
               tone={city.previewTone}
             />
           )}
+          {isStrasbourg ? <div aria-hidden="true" className="absolute inset-0 z-10" /> : null}
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(42,21,17,.08),rgba(42,21,17,.28))]" />
         </div>
 

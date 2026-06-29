@@ -82,6 +82,11 @@
         border: 0;
         pointer-events: none;
       }
+      .video-touch-blocker {
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+      }
       .overlay {
         position: absolute;
         inset: 0;
@@ -425,9 +430,12 @@
         <div class="hero-media">
           <iframe
             src="https://www.youtube.com/embed/0pPdjm650bo?autoplay=1&mute=1&controls=0&loop=1&playlist=0pPdjm650bo&playsinline=1&rel=0&modestbranding=1&disablekb=1&fs=0&iv_load_policy=3"
-            allow="autoplay; encrypted-media; picture-in-picture"
+            allow="autoplay; encrypted-media"
+            aria-hidden="true"
+            tabindex="-1"
             title="Video Flam's Strasbourg"
           ></iframe>
+          <div class="video-touch-blocker" aria-hidden="true"></div>
           <div class="overlay"></div>
         </div>
         <div class="hero-copy">
