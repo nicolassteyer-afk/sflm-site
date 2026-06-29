@@ -22,8 +22,8 @@ export default function Page() {
           <iframe
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
-            className="absolute left-1/2 top-1/2 h-[115vh] w-[204vh] min-h-full min-w-full -translate-x-1/2 -translate-y-1/2"
-            src="https://www.youtube.com/embed/0pPdjm650bo?autoplay=1&mute=1&loop=1&playlist=0pPdjm650bo&controls=0&modestbranding=1&playsinline=1&rel=0"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[115vh] w-[204vh] min-h-full min-w-full -translate-x-1/2 -translate-y-1/2"
+            src="https://www.youtube.com/embed/0pPdjm650bo?autoplay=1&mute=1&loop=1&playlist=0pPdjm650bo&controls=0&modestbranding=1&playsinline=1&rel=0&disablekb=1&fs=0&iv_load_policy=3"
             title="Video Flam's"
           />
         </div>
