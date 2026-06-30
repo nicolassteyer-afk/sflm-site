@@ -11,23 +11,23 @@ const wallpaperFlames = Array.from({ length: 180 }, (_, index) => index);
 const ritualIcons = [
   {
     alt: "Biere Flam's",
-    src: "https://raw.githubusercontent.com/nicolassteyer-afk/sflm-site/main/public/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-BIERE-BEIGE.svg",
+    src: "/assets/flams/biere-flams.png",
   },
   {
     alt: "Flamme Flam's",
-    src: "https://raw.githubusercontent.com/nicolassteyer-afk/sflm-site/main/public/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-FLAMME-BEIGE.svg",
+    src: "/assets/flams/flamme-beige.png",
   },
   {
     alt: "Fut Flam's",
-    src: "https://raw.githubusercontent.com/nicolassteyer-afk/sflm-site/main/public/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-FUT-BEIGE.svg",
+    src: "/assets/flams/biere-flams.png",
   },
   {
     alt: "Planche Flam's",
-    src: "https://raw.githubusercontent.com/nicolassteyer-afk/sflm-site/main/public/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-PLANCHE-BEIGE.svg",
+    src: "/assets/flams/table-partage.png",
   },
   {
     alt: "Vin Flam's",
-    src: "https://raw.githubusercontent.com/nicolassteyer-afk/sflm-site/main/public/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-VIN-BEIGE.svg",
+    src: "/assets/flams/rouge-croquant.png",
   },
 ];
 
