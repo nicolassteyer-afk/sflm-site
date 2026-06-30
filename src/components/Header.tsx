@@ -1,15 +1,16 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrandLogo } from "./BrandLogo";
 import { FullscreenMenu } from "./FullscreenMenu";
 
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { scrollY } = useScroll();
   const background = useTransform(
     scrollY,
@@ -22,12 +23,22 @@ export function Header() {
     ["rgba(42,21,17,0)", "rgba(42,21,17,0.22)"],
   );
 
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setScrolled(latest > 80);
+  });
+
+  useEffect(() => {
+    setScrolled(window.scrollY > 80);
+  }, []);
+
   if (pathname?.startsWith("/admin")) return null;
 
   return (
     <>
       <motion.header
-        className="fixed left-0 right-0 top-0 z-40 grid h-[86px] grid-cols-[1fr_auto_1fr] items-center px-5 text-cacao md:px-10 lg:px-14"
+        className={`fixed left-0 right-0 top-0 z-40 grid h-[86px] grid-cols-[1fr_auto_1fr] items-center px-5 transition-colors duration-300 md:px-10 lg:px-14 ${
+          scrolled ? "text-wine" : "text-bone"
+        }`}
         style={{
           background,
           borderBottom: "1px solid",
@@ -54,11 +65,11 @@ export function Header() {
           href="/"
           aria-label="Accueil Flam's"
         >
-          <BrandLogo className="h-full w-full" tone="bordeaux" />
+          <BrandLogo className="h-full w-full" tone={scrolled ? "bordeaux" : "cream"} />
         </Link>
         <div className="flex items-center justify-end gap-4">
           <Link
-            className="warm-button hidden px-2 py-2 text-xs font-black uppercase tracking-[0.16em] text-cacao md:block"
+            className="warm-button hidden px-2 py-2 text-xs font-black uppercase tracking-[0.16em] md:block"
             href="/reservation"
           >
             Reserver
