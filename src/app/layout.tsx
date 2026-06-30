@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Footer } from "@/components/Footer";
+import { FlamsCursor } from "@/components/FlamsCursor";
 import { Header } from "@/components/Header";
 import { PageTransition } from "@/components/PageTransition";
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
@@ -23,6 +24,7 @@ export default function RootLayout({
           <Header />
           <PageTransition>{children}</PageTransition>
           <Footer />
+          <FlamsCursor />
         </SmoothScrollProvider>
       </body>
     </html>
