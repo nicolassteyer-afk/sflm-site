@@ -19,11 +19,15 @@ export default function Page() {
     <main className="bg-cream text-cacao">
       <section className="relative min-h-screen overflow-hidden bg-ink text-bone">
         <div className="absolute inset-0 scale-105">
-          <iframe
-            allow="autoplay; encrypted-media"
+          <video
             aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[115vh] w-[204vh] min-h-full min-w-full -translate-x-1/2 -translate-y-1/2"
-            src="https://www.youtube.com/embed/0pPdjm650bo?autoplay=1&mute=1&loop=1&playlist=0pPdjm650bo&controls=0&modestbranding=1&playsinline=1&rel=0&disablekb=1&fs=0&iv_load_policy=3"
+            autoPlay
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+            loop
+            muted
+            playsInline
+            preload="auto"
+            src="/assets/videos/flams-background.mp4"
             tabIndex={-1}
             title="Video Flam's"
           />

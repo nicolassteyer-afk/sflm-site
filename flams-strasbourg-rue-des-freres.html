@@ -70,16 +70,12 @@
         overflow: hidden;
         background: var(--cacao);
       }
-      .hero-media iframe {
+      .hero-media video {
         position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 177.78vh;
-        min-width: 100%;
-        height: 56.25vw;
-        min-height: 100%;
-        transform: translate(-50%, -50%) scale(1.25);
-        border: 0;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         pointer-events: none;
       }
       .video-touch-blocker {
@@ -428,13 +424,17 @@
     <main>
       <section class="section-split">
         <div class="hero-media">
-          <iframe
-            src="https://www.youtube.com/embed/0pPdjm650bo?autoplay=1&mute=1&controls=0&loop=1&playlist=0pPdjm650bo&playsinline=1&rel=0&modestbranding=1&disablekb=1&fs=0&iv_load_policy=3"
-            allow="autoplay; encrypted-media"
+          <video
+            src="public/assets/videos/flams-background.mp4"
             aria-hidden="true"
             tabindex="-1"
             title="Video Flam's Strasbourg"
-          ></iframe>
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto"
+          ></video>
           <div class="video-touch-blocker" aria-hidden="true"></div>
           <div class="overlay"></div>
         </div>

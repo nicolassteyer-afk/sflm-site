@@ -85,12 +85,16 @@ function RestaurantCmsBlock({
       <section className="grid min-h-screen bg-bone lg:grid-cols-2">
         <div className="relative min-h-[52vh] overflow-hidden bg-cacao lg:min-h-screen">
           {useVideo ? (
-            <iframe
-              allow="autoplay; encrypted-media; picture-in-picture"
+            <video
               aria-label={`Ambiance ${restaurant.name}`}
               aria-hidden="true"
-              className="pointer-events-none absolute left-1/2 top-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 scale-125 border-0"
-              src={block.image || "https://www.youtube.com/embed/0pPdjm650bo?autoplay=1&mute=1&controls=0&loop=1&playlist=0pPdjm650bo&playsinline=1&rel=0&modestbranding=1&disablekb=1&fs=0&iv_load_policy=3"}
+              autoPlay
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+              loop
+              muted
+              playsInline
+              preload="auto"
+              src={block.image || "/assets/videos/flams-background.mp4"}
               tabIndex={-1}
               title={`Video ${restaurant.name}`}
             />

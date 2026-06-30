@@ -21,8 +21,7 @@ type City = {
   tone: string;
 };
 
-const youtubeEmbed =
-  "https://www.youtube.com/embed/0pPdjm650bo?autoplay=1&mute=1&loop=1&playlist=0pPdjm650bo&controls=0&modestbranding=1&playsinline=1&rel=0&disablekb=1&fs=0&iv_load_policy=3";
+const backgroundVideo = "/assets/videos/flams-background.mp4";
 
 const cities: City[] = [
   city("Paris", ["Grand Boulevard", "Rive Gauche"], "La table qui allonge les soirees."),
@@ -165,11 +164,15 @@ function VideoSection() {
           whileHover={{ scale: 0.985 }}
           transition={{ duration: 0.35 }}
         >
-          <iframe
-            allow="autoplay; encrypted-media"
+          <video
             aria-hidden="true"
+            autoPlay
             className="pointer-events-none absolute inset-0 h-full w-full"
-            src={youtubeEmbed}
+            loop
+            muted
+            playsInline
+            preload="auto"
+            src={backgroundVideo}
             tabIndex={-1}
             title="Video Flam's"
           />
