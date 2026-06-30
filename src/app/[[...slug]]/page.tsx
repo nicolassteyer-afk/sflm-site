@@ -28,7 +28,6 @@ export default function Page() {
             title="Video Flam's"
           />
           <div aria-hidden="true" className="absolute inset-0 z-[1]" />
-          <div aria-hidden="true" className="youtube-start-mask" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-cacao/20 to-ink/80" />
         <div className="texture absolute inset-0 opacity-40" />

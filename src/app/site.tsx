@@ -174,7 +174,6 @@ function VideoSection() {
             title="Video Flam's"
           />
           <div aria-hidden="true" className="absolute inset-0 z-[1]" />
-          <div aria-hidden="true" className="youtube-start-mask" />
         </motion.div>
       </div>
     </section>

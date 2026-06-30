@@ -239,10 +239,7 @@ export function CityRestaurantPage({
             />
           )}
           {isStrasbourg ? (
-            <>
-              <div aria-hidden="true" className="absolute inset-0 z-[1]" />
-              <div aria-hidden="true" className="youtube-start-mask" />
-            </>
+            <div aria-hidden="true" className="absolute inset-0 z-[1]" />
           ) : null}
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(42,21,17,.08),rgba(42,21,17,.28))]" />
         </div>

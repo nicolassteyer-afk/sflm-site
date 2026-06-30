@@ -87,26 +87,6 @@
         inset: 0;
         z-index: 1;
       }
-      .youtube-start-mask {
-        position: absolute;
-        inset: 0;
-        z-index: 2;
-        pointer-events: none;
-        background:
-          radial-gradient(circle at 24% 22%, rgba(243, 177, 42, 0.14), transparent 28%),
-          linear-gradient(135deg, #2a1511 0%, #65131a 48%, #11100d 100%);
-        animation: youtube-start-mask-fade 4.2s ease forwards;
-      }
-      @keyframes youtube-start-mask-fade {
-        0%,
-        70% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0;
-          visibility: hidden;
-        }
-      }
       .overlay {
         position: absolute;
         inset: 0;
@@ -456,7 +436,6 @@
             title="Video Flam's Strasbourg"
           ></iframe>
           <div class="video-touch-blocker" aria-hidden="true"></div>
-          <div class="youtube-start-mask" aria-hidden="true"></div>
           <div class="overlay"></div>
         </div>
         <div class="hero-copy">
