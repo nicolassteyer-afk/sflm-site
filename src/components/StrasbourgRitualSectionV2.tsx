@@ -11,23 +11,23 @@ const wallpaperFlames = Array.from({ length: 180 }, (_, index) => index);
 const ritualIcons = [
   {
     alt: "Biere Flam's",
-    src: "/assets/flams/biere-flams.png",
+    src: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-BIERE-BEIGE.svg",
   },
   {
     alt: "Flamme Flam's",
-    src: "/assets/flams/flamme-beige.png",
+    src: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-FLAMME-BEIGE.svg",
   },
   {
     alt: "Fut Flam's",
-    src: "/assets/flams/biere-flams.png",
+    src: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-FUT-BEIGE.svg",
   },
   {
     alt: "Planche Flam's",
-    src: "/assets/flams/table-partage.png",
+    src: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-PLANCHE-BEIGE.svg",
   },
   {
     alt: "Vin Flam's",
-    src: "/assets/flams/rouge-croquant.png",
+    src: "/assets/flams/2025-09-FLAMS-Valise-Logo_ILLU-VIN-BEIGE.svg",
   },
 ];
 
