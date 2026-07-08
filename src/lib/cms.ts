@@ -19,6 +19,24 @@ export type PublicMenuCategory = {
   }[];
 };
 
+export type PublicRestaurant = {
+  slug: string;
+  name: string;
+  city: string;
+  country: string;
+  address: string;
+  postalCode?: string | null;
+  phone?: string | null;
+  reservationUrl?: string | null;
+  googleMapsUrl?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  hours: string;
+  mood: string;
+  heroTone: string;
+  mediaSrc: string;
+};
+
 export async function getDashboardStats() {
   noStore();
   if (!hasDatabaseUrl()) {
@@ -170,6 +188,56 @@ export async function getPublicCities() {
   }
 
   return Array.from(cityMap.values());
+}
+
+export async function getPublicRestaurants(): Promise<PublicRestaurant[]> {
+  noStore();
+  if (!hasDatabaseUrl()) {
+    return allRestaurants.map((restaurant) => ({
+      ...restaurant,
+      postalCode: null,
+      reservationUrl: null,
+      googleMapsUrl: null,
+      latitude: null,
+      longitude: null,
+    }));
+  }
+
+  const restaurants = await getPrisma().restaurant.findMany({
+    where: { isActive: true },
+    orderBy: [{ city: "asc" }, { displayOrder: "asc" }, { name: "asc" }],
+  });
+
+  if (restaurants.length === 0) return getPublicRestaurantsFallback();
+
+  return restaurants.map((restaurant) => ({
+    slug: restaurant.slug,
+    name: restaurant.name,
+    city: restaurant.city,
+    country: restaurant.country,
+    address: restaurant.address,
+    postalCode: restaurant.postalCode,
+    phone: restaurant.phone,
+    reservationUrl: restaurant.reservationUrl,
+    googleMapsUrl: restaurant.googleMapsUrl,
+    latitude: restaurant.latitude,
+    longitude: restaurant.longitude,
+    hours: restaurant.shortDescription ?? "Horaires a confirmer",
+    mood: restaurant.shortDescription ?? "Grande table, service vif.",
+    heroTone: "from-wine via-cacao to-ember",
+    mediaSrc: restaurant.mainImage ?? "/assets/flams/table-partage.png",
+  }));
+}
+
+function getPublicRestaurantsFallback(): PublicRestaurant[] {
+  return allRestaurants.map((restaurant) => ({
+    ...restaurant,
+    postalCode: null,
+    reservationUrl: null,
+    googleMapsUrl: null,
+    latitude: null,
+    longitude: null,
+  }));
 }
 
 export async function getPublicCountries() {
