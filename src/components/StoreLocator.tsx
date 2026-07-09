@@ -2,7 +2,14 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import {
+  type PointerEvent as ReactPointerEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { PublicRestaurant } from "@/lib/cms";
 
 type StoreLocatorProps = {
@@ -15,15 +22,42 @@ type MapRestaurant = PublicRestaurant & {
   region: string;
 };
 
-type RestaurantCluster = {
+type MapCenter = {
+  lat: number;
+  lng: number;
+};
+
+type MapSize = {
+  width: number;
+  height: number;
+};
+
+type ScreenRestaurant = MapRestaurant & {
+  screenX: number;
+  screenY: number;
+};
+
+type ScreenCluster = {
   key: string;
-  city: string;
-  label: string;
   count: number;
+  screenX: number;
+  screenY: number;
   mapLat: number;
   mapLng: number;
-  restaurants: MapRestaurant[];
+  restaurants: ScreenRestaurant[];
 };
+
+type Tile = {
+  key: string;
+  url: string;
+  left: number;
+  top: number;
+};
+
+const tileSize = 256;
+const minZoom = 5;
+const maxZoom = 15;
+const franceCenter = { lat: 46.603, lng: 1.888 };
 
 const cityCoordinates: Record<string, { lat: number; lng: number; region: string }> = {
   arras: { lat: 50.291, lng: 2.778, region: "Hauts-de-France" },
@@ -56,7 +90,6 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
     () => Array.from(new Set(mappedRestaurants.map((restaurant) => restaurant.city))).sort(),
     [mappedRestaurants],
   );
-  const clusters = useMemo(() => clusterRestaurants(mappedRestaurants), [mappedRestaurants]);
 
   const filteredRestaurants = useMemo(() => {
     const normalizedQuery = normalize(query);
@@ -72,7 +105,15 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
   const activeRestaurant =
     mappedRestaurants.find((restaurant) => restaurant.slug === activeSlug) ?? null;
 
-  const mapUrl = activeRestaurant ? mapsEmbedUrl(activeRestaurant) : mapsFranceUrl();
+  const selectRestaurant = useCallback((restaurant: MapRestaurant) => {
+    setCity(restaurant.city);
+    setActiveSlug(restaurant.slug);
+  }, []);
+
+  const resetFrance = useCallback(() => {
+    setCity("all");
+    setActiveSlug("");
+  }, []);
 
   return (
     <div className="grid gap-8 lg:grid-cols-[0.86fr_1.14fr]">
@@ -92,7 +133,10 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
             />
             <button
               className="warm-button h-12 rounded-[6px] border border-cacao bg-cacao px-5 text-xs font-black uppercase tracking-[0.16em] text-bone transition hover:text-bone"
-              onClick={() => setActiveSlug(filteredRestaurants[0]?.slug ?? "")}
+              onClick={() => {
+                const firstResult = filteredRestaurants[0];
+                if (firstResult) selectRestaurant(firstResult);
+              }}
               type="button"
             >
               Trouver
@@ -135,7 +179,7 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
               }`}
               initial={{ opacity: 0, y: 14 }}
               key={`${restaurant.city}-${restaurant.slug}`}
-              onClick={() => setActiveSlug(restaurant.slug)}
+              onClick={() => selectRestaurant(restaurant)}
               transition={{ delay: index * 0.025 }}
               type="button"
               whileInView={{ opacity: 1, y: 0 }}
@@ -162,101 +206,16 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
 
       <section className="overflow-hidden rounded-[8px] border border-cacao/15 bg-cacao text-bone">
         <div className="grid min-h-[760px] lg:grid-rows-[1fr_auto]">
-          <div className="relative min-h-[520px] bg-ink">
-            <div className="absolute left-5 right-5 top-5 z-10 flex flex-wrap items-center justify-between gap-3 rounded-[8px] border border-bone/15 bg-ink/75 p-3 backdrop-blur-md">
-              <div>
-                <p className="text-xs font-black uppercase tracking-[0.2em] text-saffron">
-                  {activeRestaurant ? "Carte Maps" : "Carte de France"}
-                </p>
-                <p className="mt-1 text-sm font-bold text-bone/70">
-                  {activeRestaurant
-                    ? "La carte est zoomee sur le restaurant choisi."
-                    : "Les bulles indiquent les villes avec plusieurs restaurants."}
-                </p>
-              </div>
-              {activeRestaurant ? (
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    className="rounded-[6px] border border-bone/25 bg-bone/10 px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-bone transition hover:border-saffron hover:text-saffron"
-                    onClick={() => setActiveSlug("")}
-                    type="button"
-                  >
-                    Voir la France
-                  </button>
-                  <Link
-                    className="rounded-[6px] border border-bone/25 bg-bone/10 px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-bone transition hover:border-saffron hover:text-saffron"
-                    href={
-                      activeRestaurant.googleMapsUrl ??
-                      `https://www.google.com/maps/dir/?api=1&destination=${activeRestaurant.mapLat},${activeRestaurant.mapLng}`
-                    }
-                    target="_blank"
-                  >
-                    Ouvrir Maps
-                  </Link>
-                </div>
-              ) : (
-                <Link
-                  className="rounded-[6px] border border-bone/25 bg-bone/10 px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-bone transition hover:border-saffron hover:text-saffron"
-                  href="https://www.google.com/maps/search/Flam's+restaurant+France"
-                  target="_blank"
-                >
-                  Ouvrir Maps
-                </Link>
-              )}
-            </div>
-            <iframe
-              className="h-full min-h-[520px] w-full border-0"
-              key={mapUrl}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              src={mapUrl}
-              title={
-                activeRestaurant
-                  ? `Carte Maps - ${activeRestaurant.name}`
-                  : "Carte Maps des restaurants Flam's"
-              }
-            />
-            {!activeRestaurant ? (
-              <div className="pointer-events-none absolute inset-0 z-10">
-                {clusters.map((cluster) => {
-                  const position = markerPosition(cluster);
-                  const isCluster = cluster.count > 1;
-                  return (
-                    <button
-                      aria-label={
-                        isCluster
-                          ? `Voir les ${cluster.count} restaurants a ${cluster.label}`
-                          : `Zoomer sur ${cluster.restaurants[0]?.name}`
-                      }
-                      className={`pointer-events-auto absolute flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-bone text-sm font-black shadow-[0_12px_30px_rgba(42,21,17,0.32)] transition hover:scale-110 ${
-                        isCluster
-                          ? "h-14 w-14 bg-saffron text-cacao ring-[10px] ring-saffron/25 hover:bg-bone"
-                          : "h-11 w-11 bg-ember text-bone hover:bg-saffron hover:text-cacao"
-                      }`}
-                      key={`marker-${cluster.key}`}
-                      onClick={() => {
-                        if (isCluster) {
-                          setCity(cluster.city);
-                          setActiveSlug("");
-                          return;
-                        }
-                        setActiveSlug(cluster.restaurants[0]?.slug ?? "");
-                      }}
-                      style={{ left: `${position.x}%`, top: `${position.y}%` }}
-                      title={
-                        isCluster
-                          ? `${cluster.count} restaurants a ${cluster.label}`
-                          : cluster.restaurants[0]?.name
-                      }
-                      type="button"
-                    >
-                      {isCluster ? cluster.count : "F"}
-                    </button>
-                  );
-                })}
-              </div>
-            ) : null}
-          </div>
+          <DynamicRestaurantMap
+            activeRestaurant={activeRestaurant}
+            onCityFocus={(cityName) => {
+              setCity(cityName);
+              setActiveSlug("");
+            }}
+            onReset={resetFrance}
+            onSelect={selectRestaurant}
+            restaurants={mappedRestaurants}
+          />
 
           {activeRestaurant ? (
             <div className="grid gap-8 border-t border-bone/15 p-6 md:grid-cols-[1fr_auto] md:p-8">
@@ -308,6 +267,218 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
   );
 }
 
+function DynamicRestaurantMap({
+  activeRestaurant,
+  onCityFocus,
+  onReset,
+  onSelect,
+  restaurants,
+}: {
+  activeRestaurant: MapRestaurant | null;
+  onCityFocus: (city: string) => void;
+  onReset: () => void;
+  onSelect: (restaurant: MapRestaurant) => void;
+  restaurants: MapRestaurant[];
+}) {
+  const mapRef = useRef<HTMLDivElement | null>(null);
+  const dragRef = useRef<{ x: number; y: number; center: MapCenter } | null>(null);
+  const [size, setSize] = useState<MapSize>({ width: 960, height: 620 });
+  const [center, setCenter] = useState<MapCenter>(franceCenter);
+  const [zoom, setZoom] = useState(6);
+
+  useEffect(() => {
+    const mapElement = mapRef.current;
+    if (!mapElement) return;
+
+    const resizeObserver = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      setSize({ width: Math.max(width, 320), height: Math.max(height, 420) });
+    });
+
+    resizeObserver.observe(mapElement);
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!activeRestaurant) return;
+    setCenter({ lat: activeRestaurant.mapLat, lng: activeRestaurant.mapLng });
+    setZoom(13);
+  }, [activeRestaurant]);
+
+  const centerPoint = useMemo(() => project(center.lat, center.lng, zoom), [center, zoom]);
+
+  const tiles = useMemo(
+    () => getVisibleTiles(centerPoint, size, zoom),
+    [centerPoint, size, zoom],
+  );
+
+  const screenRestaurants = useMemo(
+    () =>
+      restaurants.map((restaurant) => {
+        const point = project(restaurant.mapLat, restaurant.mapLng, zoom);
+        return {
+          ...restaurant,
+          screenX: point.x - centerPoint.x + size.width / 2,
+          screenY: point.y - centerPoint.y + size.height / 2,
+        };
+      }),
+    [centerPoint, restaurants, size, zoom],
+  );
+
+  const screenClusters = useMemo(
+    () => clusterScreenRestaurants(screenRestaurants, zoom),
+    [screenRestaurants, zoom],
+  );
+
+  const setZoomAroundCenter = useCallback((nextZoom: number) => {
+    setZoom(Math.min(Math.max(nextZoom, minZoom), maxZoom));
+  }, []);
+
+  const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    event.currentTarget.setPointerCapture(event.pointerId);
+    dragRef.current = { x: event.clientX, y: event.clientY, center };
+  };
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    if (!drag) return;
+
+    const dragCenterPoint = project(drag.center.lat, drag.center.lng, zoom);
+    const nextPoint = {
+      x: dragCenterPoint.x - (event.clientX - drag.x),
+      y: dragCenterPoint.y - (event.clientY - drag.y),
+    };
+    setCenter(unproject(nextPoint.x, nextPoint.y, zoom));
+  };
+
+  const handlePointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
+    dragRef.current = null;
+    event.currentTarget.releasePointerCapture(event.pointerId);
+  };
+
+  const handleClusterClick = (cluster: ScreenCluster) => {
+    const cities = Array.from(new Set(cluster.restaurants.map((restaurant) => restaurant.city)));
+
+    if (cluster.count === 1) {
+      onSelect(cluster.restaurants[0]);
+      return;
+    }
+
+    setCenter({ lat: cluster.mapLat, lng: cluster.mapLng });
+    setZoom((currentZoom) => Math.min(currentZoom + 2, maxZoom));
+
+    if (cities.length === 1) {
+      onCityFocus(cities[0]);
+    }
+  };
+
+  return (
+    <div
+      className="relative min-h-[620px] overflow-hidden bg-[#e8dfcf] touch-none"
+      onPointerCancel={handlePointerUp}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onWheel={(event) => {
+        event.preventDefault();
+        setZoomAroundCenter(zoom + (event.deltaY < 0 ? 1 : -1));
+      }}
+      ref={mapRef}
+    >
+      {tiles.map((tile) => (
+        <img
+          alt=""
+          className="absolute h-64 w-64 select-none"
+          draggable={false}
+          key={tile.key}
+          src={tile.url}
+          style={{ left: tile.left, top: tile.top }}
+        />
+      ))}
+
+      <div className="absolute left-5 right-5 top-5 z-20 flex flex-wrap items-center justify-between gap-3 rounded-[8px] border border-bone/15 bg-ink/80 p-3 backdrop-blur-md">
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-saffron">
+            Carte dynamique
+          </p>
+          <p className="mt-1 text-sm font-bold text-bone/70">
+            Deplacez la carte, zoomez, puis cliquez une bulle ou un restaurant.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            className="h-9 w-9 rounded-[6px] border border-bone/25 bg-bone/10 text-sm font-black text-bone transition hover:border-saffron hover:text-saffron"
+            onClick={() => setZoomAroundCenter(zoom + 1)}
+            type="button"
+          >
+            +
+          </button>
+          <button
+            className="h-9 w-9 rounded-[6px] border border-bone/25 bg-bone/10 text-sm font-black text-bone transition hover:border-saffron hover:text-saffron"
+            onClick={() => setZoomAroundCenter(zoom - 1)}
+            type="button"
+          >
+            -
+          </button>
+          <button
+            className="rounded-[6px] border border-bone/25 bg-bone/10 px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-bone transition hover:border-saffron hover:text-saffron"
+            onClick={() => {
+              setCenter(franceCenter);
+              setZoom(6);
+              onReset();
+            }}
+            type="button"
+          >
+            France
+          </button>
+        </div>
+      </div>
+
+      <div className="absolute inset-0 z-10">
+        {screenClusters.map((cluster) => {
+          const isCluster = cluster.count > 1;
+          const active = cluster.restaurants.some(
+            (restaurant) => restaurant.slug === activeRestaurant?.slug,
+          );
+
+          return (
+            <button
+              aria-label={
+                isCluster
+                  ? `Voir les ${cluster.count} restaurants dans cette zone`
+                  : `Voir ${cluster.restaurants[0]?.name}`
+              }
+              className={`absolute flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-bone font-black shadow-[0_14px_34px_rgba(42,21,17,0.34)] transition hover:scale-110 ${
+                isCluster
+                  ? "h-14 w-14 bg-saffron text-cacao ring-[10px] ring-saffron/25"
+                  : "h-11 w-11 bg-ember text-bone"
+              } ${active ? "scale-110 ring-[10px] ring-ember/30" : ""}`}
+              key={cluster.key}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleClusterClick(cluster);
+              }}
+              style={{ left: cluster.screenX, top: cluster.screenY }}
+              title={
+                isCluster
+                  ? `${cluster.count} restaurants dans cette zone`
+                  : cluster.restaurants[0]?.name
+              }
+              type="button"
+            >
+              {isCluster ? cluster.count : "F"}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="absolute bottom-4 left-4 z-20 rounded-[6px] bg-bone/90 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.12em] text-cacao shadow">
+        OpenStreetMap
+      </div>
+    </div>
+  );
+}
+
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-[8px] border border-cacao/15 bg-cream p-4 text-cacao">
@@ -338,13 +509,93 @@ function withMapPosition(restaurant: PublicRestaurant): MapRestaurant {
   };
 }
 
-function mapsEmbedUrl(restaurant: MapRestaurant) {
-  const query = encodeURIComponent(`${restaurant.name}, ${formatAddress(restaurant)}`);
-  return `https://maps.google.com/maps?q=${query}&ll=${restaurant.mapLat},${restaurant.mapLng}&z=14&output=embed`;
+function getVisibleTiles(centerPoint: { x: number; y: number }, size: MapSize, zoom: number) {
+  const tiles: Tile[] = [];
+  const startX = Math.floor((centerPoint.x - size.width / 2) / tileSize);
+  const endX = Math.floor((centerPoint.x + size.width / 2) / tileSize);
+  const startY = Math.floor((centerPoint.y - size.height / 2) / tileSize);
+  const endY = Math.floor((centerPoint.y + size.height / 2) / tileSize);
+  const maxTile = 2 ** zoom;
+
+  for (let x = startX; x <= endX; x += 1) {
+    for (let y = startY; y <= endY; y += 1) {
+      if (y < 0 || y >= maxTile) continue;
+
+      const wrappedX = ((x % maxTile) + maxTile) % maxTile;
+      tiles.push({
+        key: `${zoom}-${wrappedX}-${y}`,
+        url: `https://tile.openstreetmap.org/${zoom}/${wrappedX}/${y}.png`,
+        left: x * tileSize - centerPoint.x + size.width / 2,
+        top: y * tileSize - centerPoint.y + size.height / 2,
+      });
+    }
+  }
+
+  return tiles;
 }
 
-function mapsFranceUrl() {
-  return "https://maps.google.com/maps?q=France&ll=46.603,1.888&z=6&output=embed";
+function clusterScreenRestaurants(restaurants: ScreenRestaurant[], zoom: number): ScreenCluster[] {
+  const radius = zoom < 8 ? 68 : zoom < 11 ? 54 : 34;
+  const clusters: ScreenCluster[] = [];
+
+  for (const restaurant of restaurants) {
+    const existingCluster = clusters.find((cluster) => {
+      const distance = Math.hypot(cluster.screenX - restaurant.screenX, cluster.screenY - restaurant.screenY);
+      return distance < radius;
+    });
+
+    if (existingCluster) {
+      existingCluster.restaurants.push(restaurant);
+      existingCluster.count += 1;
+      existingCluster.screenX =
+        (existingCluster.screenX * (existingCluster.count - 1) + restaurant.screenX) /
+        existingCluster.count;
+      existingCluster.screenY =
+        (existingCluster.screenY * (existingCluster.count - 1) + restaurant.screenY) /
+        existingCluster.count;
+      existingCluster.mapLat =
+        (existingCluster.mapLat * (existingCluster.count - 1) + restaurant.mapLat) /
+        existingCluster.count;
+      existingCluster.mapLng =
+        (existingCluster.mapLng * (existingCluster.count - 1) + restaurant.mapLng) /
+        existingCluster.count;
+    } else {
+      clusters.push({
+        key: restaurant.slug,
+        count: 1,
+        screenX: restaurant.screenX,
+        screenY: restaurant.screenY,
+        mapLat: restaurant.mapLat,
+        mapLng: restaurant.mapLng,
+        restaurants: [restaurant],
+      });
+    }
+  }
+
+  return clusters.map((cluster) => ({
+    ...cluster,
+    key: cluster.restaurants.map((restaurant) => restaurant.slug).join("-"),
+  }));
+}
+
+function project(lat: number, lng: number, zoom: number) {
+  const sinLat = Math.sin((lat * Math.PI) / 180);
+  const scale = tileSize * 2 ** zoom;
+  return {
+    x: ((lng + 180) / 360) * scale,
+    y:
+      (0.5 - Math.log((1 + sinLat) / (1 - sinLat)) / (4 * Math.PI)) *
+      scale,
+  };
+}
+
+function unproject(x: number, y: number, zoom: number): MapCenter {
+  const scale = tileSize * 2 ** zoom;
+  const lng = (x / scale) * 360 - 180;
+  const n = Math.PI - (2 * Math.PI * y) / scale;
+  const lat = (180 / Math.PI) * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
+
+  return { lat: Math.min(Math.max(lat, -85), 85), lng };
 }
 
 function formatAddress(restaurant: PublicRestaurant) {
@@ -365,46 +616,4 @@ function slugCity(city: string) {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/\s+/g, "-");
-}
-
-function clusterRestaurants(restaurants: MapRestaurant[]): RestaurantCluster[] {
-  const grouped = new Map<string, MapRestaurant[]>();
-  for (const restaurant of restaurants) {
-    const key = slugCity(restaurant.city);
-    grouped.set(key, [...(grouped.get(key) ?? []), restaurant]);
-  }
-
-  return Array.from(grouped.entries()).map(([key, clusterRestaurants]) => {
-    const mapLat =
-      clusterRestaurants.reduce((total, restaurant) => total + restaurant.mapLat, 0) /
-      clusterRestaurants.length;
-    const mapLng =
-      clusterRestaurants.reduce((total, restaurant) => total + restaurant.mapLng, 0) /
-      clusterRestaurants.length;
-    const firstRestaurant = clusterRestaurants[0];
-
-    return {
-      key,
-      city: firstRestaurant?.city ?? key,
-      label: firstRestaurant?.city ?? key,
-      count: clusterRestaurants.length,
-      mapLat,
-      mapLng,
-      restaurants: clusterRestaurants,
-    };
-  });
-}
-
-function markerPosition(place: { mapLat: number; mapLng: number }) {
-  const minLng = -5.6;
-  const maxLng = 9.7;
-  const minLat = 41.0;
-  const maxLat = 51.4;
-  const x = ((place.mapLng - minLng) / (maxLng - minLng)) * 100;
-  const y = ((maxLat - place.mapLat) / (maxLat - minLat)) * 100;
-
-  return {
-    x: Math.min(Math.max(x, 4), 96),
-    y: Math.min(Math.max(y, 8), 92),
-  };
 }
