@@ -40,7 +40,7 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
   );
   const [query, setQuery] = useState("");
   const [city, setCity] = useState("all");
-  const [activeSlug, setActiveSlug] = useState(mappedRestaurants[0]?.slug ?? "");
+  const [activeSlug, setActiveSlug] = useState("");
 
   const cities = useMemo(
     () => Array.from(new Set(mappedRestaurants.map((restaurant) => restaurant.city))).sort(),
@@ -59,9 +59,7 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
   }, [city, mappedRestaurants, query]);
 
   const activeRestaurant =
-    filteredRestaurants.find((restaurant) => restaurant.slug === activeSlug) ??
-    filteredRestaurants[0] ??
-    mappedRestaurants[0];
+    mappedRestaurants.find((restaurant) => restaurant.slug === activeSlug) ?? null;
 
   const mapUrl = activeRestaurant ? mapsEmbedUrl(activeRestaurant) : mapsFranceUrl();
 
@@ -113,7 +111,7 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
         <div className="grid grid-cols-3 gap-3">
           <Stat label="adresses" value={filteredRestaurants.length.toString()} />
           <Stat label="villes" value={cities.length.toString()} />
-          <Stat label="selection" value={activeRestaurant?.city ?? "-"} />
+          <Stat label="selection" value={activeRestaurant?.city ?? "France"} />
         </div>
 
         <div className="grid max-h-[620px] gap-3 overflow-auto pr-1" data-lenis-prevent>
@@ -157,24 +155,43 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
             <div className="absolute left-5 right-5 top-5 z-10 flex flex-wrap items-center justify-between gap-3 rounded-[8px] border border-bone/15 bg-ink/75 p-3 backdrop-blur-md">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-saffron">
-                  Carte Maps
+                  {activeRestaurant ? "Carte Maps" : "Carte de France"}
                 </p>
                 <p className="mt-1 text-sm font-bold text-bone/70">
-                  Cliquez une adresse a gauche, la carte se recentre dessus.
+                  {activeRestaurant
+                    ? "La carte est zoomee sur le restaurant choisi."
+                    : "Cliquez un marqueur ou une adresse pour zoomer sur le restaurant."}
                 </p>
               </div>
               {activeRestaurant ? (
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    className="rounded-[6px] border border-bone/25 bg-bone/10 px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-bone transition hover:border-saffron hover:text-saffron"
+                    onClick={() => setActiveSlug("")}
+                    type="button"
+                  >
+                    Voir la France
+                  </button>
+                  <Link
+                    className="rounded-[6px] border border-bone/25 bg-bone/10 px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-bone transition hover:border-saffron hover:text-saffron"
+                    href={
+                      activeRestaurant.googleMapsUrl ??
+                      `https://www.google.com/maps/dir/?api=1&destination=${activeRestaurant.mapLat},${activeRestaurant.mapLng}`
+                    }
+                    target="_blank"
+                  >
+                    Ouvrir Maps
+                  </Link>
+                </div>
+              ) : (
                 <Link
                   className="rounded-[6px] border border-bone/25 bg-bone/10 px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-bone transition hover:border-saffron hover:text-saffron"
-                  href={
-                    activeRestaurant.googleMapsUrl ??
-                    `https://www.google.com/maps/dir/?api=1&destination=${activeRestaurant.mapLat},${activeRestaurant.mapLng}`
-                  }
+                  href="https://www.google.com/maps/search/Flam's+restaurant+France"
                   target="_blank"
                 >
                   Ouvrir Maps
                 </Link>
-              ) : null}
+              )}
             </div>
             <iframe
               className="h-full min-h-[520px] w-full border-0"
@@ -188,6 +205,26 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
                   : "Carte Maps des restaurants Flam's"
               }
             />
+            {!activeRestaurant ? (
+              <div className="pointer-events-none absolute inset-0 z-10">
+                {mappedRestaurants.map((restaurant) => {
+                  const position = markerPosition(restaurant);
+                  return (
+                    <button
+                      aria-label={`Zoomer sur ${restaurant.name}`}
+                      className="pointer-events-auto absolute flex h-10 w-10 -translate-x-1/2 -translate-y-full items-center justify-center rounded-full border-2 border-bone bg-ember text-xs font-black text-bone shadow-[0_10px_28px_rgba(42,21,17,0.28)] transition hover:scale-110 hover:bg-saffron hover:text-cacao"
+                      key={`marker-${restaurant.slug}`}
+                      onClick={() => setActiveSlug(restaurant.slug)}
+                      style={{ left: `${position.x}%`, top: `${position.y}%` }}
+                      title={restaurant.name}
+                      type="button"
+                    >
+                      F
+                    </button>
+                  );
+                })}
+              </div>
+            ) : null}
           </div>
 
           {activeRestaurant ? (
@@ -276,7 +313,7 @@ function mapsEmbedUrl(restaurant: MapRestaurant) {
 }
 
 function mapsFranceUrl() {
-  return "https://maps.google.com/maps?q=France&z=6&output=embed";
+  return "https://maps.google.com/maps?q=France&ll=46.603,1.888&z=6&output=embed";
 }
 
 function formatAddress(restaurant: PublicRestaurant) {
@@ -297,4 +334,18 @@ function slugCity(city: string) {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/\s+/g, "-");
+}
+
+function markerPosition(restaurant: MapRestaurant) {
+  const minLng = -5.6;
+  const maxLng = 9.7;
+  const minLat = 41.0;
+  const maxLat = 51.4;
+  const x = ((restaurant.mapLng - minLng) / (maxLng - minLng)) * 100;
+  const y = ((maxLat - restaurant.mapLat) / (maxLat - minLat)) * 100;
+
+  return {
+    x: Math.min(Math.max(x, 4), 96),
+    y: Math.min(Math.max(y, 8), 92),
+  };
 }
