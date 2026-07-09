@@ -25,6 +25,7 @@ type TextPressureProps = {
   strokeColor?: string;
   className?: string;
   minFontSize?: number;
+  maxFontSize?: number;
 };
 
 const distance = (a: Point, b: Point) =>
@@ -56,6 +57,7 @@ export function TextPressure({
   strokeColor = "#ef240d",
   className = "",
   minFontSize = 36,
+  maxFontSize = 156,
 }: TextPressureProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -95,7 +97,7 @@ export function TextPressure({
     const { width: containerWidth, height: containerHeight } =
       container.getBoundingClientRect();
     setFontSize(
-      Math.max(containerWidth / (characters.length / 2), minFontSize),
+      Math.min(Math.max(containerWidth / Math.max(characters.length * 0.72, 1), minFontSize), maxFontSize),
     );
     setScaleY(1);
     setLineHeight(1);
@@ -108,7 +110,7 @@ export function TextPressure({
         setLineHeight(ratio);
       }
     });
-  }, [characters.length, minFontSize, scale]);
+  }, [characters.length, maxFontSize, minFontSize, scale]);
 
   useEffect(() => {
     let timeout = 0;

@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import type { PointerEvent } from "react";
 import type { PublicRestaurant } from "@/lib/cms";
 
 type StoreLocatorProps = {
@@ -13,19 +12,8 @@ type StoreLocatorProps = {
 type MapRestaurant = PublicRestaurant & {
   mapLat: number;
   mapLng: number;
-  mapX: number;
-  mapY: number;
   region: string;
 };
-
-type ViewBox = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
-
-const FRANCE_VIEWBOX: ViewBox = { x: 0, y: 0, width: 760, height: 760 };
 
 const cityCoordinates: Record<string, { lat: number; lng: number; region: string }> = {
   arras: { lat: 50.291, lng: 2.778, region: "Hauts-de-France" },
@@ -53,8 +41,6 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
   const [query, setQuery] = useState("");
   const [city, setCity] = useState("all");
   const [activeSlug, setActiveSlug] = useState(mappedRestaurants[0]?.slug ?? "");
-  const [viewBox, setViewBox] = useState<ViewBox>(FRANCE_VIEWBOX);
-  const [dragStart, setDragStart] = useState<{ x: number; y: number; viewBox: ViewBox } | null>(null);
 
   const cities = useMemo(
     () => Array.from(new Set(mappedRestaurants.map((restaurant) => restaurant.city))).sort(),
@@ -77,62 +63,7 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
     filteredRestaurants[0] ??
     mappedRestaurants[0];
 
-  function focusRestaurant(restaurant: MapRestaurant) {
-    setActiveSlug(restaurant.slug);
-    setViewBox(centerOn(restaurant.mapX, restaurant.mapY, 240));
-  }
-
-  function fitVisible() {
-    if (!filteredRestaurants.length) {
-      setViewBox(FRANCE_VIEWBOX);
-      return;
-    }
-
-    const xs = filteredRestaurants.map((restaurant) => restaurant.mapX);
-    const ys = filteredRestaurants.map((restaurant) => restaurant.mapY);
-    const minX = Math.min(...xs);
-    const maxX = Math.max(...xs);
-    const minY = Math.min(...ys);
-    const maxY = Math.max(...ys);
-    const width = Math.max(220, maxX - minX + 190);
-    const height = Math.max(220, maxY - minY + 190);
-    setViewBox({
-      x: clamp(minX - (width - (maxX - minX)) / 2, 0, 760 - width),
-      y: clamp(minY - (height - (maxY - minY)) / 2, 0, 760 - height),
-      width,
-      height,
-    });
-  }
-
-  function zoom(direction: "in" | "out") {
-    const factor = direction === "in" ? 0.78 : 1.22;
-    const nextWidth = clamp(viewBox.width * factor, 180, 760);
-    const nextHeight = clamp(viewBox.height * factor, 180, 760);
-    const centerX = viewBox.x + viewBox.width / 2;
-    const centerY = viewBox.y + viewBox.height / 2;
-    setViewBox({
-      x: clamp(centerX - nextWidth / 2, 0, 760 - nextWidth),
-      y: clamp(centerY - nextHeight / 2, 0, 760 - nextHeight),
-      width: nextWidth,
-      height: nextHeight,
-    });
-  }
-
-  function startDrag(event: PointerEvent<SVGSVGElement>) {
-    event.currentTarget.setPointerCapture(event.pointerId);
-    setDragStart({ x: event.clientX, y: event.clientY, viewBox });
-  }
-
-  function drag(event: PointerEvent<SVGSVGElement>) {
-    if (!dragStart) return;
-    const scaleX = dragStart.viewBox.width / event.currentTarget.clientWidth;
-    const scaleY = dragStart.viewBox.height / event.currentTarget.clientHeight;
-    setViewBox({
-      ...dragStart.viewBox,
-      x: clamp(dragStart.viewBox.x - (event.clientX - dragStart.x) * scaleX, 0, 760 - dragStart.viewBox.width),
-      y: clamp(dragStart.viewBox.y - (event.clientY - dragStart.y) * scaleY, 0, 760 - dragStart.viewBox.height),
-    });
-  }
+  const mapUrl = activeRestaurant ? mapsEmbedUrl(activeRestaurant) : mapsFranceUrl();
 
   return (
     <div className="grid gap-8 lg:grid-cols-[0.86fr_1.14fr]">
@@ -152,10 +83,10 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
             />
             <button
               className="warm-button h-12 rounded-[6px] border border-cacao bg-cacao px-5 text-xs font-black uppercase tracking-[0.16em] text-bone transition hover:text-bone"
-              onClick={fitVisible}
+              onClick={() => setActiveSlug(filteredRestaurants[0]?.slug ?? "")}
               type="button"
             >
-              Voir
+              Trouver
             </button>
           </div>
           <label className="sr-only" htmlFor="restaurant-city">
@@ -195,7 +126,7 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
               }`}
               initial={{ opacity: 0, y: 14 }}
               key={`${restaurant.city}-${restaurant.slug}`}
-              onClick={() => focusRestaurant(restaurant)}
+              onClick={() => setActiveSlug(restaurant.slug)}
               transition={{ delay: index * 0.025 }}
               type="button"
               whileInView={{ opacity: 1, y: 0 }}
@@ -222,111 +153,41 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
 
       <section className="overflow-hidden rounded-[8px] border border-cacao/15 bg-cacao text-bone">
         <div className="grid min-h-[760px] lg:grid-rows-[1fr_auto]">
-          <div className="relative min-h-[520px] bg-[radial-gradient(circle_at_20%_20%,rgba(243,177,42,0.32),transparent_18rem),linear-gradient(135deg,#65131a,#2a1511_58%,#11100d)]">
-            <div className="absolute left-5 right-5 top-5 z-10 flex flex-wrap items-center justify-between gap-3 rounded-[8px] border border-bone/15 bg-ink/70 p-3 backdrop-blur-md">
+          <div className="relative min-h-[520px] bg-ink">
+            <div className="absolute left-5 right-5 top-5 z-10 flex flex-wrap items-center justify-between gap-3 rounded-[8px] border border-bone/15 bg-ink/75 p-3 backdrop-blur-md">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-saffron">
-                  Carte de France
+                  Carte Maps
                 </p>
                 <p className="mt-1 text-sm font-bold text-bone/70">
-                  Cliquez, zoomez et deplacez la carte pour naviguer.
+                  Cliquez une adresse a gauche, la carte se recentre dessus.
                 </p>
               </div>
-              <div className="flex gap-2">
-                <MapButton label="+" onClick={() => zoom("in")} />
-                <MapButton label="-" onClick={() => zoom("out")} />
-                <MapButton label="Tout" onClick={() => setViewBox(FRANCE_VIEWBOX)} />
-                <MapButton label="Selection" onClick={fitVisible} />
-              </div>
-            </div>
-
-            <svg
-              aria-label="Carte interactive des restaurants Flam's en France"
-              className="h-full min-h-[520px] w-full cursor-grab touch-none select-none active:cursor-grabbing"
-              onPointerDown={startDrag}
-              onPointerLeave={() => setDragStart(null)}
-              onPointerMove={drag}
-              onPointerUp={() => setDragStart(null)}
-              role="img"
-              viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
-            >
-              <defs>
-                <filter id="pinGlow" x="-80%" y="-80%" width="260%" height="260%">
-                  <feDropShadow dx="0" dy="10" floodColor="#11100d" floodOpacity="0.45" stdDeviation="8" />
-                </filter>
-                <linearGradient id="franceFill" x1="0" x2="1" y1="0" y2="1">
-                  <stop offset="0%" stopColor="#fff7df" stopOpacity="0.22" />
-                  <stop offset="58%" stopColor="#f3b12a" stopOpacity="0.18" />
-                  <stop offset="100%" stopColor="#ef3c19" stopOpacity="0.22" />
-                </linearGradient>
-              </defs>
-              <rect height="760" width="760" fill="transparent" />
-              <path
-                d="M355 52 L450 70 L520 122 L565 198 L625 278 L604 372 L642 458 L585 562 L510 618 L430 705 L342 665 L260 678 L188 610 L150 512 L104 440 L145 355 L118 275 L170 196 L255 154 L300 88 Z"
-                fill="url(#franceFill)"
-                stroke="rgba(255,247,223,.72)"
-                strokeWidth="4"
-              />
-              <path
-                d="M190 202 C260 236 320 248 382 232 C455 214 520 222 578 268 M144 356 C236 335 310 352 382 386 C460 424 532 420 612 380 M176 560 C246 506 334 502 420 530 C482 550 532 548 588 522"
-                fill="none"
-                stroke="rgba(255,247,223,.18)"
-                strokeLinecap="round"
-                strokeWidth="3"
-              />
-              <path
-                d="M356 52 C336 168 332 260 352 360 C373 468 378 572 342 665 M520 122 C468 204 446 282 452 358 C458 454 440 562 430 705 M255 154 C292 244 292 344 260 448 C238 518 222 588 260 678"
-                fill="none"
-                stroke="rgba(255,247,223,.13)"
-                strokeLinecap="round"
-                strokeWidth="3"
-              />
-              {filteredRestaurants.map((restaurant, index) => (
-                <g
-                  className="cursor-pointer"
-                  filter="url(#pinGlow)"
-                  key={`${restaurant.city}-${restaurant.slug}-pin`}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    focusRestaurant(restaurant);
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  transform={`translate(${restaurant.mapX} ${restaurant.mapY})`}
+              {activeRestaurant ? (
+                <Link
+                  className="rounded-[6px] border border-bone/25 bg-bone/10 px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-bone transition hover:border-saffron hover:text-saffron"
+                  href={
+                    activeRestaurant.googleMapsUrl ??
+                    `https://www.google.com/maps/dir/?api=1&destination=${activeRestaurant.mapLat},${activeRestaurant.mapLng}`
+                  }
+                  target="_blank"
                 >
-                  <circle
-                    fill={activeRestaurant?.slug === restaurant.slug ? "#f3b12a" : "#fff7df"}
-                    r={activeRestaurant?.slug === restaurant.slug ? 20 : 15}
-                    stroke="#65131a"
-                    strokeWidth="5"
-                  />
-                  <text
-                    dy="6"
-                    fill="#65131a"
-                    fontFamily="Arial, sans-serif"
-                    fontSize="15"
-                    fontWeight="900"
-                    textAnchor="middle"
-                  >
-                    {index + 1}
-                  </text>
-                  <text
-                    className="pointer-events-none"
-                    dy="-26"
-                    fill="#fff7df"
-                    fontFamily="Arial, sans-serif"
-                    fontSize="14"
-                    fontWeight="900"
-                    paintOrder="stroke"
-                    stroke="#2a1511"
-                    strokeWidth="5"
-                    textAnchor="middle"
-                  >
-                    {restaurant.city}
-                  </text>
-                </g>
-              ))}
-            </svg>
+                  Ouvrir Maps
+                </Link>
+              ) : null}
+            </div>
+            <iframe
+              className="h-full min-h-[520px] w-full border-0"
+              key={mapUrl}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              src={mapUrl}
+              title={
+                activeRestaurant
+                  ? `Carte Maps - ${activeRestaurant.name}`
+                  : "Carte Maps des restaurants Flam's"
+              }
+            />
           </div>
 
           {activeRestaurant ? (
@@ -382,21 +243,9 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-[8px] border border-cacao/15 bg-cream p-4 text-cacao">
-      <p className="font-display text-4xl uppercase leading-none">{value}</p>
+      <p className="truncate font-display text-4xl uppercase leading-none">{value}</p>
       <p className="mt-1 text-xs font-black uppercase tracking-[0.16em] text-cacao/55">{label}</p>
     </div>
-  );
-}
-
-function MapButton({ label, onClick }: { label: string; onClick: () => void }) {
-  return (
-    <button
-      className="rounded-[6px] border border-bone/25 bg-bone/10 px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-bone transition hover:border-saffron hover:text-saffron"
-      onClick={onClick}
-      type="button"
-    >
-      {label}
-    </button>
   );
 }
 
@@ -417,10 +266,17 @@ function withMapPosition(restaurant: PublicRestaurant): MapRestaurant {
     ...restaurant,
     mapLat,
     mapLng,
-    mapX: longitudeToX(mapLng),
-    mapY: latitudeToY(mapLat),
     region: fallback.region,
   };
+}
+
+function mapsEmbedUrl(restaurant: MapRestaurant) {
+  const query = encodeURIComponent(`${restaurant.name}, ${formatAddress(restaurant)}`);
+  return `https://maps.google.com/maps?q=${query}&ll=${restaurant.mapLat},${restaurant.mapLng}&z=14&output=embed`;
+}
+
+function mapsFranceUrl() {
+  return "https://maps.google.com/maps?q=France&z=6&output=embed";
 }
 
 function formatAddress(restaurant: PublicRestaurant) {
@@ -433,27 +289,6 @@ function normalize(value: string) {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .trim();
-}
-
-function longitudeToX(lng: number) {
-  return 115 + ((lng + 5.2) / 14.2) * 530;
-}
-
-function latitudeToY(lat: number) {
-  return 690 - ((lat - 41.1) / 10.3) * 620;
-}
-
-function centerOn(x: number, y: number, size: number): ViewBox {
-  return {
-    x: clamp(x - size / 2, 0, 760 - size),
-    y: clamp(y - size / 2, 0, 760 - size),
-    width: size,
-    height: size,
-  };
-}
-
-function clamp(value: number, min: number, max: number) {
-  return Math.min(max, Math.max(min, value));
 }
 
 function slugCity(city: string) {
