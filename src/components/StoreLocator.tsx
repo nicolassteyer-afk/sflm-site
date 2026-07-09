@@ -15,6 +15,16 @@ type MapRestaurant = PublicRestaurant & {
   region: string;
 };
 
+type RestaurantCluster = {
+  key: string;
+  city: string;
+  label: string;
+  count: number;
+  mapLat: number;
+  mapLng: number;
+  restaurants: MapRestaurant[];
+};
+
 const cityCoordinates: Record<string, { lat: number; lng: number; region: string }> = {
   arras: { lat: 50.291, lng: 2.778, region: "Hauts-de-France" },
   begles: { lat: 44.808, lng: -0.548, region: "Nouvelle-Aquitaine" },
@@ -46,6 +56,7 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
     () => Array.from(new Set(mappedRestaurants.map((restaurant) => restaurant.city))).sort(),
     [mappedRestaurants],
   );
+  const clusters = useMemo(() => clusterRestaurants(mappedRestaurants), [mappedRestaurants]);
 
   const filteredRestaurants = useMemo(() => {
     const normalizedQuery = normalize(query);
@@ -160,7 +171,7 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
                 <p className="mt-1 text-sm font-bold text-bone/70">
                   {activeRestaurant
                     ? "La carte est zoomee sur le restaurant choisi."
-                    : "Cliquez un marqueur ou une adresse pour zoomer sur le restaurant."}
+                    : "Les bulles indiquent les villes avec plusieurs restaurants."}
                 </p>
               </div>
               {activeRestaurant ? (
@@ -207,19 +218,39 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
             />
             {!activeRestaurant ? (
               <div className="pointer-events-none absolute inset-0 z-10">
-                {mappedRestaurants.map((restaurant) => {
-                  const position = markerPosition(restaurant);
+                {clusters.map((cluster) => {
+                  const position = markerPosition(cluster);
+                  const isCluster = cluster.count > 1;
                   return (
                     <button
-                      aria-label={`Zoomer sur ${restaurant.name}`}
-                      className="pointer-events-auto absolute flex h-10 w-10 -translate-x-1/2 -translate-y-full items-center justify-center rounded-full border-2 border-bone bg-ember text-xs font-black text-bone shadow-[0_10px_28px_rgba(42,21,17,0.28)] transition hover:scale-110 hover:bg-saffron hover:text-cacao"
-                      key={`marker-${restaurant.slug}`}
-                      onClick={() => setActiveSlug(restaurant.slug)}
+                      aria-label={
+                        isCluster
+                          ? `Voir les ${cluster.count} restaurants a ${cluster.label}`
+                          : `Zoomer sur ${cluster.restaurants[0]?.name}`
+                      }
+                      className={`pointer-events-auto absolute flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-bone text-sm font-black shadow-[0_12px_30px_rgba(42,21,17,0.32)] transition hover:scale-110 ${
+                        isCluster
+                          ? "h-14 w-14 bg-saffron text-cacao ring-[10px] ring-saffron/25 hover:bg-bone"
+                          : "h-11 w-11 bg-ember text-bone hover:bg-saffron hover:text-cacao"
+                      }`}
+                      key={`marker-${cluster.key}`}
+                      onClick={() => {
+                        if (isCluster) {
+                          setCity(cluster.city);
+                          setActiveSlug("");
+                          return;
+                        }
+                        setActiveSlug(cluster.restaurants[0]?.slug ?? "");
+                      }}
                       style={{ left: `${position.x}%`, top: `${position.y}%` }}
-                      title={restaurant.name}
+                      title={
+                        isCluster
+                          ? `${cluster.count} restaurants a ${cluster.label}`
+                          : cluster.restaurants[0]?.name
+                      }
                       type="button"
                     >
-                      F
+                      {isCluster ? cluster.count : "F"}
                     </button>
                   );
                 })}
@@ -336,13 +367,41 @@ function slugCity(city: string) {
     .replace(/\s+/g, "-");
 }
 
-function markerPosition(restaurant: MapRestaurant) {
+function clusterRestaurants(restaurants: MapRestaurant[]): RestaurantCluster[] {
+  const grouped = new Map<string, MapRestaurant[]>();
+  for (const restaurant of restaurants) {
+    const key = slugCity(restaurant.city);
+    grouped.set(key, [...(grouped.get(key) ?? []), restaurant]);
+  }
+
+  return Array.from(grouped.entries()).map(([key, clusterRestaurants]) => {
+    const mapLat =
+      clusterRestaurants.reduce((total, restaurant) => total + restaurant.mapLat, 0) /
+      clusterRestaurants.length;
+    const mapLng =
+      clusterRestaurants.reduce((total, restaurant) => total + restaurant.mapLng, 0) /
+      clusterRestaurants.length;
+    const firstRestaurant = clusterRestaurants[0];
+
+    return {
+      key,
+      city: firstRestaurant?.city ?? key,
+      label: firstRestaurant?.city ?? key,
+      count: clusterRestaurants.length,
+      mapLat,
+      mapLng,
+      restaurants: clusterRestaurants,
+    };
+  });
+}
+
+function markerPosition(place: { mapLat: number; mapLng: number }) {
   const minLng = -5.6;
   const maxLng = 9.7;
   const minLat = 41.0;
   const maxLat = 51.4;
-  const x = ((restaurant.mapLng - minLng) / (maxLng - minLng)) * 100;
-  const y = ((maxLat - restaurant.mapLat) / (maxLat - minLat)) * 100;
+  const x = ((place.mapLng - minLng) / (maxLng - minLng)) * 100;
+  const y = ((maxLat - place.mapLat) / (maxLat - minLat)) * 100;
 
   return {
     x: Math.min(Math.max(x, 4), 96),
