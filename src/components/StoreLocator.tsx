@@ -54,6 +54,11 @@ type Tile = {
   top: number;
 };
 
+type TileLayer = {
+  id: number;
+  tiles: Tile[];
+};
+
 const tileSize = 256;
 const minZoom = 5;
 const maxZoom = 15;
@@ -287,6 +292,7 @@ function DynamicRestaurantMap({
   const [size, setSize] = useState<MapSize>({ width: 960, height: 620 });
   const [center, setCenter] = useState<MapCenter>(franceCenter);
   const [zoom, setZoom] = useState(6);
+  const [previousTileLayer, setPreviousTileLayer] = useState<TileLayer | null>(null);
 
   useEffect(() => {
     const mapElement = mapRef.current;
@@ -301,11 +307,36 @@ function DynamicRestaurantMap({
     return () => resizeObserver.disconnect();
   }, []);
 
+  const centerPoint = useMemo(() => project(center.lat, center.lng, zoom), [center, zoom]);
+
+  const tiles = useMemo(
+    () => getVisibleTiles(centerPoint, size, zoom),
+    [centerPoint, size, zoom],
+  );
+
+  const setSmoothZoom = useCallback(
+    (nextZoom: number) => {
+      const clampedZoom = Math.min(Math.max(nextZoom, minZoom), maxZoom);
+      if (clampedZoom === zoom) return;
+
+      setPreviousTileLayer({ id: Date.now(), tiles });
+      setZoom(clampedZoom);
+    },
+    [tiles, zoom],
+  );
+
+  useEffect(() => {
+    if (!previousTileLayer) return;
+
+    const timeout = window.setTimeout(() => setPreviousTileLayer(null), 420);
+    return () => window.clearTimeout(timeout);
+  }, [previousTileLayer]);
+
   useEffect(() => {
     if (!activeRestaurant) return;
     setCenter({ lat: activeRestaurant.mapLat, lng: activeRestaurant.mapLng });
-    setZoom(13);
-  }, [activeRestaurant]);
+    setSmoothZoom(13);
+  }, [activeRestaurant, setSmoothZoom]);
 
   useEffect(() => {
     const mapElement = mapRef.current;
@@ -317,21 +348,12 @@ function DynamicRestaurantMap({
       }
 
       event.preventDefault();
-      setZoom((currentZoom) =>
-        Math.min(Math.max(currentZoom + (event.deltaY < 0 ? 1 : -1), minZoom), maxZoom),
-      );
+      setSmoothZoom(zoom + (event.deltaY < 0 ? 1 : -1));
     };
 
     mapElement.addEventListener("wheel", handleWheel, { passive: false });
     return () => mapElement.removeEventListener("wheel", handleWheel);
-  }, []);
-
-  const centerPoint = useMemo(() => project(center.lat, center.lng, zoom), [center, zoom]);
-
-  const tiles = useMemo(
-    () => getVisibleTiles(centerPoint, size, zoom),
-    [centerPoint, size, zoom],
-  );
+  }, [setSmoothZoom, zoom]);
 
   const screenRestaurants = useMemo(
     () =>
@@ -358,10 +380,6 @@ function DynamicRestaurantMap({
         : null,
     [activeRestaurant, screenRestaurants],
   );
-
-  const setZoomAroundCenter = useCallback((nextZoom: number) => {
-    setZoom(Math.min(Math.max(nextZoom, minZoom), maxZoom));
-  }, []);
 
   const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -394,7 +412,7 @@ function DynamicRestaurantMap({
     }
 
     setCenter({ lat: cluster.mapLat, lng: cluster.mapLng });
-    setZoom((currentZoom) => Math.min(currentZoom + 2, maxZoom));
+    setSmoothZoom(zoom + 2);
 
     if (cities.length === 1) {
       onCityFocus(cities[0]);
@@ -410,10 +428,27 @@ function DynamicRestaurantMap({
       onPointerUp={handlePointerUp}
       ref={mapRef}
     >
+      {previousTileLayer ? (
+        <div
+          className="pointer-events-none absolute inset-0 opacity-45 transition-opacity duration-[420ms]"
+          key={previousTileLayer.id}
+        >
+          {previousTileLayer.tiles.map((tile) => (
+            <img
+              alt=""
+              className="absolute h-64 w-64 select-none"
+              draggable={false}
+              key={`previous-${tile.key}`}
+              src={tile.url}
+              style={{ left: tile.left, top: tile.top }}
+            />
+          ))}
+        </div>
+      ) : null}
       {tiles.map((tile) => (
         <img
           alt=""
-          className="absolute h-64 w-64 select-none"
+          className="absolute h-64 w-64 select-none transition-opacity duration-200"
           draggable={false}
           key={tile.key}
           src={tile.url}
@@ -427,14 +462,14 @@ function DynamicRestaurantMap({
       >
         <button
           className="h-10 w-10 rounded-[3px] border border-black/15 bg-white text-lg font-black text-black shadow transition hover:bg-ember hover:text-white"
-          onClick={() => setZoomAroundCenter(zoom + 1)}
+          onClick={() => setSmoothZoom(zoom + 1)}
           type="button"
         >
           +
         </button>
         <button
           className="h-10 w-10 rounded-[3px] border border-black/15 bg-white text-lg font-black text-black shadow transition hover:bg-ember hover:text-white"
-          onClick={() => setZoomAroundCenter(zoom - 1)}
+          onClick={() => setSmoothZoom(zoom - 1)}
           type="button"
         >
           -
@@ -442,6 +477,7 @@ function DynamicRestaurantMap({
         <button
           className="rounded-[3px] border border-black/15 bg-white px-3 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-black shadow transition hover:bg-ember hover:text-white"
           onClick={() => {
+            setPreviousTileLayer({ id: Date.now(), tiles });
             setCenter(franceCenter);
             setZoom(6);
             onReset();
@@ -582,10 +618,10 @@ function withMapPosition(restaurant: PublicRestaurant): MapRestaurant {
 
 function getVisibleTiles(centerPoint: { x: number; y: number }, size: MapSize, zoom: number) {
   const tiles: Tile[] = [];
-  const startX = Math.floor((centerPoint.x - size.width / 2) / tileSize);
-  const endX = Math.floor((centerPoint.x + size.width / 2) / tileSize);
-  const startY = Math.floor((centerPoint.y - size.height / 2) / tileSize);
-  const endY = Math.floor((centerPoint.y + size.height / 2) / tileSize);
+  const startX = Math.floor((centerPoint.x - size.width / 2) / tileSize) - 1;
+  const endX = Math.floor((centerPoint.x + size.width / 2) / tileSize) + 1;
+  const startY = Math.floor((centerPoint.y - size.height / 2) / tileSize) - 1;
+  const endY = Math.floor((centerPoint.y + size.height / 2) / tileSize) + 1;
   const maxTile = 2 ** zoom;
 
   for (let x = startX; x <= endX; x += 1) {
