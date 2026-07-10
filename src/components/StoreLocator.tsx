@@ -307,6 +307,25 @@ function DynamicRestaurantMap({
     setZoom(13);
   }, [activeRestaurant]);
 
+  useEffect(() => {
+    const mapElement = mapRef.current;
+    if (!mapElement) return;
+
+    const handleWheel = (event: WheelEvent) => {
+      if (!event.ctrlKey) {
+        return;
+      }
+
+      event.preventDefault();
+      setZoom((currentZoom) =>
+        Math.min(Math.max(currentZoom + (event.deltaY < 0 ? 1 : -1), minZoom), maxZoom),
+      );
+    };
+
+    mapElement.addEventListener("wheel", handleWheel, { passive: false });
+    return () => mapElement.removeEventListener("wheel", handleWheel);
+  }, []);
+
   const centerPoint = useMemo(() => project(center.lat, center.lng, zoom), [center, zoom]);
 
   const tiles = useMemo(
@@ -330,6 +349,14 @@ function DynamicRestaurantMap({
   const screenClusters = useMemo(
     () => clusterScreenRestaurants(screenRestaurants, zoom),
     [screenRestaurants, zoom],
+  );
+
+  const activeScreenRestaurant = useMemo(
+    () =>
+      activeRestaurant
+        ? screenRestaurants.find((restaurant) => restaurant.slug === activeRestaurant.slug) ?? null
+        : null,
+    [activeRestaurant, screenRestaurants],
   );
 
   const setZoomAroundCenter = useCallback((nextZoom: number) => {
@@ -381,11 +408,6 @@ function DynamicRestaurantMap({
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
-      onWheel={(event) => {
-        if (!event.ctrlKey) return;
-        event.preventDefault();
-        setZoomAroundCenter(zoom + (event.deltaY < 0 ? 1 : -1));
-      }}
       ref={mapRef}
     >
       {tiles.map((tile) => (
@@ -399,7 +421,10 @@ function DynamicRestaurantMap({
         />
       ))}
 
-      <div className="absolute right-5 top-5 z-20 grid gap-2">
+      <div
+        className="absolute right-5 top-5 z-20 grid gap-2"
+        onPointerDown={(event) => event.stopPropagation()}
+      >
         <button
           className="h-10 w-10 rounded-[3px] border border-black/15 bg-white text-lg font-black text-black shadow transition hover:bg-ember hover:text-white"
           onClick={() => setZoomAroundCenter(zoom + 1)}
@@ -455,6 +480,7 @@ function DynamicRestaurantMap({
                 event.stopPropagation();
                 handleClusterClick(cluster);
               }}
+              onPointerDown={(event) => event.stopPropagation()}
               style={{ left: cluster.screenX, top: cluster.screenY }}
               title={
                 isCluster
@@ -468,6 +494,63 @@ function DynamicRestaurantMap({
           );
         })}
       </div>
+
+      {activeScreenRestaurant ? (
+        <div
+          className="absolute z-30 w-72 -translate-x-1/2 rounded-[6px] border border-black/15 bg-white p-4 text-black shadow-[0_18px_45px_rgba(42,21,17,0.22)]"
+          onPointerDown={(event) => event.stopPropagation()}
+          style={{
+            left: Math.min(Math.max(activeScreenRestaurant.screenX, 156), size.width - 156),
+            top: Math.min(Math.max(activeScreenRestaurant.screenY - 150, 18), size.height - 220),
+          }}
+        >
+          <button
+            aria-label="Fermer la fiche restaurant"
+            className="absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-full text-lg leading-none text-black/50 transition hover:bg-black/5 hover:text-black"
+            onClick={onReset}
+            type="button"
+          >
+            x
+          </button>
+          <p className="pr-7 text-[10px] font-black uppercase tracking-[0.16em] text-ember">
+            {activeScreenRestaurant.city}
+          </p>
+          <h3 className="mt-1 text-lg font-black leading-tight">
+            {activeScreenRestaurant.name}
+          </h3>
+          <p className="mt-3 text-sm font-medium leading-5 text-black/75">
+            {activeScreenRestaurant.address}
+            <br />
+            {[activeScreenRestaurant.postalCode, activeScreenRestaurant.city]
+              .filter(Boolean)
+              .join(", ")}
+            {activeScreenRestaurant.phone ? (
+              <>
+                <br />
+                {activeScreenRestaurant.phone}
+              </>
+            ) : null}
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Link
+              className="rounded-[3px] bg-ember px-3 py-2 text-xs font-black text-white transition hover:bg-cacao"
+              href={`/restaurants/${slugCity(activeScreenRestaurant.city)}/${activeScreenRestaurant.slug}`}
+            >
+              Voir la fiche
+            </Link>
+            <Link
+              className="rounded-[3px] border border-ember px-3 py-2 text-xs font-black text-ember transition hover:bg-ember hover:text-white"
+              href={
+                activeScreenRestaurant.googleMapsUrl ??
+                `https://www.google.com/maps/dir/?api=1&destination=${activeScreenRestaurant.mapLat},${activeScreenRestaurant.mapLng}`
+              }
+              target="_blank"
+            >
+              Itineraire
+            </Link>
+          </div>
+        </div>
+      ) : null}
 
       <div className="absolute bottom-3 right-3 z-20 rounded-[3px] bg-white/85 px-2 py-1 text-[10px] font-medium text-black/70 shadow">
         OpenStreetMap
