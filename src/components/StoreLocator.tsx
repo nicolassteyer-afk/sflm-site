@@ -382,6 +382,7 @@ function DynamicRestaurantMap({
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onWheel={(event) => {
+        if (!event.ctrlKey) return;
         event.preventDefault();
         setZoomAroundCenter(zoom + (event.deltaY < 0 ? 1 : -1));
       }}
@@ -424,6 +425,10 @@ function DynamicRestaurantMap({
         >
           France
         </button>
+      </div>
+
+      <div className="absolute left-5 top-5 z-20 rounded-[3px] bg-white/90 px-3 py-2 text-xs font-bold text-black/70 shadow">
+        Ctrl + molette pour zoomer
       </div>
 
       <div className="absolute inset-0 z-10">
