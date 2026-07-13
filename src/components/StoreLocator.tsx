@@ -64,10 +64,52 @@ type TileLayer = {
   tiles: Tile[];
 };
 
+declare global {
+  interface Window {
+    google?: GoogleMapsNamespace;
+    __googleMapsStoreLocatorPromise?: Promise<GoogleMapsNamespace>;
+  }
+}
+
+type GoogleMapsNamespace = {
+  maps: {
+    Animation: { DROP: number };
+    InfoWindow: new (options?: Record<string, unknown>) => GoogleInfoWindow;
+    LatLngBounds: new () => GoogleLatLngBounds;
+    Map: new (element: HTMLElement, options: Record<string, unknown>) => GoogleMap;
+    Marker: new (options: Record<string, unknown>) => GoogleMarker;
+    Size: new (width: number, height: number) => unknown;
+    Point: new (x: number, y: number) => unknown;
+  };
+};
+
+type GoogleMap = {
+  fitBounds: (bounds: GoogleLatLngBounds, padding?: number | Record<string, number>) => void;
+  panTo: (position: UserLocation) => void;
+  setCenter: (position: UserLocation) => void;
+  setZoom: (zoom: number) => void;
+};
+
+type GoogleMarker = {
+  addListener: (eventName: string, callback: () => void) => void;
+  setMap: (map: GoogleMap | null) => void;
+};
+
+type GoogleInfoWindow = {
+  close: () => void;
+  open: (options: { anchor: GoogleMarker; map: GoogleMap }) => void;
+  setContent: (content: string) => void;
+};
+
+type GoogleLatLngBounds = {
+  extend: (position: UserLocation) => void;
+};
+
 const tileSize = 256;
 const minZoom = 5;
 const maxZoom = 15;
 const franceCenter = { lat: 46.603, lng: 1.888 };
+const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 const cityCoordinates: Record<string, { lat: number; lng: number; region: string }> = {
   arras: { lat: 50.291, lng: 2.778, region: "Hauts-de-France" },
@@ -398,6 +440,214 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
 }
 
 function DynamicRestaurantMap({
+  activeRestaurant,
+  onCityFocus,
+  onReset,
+  onSelect,
+  restaurants,
+  userLocation,
+}: {
+  activeRestaurant: MapRestaurant | null;
+  onCityFocus: (city: string) => void;
+  onReset: () => void;
+  onSelect: (restaurant: MapRestaurant) => void;
+  restaurants: MapRestaurant[];
+  userLocation: UserLocation | null;
+}) {
+  if (googleMapsApiKey) {
+    return (
+      <GoogleRestaurantMap
+        activeRestaurant={activeRestaurant}
+        apiKey={googleMapsApiKey}
+        onReset={onReset}
+        onSelect={onSelect}
+        restaurants={restaurants}
+        userLocation={userLocation}
+      />
+    );
+  }
+
+  return (
+    <FallbackTileRestaurantMap
+      activeRestaurant={activeRestaurant}
+      onCityFocus={onCityFocus}
+      onReset={onReset}
+      onSelect={onSelect}
+      restaurants={restaurants}
+      userLocation={userLocation}
+    />
+  );
+}
+
+function GoogleRestaurantMap({
+  activeRestaurant,
+  apiKey,
+  onReset,
+  onSelect,
+  restaurants,
+  userLocation,
+}: {
+  activeRestaurant: MapRestaurant | null;
+  apiKey: string;
+  onReset: () => void;
+  onSelect: (restaurant: MapRestaurant) => void;
+  restaurants: MapRestaurant[];
+  userLocation: UserLocation | null;
+}) {
+  const mapElementRef = useRef<HTMLDivElement | null>(null);
+  const mapRef = useRef<GoogleMap | null>(null);
+  const infoWindowRef = useRef<GoogleInfoWindow | null>(null);
+  const markerRefs = useRef<GoogleMarker[]>([]);
+  const [loadState, setLoadState] = useState<"loading" | "ready" | "error">("loading");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    loadGoogleMaps(apiKey)
+      .then((google) => {
+        if (cancelled || !mapElementRef.current) return;
+
+        const map = new google.maps.Map(mapElementRef.current, {
+          center: franceCenter,
+          clickableIcons: false,
+          disableDefaultUI: true,
+          fullscreenControl: true,
+          gestureHandling: "cooperative",
+          mapTypeControl: false,
+          streetViewControl: false,
+          zoom: 6,
+          zoomControl: true,
+          styles: googleMapStyle,
+        });
+
+        mapRef.current = map;
+        infoWindowRef.current = new google.maps.InfoWindow({ maxWidth: 320 });
+        setLoadState("ready");
+      })
+      .catch(() => {
+        if (!cancelled) setLoadState("error");
+      });
+
+    return () => {
+      cancelled = true;
+      markerRefs.current.forEach((marker) => marker.setMap(null));
+      markerRefs.current = [];
+    };
+  }, [apiKey]);
+
+  useEffect(() => {
+    const google = window.google;
+    const map = mapRef.current;
+    const infoWindow = infoWindowRef.current;
+    if (!google || !map || !infoWindow) return;
+
+    markerRefs.current.forEach((marker) => marker.setMap(null));
+    markerRefs.current = [];
+
+    const bounds = new google.maps.LatLngBounds();
+    restaurants.forEach((restaurant) => {
+      const marker = new google.maps.Marker({
+        animation: google.maps.Animation.DROP,
+        icon: {
+          anchor: new google.maps.Point(16, 34),
+          scaledSize: new google.maps.Size(32, 42),
+          url: markerSvgDataUrl(activeRestaurant?.slug === restaurant.slug),
+        },
+        map,
+        optimized: true,
+        position: { lat: restaurant.mapLat, lng: restaurant.mapLng },
+        title: restaurant.name,
+      });
+
+      marker.addListener("click", () => {
+        onSelect(restaurant);
+        infoWindow.setContent(infoWindowHtml(restaurant, userLocation));
+        infoWindow.open({ anchor: marker, map });
+      });
+
+      markerRefs.current.push(marker);
+      bounds.extend({ lat: restaurant.mapLat, lng: restaurant.mapLng });
+    });
+
+    if (userLocation) {
+      bounds.extend(userLocation);
+      const userMarker = new google.maps.Marker({
+        icon: {
+          anchor: new google.maps.Point(10, 10),
+          scaledSize: new google.maps.Size(20, 20),
+          url: userMarkerSvgDataUrl(),
+        },
+        map,
+        position: userLocation,
+        title: "Votre position",
+      });
+      markerRefs.current.push(userMarker);
+    }
+
+    if (restaurants.length > 1 || userLocation) {
+      map.fitBounds(bounds, { bottom: 72, left: 72, right: 72, top: 72 });
+    } else if (restaurants.length === 1) {
+      map.setCenter({ lat: restaurants[0].mapLat, lng: restaurants[0].mapLng });
+      map.setZoom(13);
+    } else {
+      map.setCenter(franceCenter);
+      map.setZoom(6);
+    }
+  }, [activeRestaurant?.slug, onSelect, restaurants, userLocation]);
+
+  useEffect(() => {
+    const google = window.google;
+    const map = mapRef.current;
+    const infoWindow = infoWindowRef.current;
+    if (!google || !map || !infoWindow || !activeRestaurant) return;
+
+    const markerIndex = restaurants.findIndex((restaurant) => restaurant.slug === activeRestaurant.slug);
+    const marker = markerRefs.current[markerIndex];
+    map.panTo({ lat: activeRestaurant.mapLat, lng: activeRestaurant.mapLng });
+    map.setZoom(14);
+
+    if (marker) {
+      infoWindow.setContent(infoWindowHtml(activeRestaurant, userLocation));
+      infoWindow.open({ anchor: marker, map });
+    }
+  }, [activeRestaurant, restaurants, userLocation]);
+
+  if (loadState === "error") {
+    return (
+      <FallbackTileRestaurantMap
+        activeRestaurant={activeRestaurant}
+        onCityFocus={() => undefined}
+        onReset={onReset}
+        onSelect={onSelect}
+        restaurants={restaurants}
+        userLocation={userLocation}
+      />
+    );
+  }
+
+  return (
+    <div className="relative h-full min-h-[calc(100vh-6rem)] overflow-hidden bg-[#76c7df]">
+      <div className="h-full min-h-[calc(100vh-6rem)]" ref={mapElementRef} />
+      {loadState === "loading" ? (
+        <div className="absolute inset-0 grid place-items-center bg-white/80 text-sm font-black uppercase tracking-[0.14em] text-cacao">
+          Chargement de la carte
+        </div>
+      ) : null}
+      <div className="absolute left-4 top-4 z-20 max-w-[16rem] rounded-[3px] bg-white/95 px-3 py-2 text-xs font-bold text-black/70 shadow md:left-5 md:top-5">
+        Carte Google Maps - glissez, zoomez, cliquez un repere
+      </div>
+      <button
+        className="absolute bottom-4 left-4 z-20 rounded-[3px] border border-black/15 bg-white px-4 py-3 text-xs font-black uppercase tracking-[0.12em] text-black shadow transition hover:bg-ember hover:text-white"
+        onClick={onReset}
+        type="button"
+      >
+        France
+      </button>
+    </div>
+  );
+}
+
+function FallbackTileRestaurantMap({
   activeRestaurant,
   onCityFocus,
   onReset,
@@ -768,6 +1018,106 @@ function withMapPosition(restaurant: PublicRestaurant): MapRestaurant {
     region: fallback.region,
   };
 }
+
+function loadGoogleMaps(apiKey: string): Promise<GoogleMapsNamespace> {
+  if (window.google?.maps) {
+    return Promise.resolve(window.google);
+  }
+
+  if (window.__googleMapsStoreLocatorPromise) {
+    return window.__googleMapsStoreLocatorPromise;
+  }
+
+  window.__googleMapsStoreLocatorPromise = new Promise((resolve, reject) => {
+    const callbackName = `initFlamsStoreLocatorMap_${Date.now()}`;
+    const script = document.createElement("script");
+
+    window[callbackName as keyof Window] = (() => {
+      delete window[callbackName as keyof Window];
+      if (window.google?.maps) {
+        resolve(window.google);
+      } else {
+        reject(new Error("Google Maps unavailable"));
+      }
+    }) as never;
+
+    script.async = true;
+    script.defer = true;
+    script.onerror = () => reject(new Error("Google Maps script failed"));
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(apiKey)}&callback=${callbackName}&v=weekly`;
+    document.head.appendChild(script);
+  });
+
+  return window.__googleMapsStoreLocatorPromise;
+}
+
+function infoWindowHtml(restaurant: MapRestaurant, userLocation: UserLocation | null) {
+  const distance = userLocation ? `<p style="margin:6px 0 0;color:#d4471d;font-weight:900;text-transform:uppercase;font-size:11px;letter-spacing:.08em">A ${formatDistance(distanceKm(userLocation, restaurant))}</p>` : "";
+  const phone = restaurant.phone ? `<p style="margin:8px 0 0;color:#2a1511;font-weight:700">${escapeHtml(restaurant.phone)}</p>` : "";
+  const address = [restaurant.postalCode, restaurant.city].filter(Boolean).join(", ");
+
+  return `
+    <div style="font-family:Arial,sans-serif;max-width:280px;color:#2a1511">
+      <p style="margin:0;color:#d4471d;font-size:10px;font-weight:900;letter-spacing:.14em;text-transform:uppercase">${escapeHtml(restaurant.city)}</p>
+      <h3 style="margin:4px 0 0;font-size:18px;line-height:1.15;font-weight:900">${escapeHtml(restaurant.name)}</h3>
+      ${distance}
+      <p style="margin:10px 0 0;color:rgba(42,21,17,.75);font-weight:700;line-height:1.35">${escapeHtml(restaurant.address)}<br>${escapeHtml(address)}</p>
+      ${phone}
+      <p style="margin:10px 0 0;color:rgba(42,21,17,.72);font-weight:700;line-height:1.35">${escapeHtml(restaurant.hours)}</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+        <a style="background:#d4471d;color:white;padding:10px 12px;border-radius:3px;text-decoration:none;font-weight:900;font-size:12px" href="/restaurants/${slugCity(restaurant.city)}/${restaurant.slug}">Voir la fiche</a>
+        <a style="border:1px solid #d4471d;color:#d4471d;padding:9px 12px;border-radius:3px;text-decoration:none;font-weight:900;font-size:12px" href="${directionsUrl(restaurant)}" target="_blank" rel="noreferrer">Itineraire</a>
+      </div>
+    </div>
+  `;
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function markerSvgDataUrl(active: boolean) {
+  const fill = active ? "#2a1511" : "#d4471d";
+  const svg = `
+    <svg width="32" height="42" viewBox="0 0 32 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 41C16 41 30 25.8 30 15.8C30 7.6 23.7 1 16 1C8.3 1 2 7.6 2 15.8C2 25.8 16 41 16 41Z" fill="${fill}" stroke="#fff7df" stroke-width="3"/>
+      <circle cx="16" cy="16" r="5.5" fill="#fff7df"/>
+    </svg>
+  `;
+
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function userMarkerSvgDataUrl() {
+  const svg = `
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="10" cy="10" r="8" fill="#2a1511" stroke="#fff" stroke-width="4"/>
+      <circle cx="10" cy="10" r="10" fill="#2a1511" fill-opacity=".16"/>
+    </svg>
+  `;
+
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+const googleMapStyle = [
+  { elementType: "geometry", stylers: [{ color: "#f2ead9" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#4a332c" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#fff7df" }] },
+  { featureType: "administrative", elementType: "geometry.stroke", stylers: [{ color: "#c9b89a" }] },
+  { featureType: "poi", stylers: [{ visibility: "off" }] },
+  { featureType: "road", elementType: "geometry", stylers: [{ color: "#ffffff" }] },
+  { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#dccdb4" }] },
+  { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#f4c48c" }] },
+  { featureType: "road.highway", elementType: "geometry.stroke", stylers: [{ color: "#dc8d4d" }] },
+  { featureType: "transit", stylers: [{ visibility: "off" }] },
+  { featureType: "water", elementType: "geometry", stylers: [{ color: "#78c9df" }] },
+  { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#376f7f" }] },
+];
 
 function getVisibleTiles(centerPoint: { x: number; y: number }, size: MapSize, zoom: number) {
   const tiles: Tile[] = [];
