@@ -32,6 +32,11 @@ type MapSize = {
   height: number;
 };
 
+type UserLocation = {
+  lat: number;
+  lng: number;
+};
+
 type ScreenRestaurant = MapRestaurant & {
   screenX: number;
   screenY: number;
@@ -90,6 +95,9 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
   const [query, setQuery] = useState("");
   const [city, setCity] = useState("all");
   const [activeSlug, setActiveSlug] = useState("");
+  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
+  const [locationStatus, setLocationStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
+  const [mobileView, setMobileView] = useState<"list" | "map">("list");
 
   const cities = useMemo(
     () => Array.from(new Set(mappedRestaurants.map((restaurant) => restaurant.city))).sort(),
@@ -97,15 +105,32 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
   );
 
   const filteredRestaurants = useMemo(() => {
-    const normalizedQuery = normalize(query);
-    return mappedRestaurants.filter((restaurant) => {
-      const matchesCity = city === "all" || restaurant.city === city;
-      const searchText = normalize(
-        `${restaurant.name} ${restaurant.city} ${restaurant.address} ${restaurant.postalCode ?? ""} ${restaurant.region}`,
-      );
-      return matchesCity && searchText.includes(normalizedQuery);
-    });
-  }, [city, mappedRestaurants, query]);
+    const queryTokens = normalize(query).split(/\s+/).filter(Boolean);
+
+    return mappedRestaurants
+      .filter((restaurant) => {
+        const matchesCity = city === "all" || restaurant.city === city;
+        const searchableWords = normalize(
+          `${restaurant.name} ${restaurant.city} ${restaurant.address} ${restaurant.postalCode ?? ""} ${restaurant.region}`,
+        ).split(/\s+/);
+        const matchesQuery =
+          queryTokens.length === 0 ||
+          queryTokens.every((token) =>
+            searchableWords.some(
+              (word) =>
+                word.includes(token) ||
+                token.includes(word) ||
+                word.startsWith(token.slice(0, Math.min(4, token.length))),
+            ),
+          );
+
+        return matchesCity && matchesQuery;
+      })
+      .sort((a, b) => {
+        if (!userLocation) return a.city.localeCompare(b.city) || a.name.localeCompare(b.name);
+        return distanceKm(userLocation, a) - distanceKm(userLocation, b);
+      });
+  }, [city, mappedRestaurants, query, userLocation]);
 
   const activeRestaurant =
     mappedRestaurants.find((restaurant) => restaurant.slug === activeSlug) ?? null;
@@ -113,46 +138,84 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
   const selectRestaurant = useCallback((restaurant: MapRestaurant) => {
     setCity(restaurant.city);
     setActiveSlug(restaurant.slug);
+    setMobileView("map");
   }, []);
 
-  const resetFrance = useCallback(() => {
+  const resetFilters = useCallback(() => {
     setCity("all");
     setActiveSlug("");
+    setQuery("");
   }, []);
+
+  const resetAll = useCallback(() => {
+    resetFilters();
+    setUserLocation(null);
+    setLocationStatus("idle");
+  }, [resetFilters]);
+
+  const useCurrentPosition = useCallback(() => {
+    if (!("geolocation" in navigator)) {
+      setLocationStatus("error");
+      return;
+    }
+
+    setLocationStatus("loading");
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+        setCity("all");
+        setActiveSlug("");
+        setLocationStatus("ready");
+      },
+      () => setLocationStatus("error"),
+      { enableHighAccuracy: true, maximumAge: 300000, timeout: 9000 },
+    );
+  }, []);
+
+  const hasActiveFilters = city !== "all" || query.trim().length > 0 || Boolean(userLocation);
 
   return (
     <div className="grid min-h-[calc(100vh-6rem)] bg-white lg:grid-cols-[36rem_1fr]">
-      <aside className="z-20 flex min-h-[42rem] flex-col border-r border-black/10 bg-white">
+      <aside
+        className={`z-20 min-h-[calc(100vh-6rem)] flex-col border-r border-black/10 bg-white pb-20 lg:flex lg:pb-0 ${
+          mobileView === "list" ? "flex" : "hidden"
+        }`}
+      >
         <div className="border-b border-black/10 px-6 pb-5 pt-8 md:px-8">
           <h1 className="font-display text-5xl uppercase leading-none text-black md:text-6xl">
             Trouver un restaurant
           </h1>
-          <div className="mt-5 flex h-12 items-center rounded-[6px] border border-black/20 bg-white px-4 text-cacao">
-            <span className="mr-3 text-xl leading-none text-ember">⌕</span>
+          <div className="mt-5 flex min-h-12 items-center rounded-[6px] border border-black/20 bg-white px-4 text-cacao">
+            <span className="mr-3 text-xs font-black uppercase tracking-[0.08em] text-ember">
+              Chercher
+            </span>
             <label className="sr-only" htmlFor="restaurant-search">
               Rechercher un restaurant
             </label>
             <input
-              className="h-full flex-1 bg-transparent text-sm font-bold text-cacao outline-none placeholder:text-cacao/45"
+              className="h-12 min-w-0 flex-1 bg-transparent text-sm font-bold text-cacao outline-none placeholder:text-cacao/45"
               id="restaurant-search"
               onChange={(event) => {
                 setQuery(event.target.value);
                 setActiveSlug("");
               }}
-              placeholder="Ville, code postal"
+              placeholder="Ville, code postal, adresse"
               type="search"
               value={query}
             />
             <button
-              aria-label="Rechercher"
-              className="ml-3 text-xl leading-none text-ember transition hover:text-cacao"
+              aria-label="Afficher le premier resultat"
+              className="ml-3 min-h-10 rounded-[3px] px-3 text-xs font-black uppercase tracking-[0.1em] text-ember transition hover:bg-ember hover:text-white"
               onClick={() => {
                 const firstResult = filteredRestaurants[0];
                 if (firstResult) selectRestaurant(firstResult);
               }}
               type="button"
             >
-              ›
+              Go
             </button>
           </div>
           <label className="sr-only" htmlFor="restaurant-city">
@@ -174,9 +237,41 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
               </option>
             ))}
           </select>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button
+              className="min-h-11 rounded-[3px] border border-ember px-4 py-2 text-xs font-black uppercase tracking-[0.1em] text-ember transition hover:bg-ember hover:text-white disabled:cursor-wait disabled:opacity-60"
+              disabled={locationStatus === "loading"}
+              onClick={useCurrentPosition}
+              type="button"
+            >
+              {locationStatus === "loading" ? "Localisation..." : "Autour de moi"}
+            </button>
+            {hasActiveFilters ? (
+              <button
+                className="min-h-11 rounded-[3px] border border-black/15 px-4 py-2 text-xs font-black uppercase tracking-[0.1em] text-black/65 transition hover:bg-black hover:text-white"
+                onClick={resetAll}
+                type="button"
+              >
+                Reinitialiser
+              </button>
+            ) : null}
+          </div>
+          {locationStatus === "error" ? (
+            <p className="mt-3 text-sm font-bold text-ember">
+              Localisation indisponible. Recherchez par ville, adresse ou code postal.
+            </p>
+          ) : null}
           <p className="mt-4 text-sm font-bold text-black">
-            {filteredRestaurants.length} restaurants a proximite
+            {filteredRestaurants.length} restaurant{filteredRestaurants.length > 1 ? "s" : ""} trouve
+            {filteredRestaurants.length > 1 ? "s" : ""}
           </p>
+          {hasActiveFilters ? (
+            <div className="mt-4 flex flex-wrap gap-2 text-[11px] font-black uppercase tracking-[0.1em] text-black/55">
+              {city !== "all" ? <span className="rounded-full bg-black/[0.06] px-3 py-2">{city}</span> : null}
+              {query.trim() ? <span className="rounded-full bg-black/[0.06] px-3 py-2">Recherche: {query}</span> : null}
+              {userLocation ? <span className="rounded-full bg-black/[0.06] px-3 py-2">Les plus proches</span> : null}
+            </div>
+          ) : null}
         </div>
 
         <div className="min-h-0 flex-1 overflow-auto px-6 md:px-8" data-lenis-prevent>
@@ -184,7 +279,7 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
             <motion.button
               className={`block w-full border-b border-black/15 py-7 text-left transition ${
                 activeRestaurant?.slug === restaurant.slug
-                  ? "bg-ember/[0.06] text-black"
+                  ? "bg-ember/[0.08] text-black"
                   : "bg-white text-black hover:bg-black/[0.03]"
               }`}
               initial={{ opacity: 0, y: 14 }}
@@ -195,27 +290,32 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-lg font-black leading-tight">
-                {restaurant.name}
-              </h2>
-              <p className="mt-3 text-sm font-medium leading-5 text-black/80">
-                {restaurant.address}
-                <br />
-                {[restaurant.postalCode, restaurant.city, restaurant.country].filter(Boolean).join(", ")}
-                {restaurant.phone ? (
-                  <>
+              <div className="flex items-start gap-3">
+                <div className="mt-1 h-3 w-3 shrink-0 rounded-full bg-ember" />
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-lg font-black leading-tight">{restaurant.name}</h2>
+                  {userLocation ? (
+                    <p className="mt-2 text-xs font-black uppercase tracking-[0.12em] text-ember">
+                      A {formatDistance(distanceKm(userLocation, restaurant))}
+                    </p>
+                  ) : null}
+                  <p className="mt-3 text-sm font-medium leading-5 text-black/80">
+                    {restaurant.address}
                     <br />
-                    {restaurant.phone}
-                  </>
-                ) : null}
-              </p>
+                    {[restaurant.postalCode, restaurant.city, restaurant.country].filter(Boolean).join(", ")}
+                    {restaurant.phone ? (
+                      <>
+                        <br />
+                        {restaurant.phone}
+                      </>
+                    ) : null}
+                  </p>
+                </div>
+              </div>
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <div className="mr-auto grid gap-1 text-sm leading-4">
-                  <span className="flex items-center gap-2 font-black">
-                    <span className="h-2 w-2 rounded-full bg-ember" />
-                    Ferme
-                  </span>
-                  <span className="pl-4 text-black/75">Ouvre a 18:30</span>
+                  <span className="font-black">Infos horaires</span>
+                  <span className="text-black/75">{restaurant.hours}</span>
                 </div>
                 {restaurant.reservationUrl ? (
                   <Link
@@ -232,31 +332,32 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
                   href={`/restaurants/${slugCity(restaurant.city)}/${restaurant.slug}`}
                   onClick={(event) => event.stopPropagation()}
                 >
-                  La carte
+                  La fiche
                 </Link>
                 <Link
                   className="rounded-[2px] border border-ember px-4 py-3 text-xs font-black text-ember transition hover:bg-ember hover:text-white"
-                  href={
-                    restaurant.googleMapsUrl ??
-                    `https://www.google.com/maps/dir/?api=1&destination=${restaurant.mapLat},${restaurant.mapLng}`
-                  }
+                  href={directionsUrl(restaurant)}
                   onClick={(event) => event.stopPropagation()}
                   target="_blank"
                 >
-                  Y aller
+                  Itineraire
                 </Link>
               </div>
             </motion.button>
           ))}
           {filteredRestaurants.length === 0 ? (
             <div className="my-8 rounded-[8px] border border-black/10 bg-black/[0.03] p-6 text-sm font-bold text-black/70">
-              Aucun restaurant ne correspond a cette recherche.
+              Aucun restaurant ne correspond a cette recherche. Essayez une ville, un code postal plus court ou reinitialisez les filtres.
             </div>
           ) : null}
         </div>
       </aside>
 
-      <section className="min-h-[42rem] overflow-hidden bg-[#76c7df]">
+      <section
+        className={`min-h-[calc(100vh-6rem)] overflow-hidden bg-[#76c7df] lg:block ${
+          mobileView === "map" ? "block" : "hidden"
+        }`}
+      >
         <div className="h-full min-h-[calc(100vh-6rem)]">
           <DynamicRestaurantMap
             activeRestaurant={activeRestaurant}
@@ -264,12 +365,34 @@ export function StoreLocator({ restaurants }: StoreLocatorProps) {
               setCity(cityName);
               setActiveSlug("");
             }}
-            onReset={resetFrance}
+            onReset={resetFilters}
             onSelect={selectRestaurant}
-            restaurants={mappedRestaurants}
+            restaurants={filteredRestaurants}
+            userLocation={userLocation}
           />
         </div>
       </section>
+
+      <div className="fixed bottom-4 left-4 right-4 z-50 grid grid-cols-2 gap-2 rounded-[6px] border border-black/10 bg-white p-1 shadow-[0_18px_45px_rgba(42,21,17,0.2)] lg:hidden">
+        <button
+          className={`min-h-12 rounded-[4px] text-xs font-black uppercase tracking-[0.12em] ${
+            mobileView === "list" ? "bg-ember text-white" : "text-black"
+          }`}
+          onClick={() => setMobileView("list")}
+          type="button"
+        >
+          Liste
+        </button>
+        <button
+          className={`min-h-12 rounded-[4px] text-xs font-black uppercase tracking-[0.12em] ${
+            mobileView === "map" ? "bg-ember text-white" : "text-black"
+          }`}
+          onClick={() => setMobileView("map")}
+          type="button"
+        >
+          Carte
+        </button>
+      </div>
     </div>
   );
 }
@@ -280,12 +403,14 @@ function DynamicRestaurantMap({
   onReset,
   onSelect,
   restaurants,
+  userLocation,
 }: {
   activeRestaurant: MapRestaurant | null;
   onCityFocus: (city: string) => void;
   onReset: () => void;
   onSelect: (restaurant: MapRestaurant) => void;
   restaurants: MapRestaurant[];
+  userLocation: UserLocation | null;
 }) {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const dragRef = useRef<{ x: number; y: number; center: MapCenter } | null>(null);
@@ -339,13 +464,17 @@ function DynamicRestaurantMap({
   }, [activeRestaurant, setSmoothZoom]);
 
   useEffect(() => {
+    if (activeRestaurant || !userLocation) return;
+    setCenter(userLocation);
+    setSmoothZoom(10);
+  }, [activeRestaurant, setSmoothZoom, userLocation]);
+
+  useEffect(() => {
     const mapElement = mapRef.current;
     if (!mapElement) return;
 
     const handleWheel = (event: WheelEvent) => {
-      if (!event.ctrlKey) {
-        return;
-      }
+      if (!event.ctrlKey) return;
 
       event.preventDefault();
       setSmoothZoom(zoom + (event.deltaY < 0 ? 1 : -1));
@@ -367,6 +496,15 @@ function DynamicRestaurantMap({
       }),
     [centerPoint, restaurants, size, zoom],
   );
+
+  const userScreenLocation = useMemo(() => {
+    if (!userLocation) return null;
+    const point = project(userLocation.lat, userLocation.lng, zoom);
+    return {
+      x: point.x - centerPoint.x + size.width / 2,
+      y: point.y - centerPoint.y + size.height / 2,
+    };
+  }, [centerPoint, size, userLocation, zoom]);
 
   const screenClusters = useMemo(
     () => clusterScreenRestaurants(screenRestaurants, zoom),
@@ -400,7 +538,9 @@ function DynamicRestaurantMap({
 
   const handlePointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
     dragRef.current = null;
-    event.currentTarget.releasePointerCapture(event.pointerId);
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
   };
 
   const handleClusterClick = (cluster: ScreenCluster) => {
@@ -457,18 +597,18 @@ function DynamicRestaurantMap({
       ))}
 
       <div
-        className="absolute right-5 top-5 z-20 grid gap-2"
+        className="absolute right-4 top-4 z-20 grid gap-2 md:right-5 md:top-5"
         onPointerDown={(event) => event.stopPropagation()}
       >
         <button
-          className="h-10 w-10 rounded-[3px] border border-black/15 bg-white text-lg font-black text-black shadow transition hover:bg-ember hover:text-white"
+          className="h-11 w-11 rounded-[3px] border border-black/15 bg-white text-lg font-black text-black shadow transition hover:bg-ember hover:text-white"
           onClick={() => setSmoothZoom(zoom + 1)}
           type="button"
         >
           +
         </button>
         <button
-          className="h-10 w-10 rounded-[3px] border border-black/15 bg-white text-lg font-black text-black shadow transition hover:bg-ember hover:text-white"
+          className="h-11 w-11 rounded-[3px] border border-black/15 bg-white text-lg font-black text-black shadow transition hover:bg-ember hover:text-white"
           onClick={() => setSmoothZoom(zoom - 1)}
           type="button"
         >
@@ -488,9 +628,17 @@ function DynamicRestaurantMap({
         </button>
       </div>
 
-      <div className="absolute left-5 top-5 z-20 rounded-[3px] bg-white/90 px-3 py-2 text-xs font-bold text-black/70 shadow">
+      <div className="absolute left-4 top-4 z-20 max-w-[14rem] rounded-[3px] bg-white/90 px-3 py-2 text-xs font-bold text-black/70 shadow md:left-5 md:top-5">
         Ctrl + molette pour zoomer
       </div>
+
+      {userScreenLocation ? (
+        <div
+          className="absolute z-20 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-cacao shadow-[0_0_0_8px_rgba(42,21,17,0.16)]"
+          style={{ left: userScreenLocation.x, top: userScreenLocation.y }}
+          title="Votre position"
+        />
+      ) : null}
 
       <div className="absolute inset-0 z-10">
         {screenClusters.map((cluster) => {
@@ -533,23 +681,24 @@ function DynamicRestaurantMap({
 
       {activeScreenRestaurant ? (
         <div
-          className="absolute z-30 w-72 -translate-x-1/2 rounded-[6px] border border-black/15 bg-white p-4 text-black shadow-[0_18px_45px_rgba(42,21,17,0.22)]"
+          className="absolute z-30 w-[min(20rem,calc(100%-2rem))] -translate-x-1/2 rounded-[6px] border border-black/15 bg-white p-4 text-black shadow-[0_18px_45px_rgba(42,21,17,0.22)]"
           onPointerDown={(event) => event.stopPropagation()}
           style={{
-            left: Math.min(Math.max(activeScreenRestaurant.screenX, 156), size.width - 156),
-            top: Math.min(Math.max(activeScreenRestaurant.screenY - 150, 18), size.height - 220),
+            left: Math.min(Math.max(activeScreenRestaurant.screenX, 164), size.width - 164),
+            top: Math.min(Math.max(activeScreenRestaurant.screenY - 168, 18), size.height - 260),
           }}
         >
           <button
             aria-label="Fermer la fiche restaurant"
-            className="absolute right-2 top-2 grid h-7 w-7 place-items-center rounded-full text-lg leading-none text-black/50 transition hover:bg-black/5 hover:text-black"
+            className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full text-lg leading-none text-black/50 transition hover:bg-black/5 hover:text-black"
             onClick={onReset}
             type="button"
           >
             x
           </button>
-          <p className="pr-7 text-[10px] font-black uppercase tracking-[0.16em] text-ember">
+          <p className="pr-8 text-[10px] font-black uppercase tracking-[0.16em] text-ember">
             {activeScreenRestaurant.city}
+            {userLocation ? ` - ${formatDistance(distanceKm(userLocation, activeScreenRestaurant))}` : ""}
           </p>
           <h3 className="mt-1 text-lg font-black leading-tight">
             {activeScreenRestaurant.name}
@@ -567,6 +716,7 @@ function DynamicRestaurantMap({
               </>
             ) : null}
           </p>
+          <p className="mt-3 text-sm font-bold text-black/70">{activeScreenRestaurant.hours}</p>
           <div className="mt-4 flex flex-wrap gap-2">
             <Link
               className="rounded-[3px] bg-ember px-3 py-2 text-xs font-black text-white transition hover:bg-cacao"
@@ -576,15 +726,18 @@ function DynamicRestaurantMap({
             </Link>
             <Link
               className="rounded-[3px] border border-ember px-3 py-2 text-xs font-black text-ember transition hover:bg-ember hover:text-white"
-              href={
-                activeScreenRestaurant.googleMapsUrl ??
-                `https://www.google.com/maps/dir/?api=1&destination=${activeScreenRestaurant.mapLat},${activeScreenRestaurant.mapLng}`
-              }
+              href={directionsUrl(activeScreenRestaurant)}
               target="_blank"
             >
               Itineraire
             </Link>
           </div>
+        </div>
+      ) : null}
+
+      {restaurants.length === 0 ? (
+        <div className="absolute left-1/2 top-1/2 z-20 w-[min(22rem,calc(100%-2rem))] -translate-x-1/2 -translate-y-1/2 rounded-[6px] border border-black/15 bg-white p-5 text-center text-sm font-bold text-black/70 shadow">
+          Aucun resultat a afficher sur la carte.
         </div>
       ) : null}
 
@@ -703,6 +856,36 @@ function unproject(x: number, y: number, zoom: number): MapCenter {
   const lat = (180 / Math.PI) * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
 
   return { lat: Math.min(Math.max(lat, -85), 85), lng };
+}
+
+function distanceKm(from: UserLocation, restaurant: MapRestaurant) {
+  const earthRadiusKm = 6371;
+  const dLat = toRad(restaurant.mapLat - from.lat);
+  const dLng = toRad(restaurant.mapLng - from.lng);
+  const lat1 = toRad(from.lat);
+  const lat2 = toRad(restaurant.mapLat);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+
+  return earthRadiusKm * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function toRad(value: number) {
+  return (value * Math.PI) / 180;
+}
+
+function formatDistance(distance: number) {
+  if (distance < 1) return `${Math.round(distance * 1000)} m`;
+  if (distance < 10) return `${distance.toFixed(1).replace(".", ",")} km`;
+  return `${Math.round(distance)} km`;
+}
+
+function directionsUrl(restaurant: MapRestaurant) {
+  return (
+    restaurant.googleMapsUrl ??
+    `https://www.google.com/maps/dir/?api=1&destination=${restaurant.mapLat},${restaurant.mapLng}`
+  );
 }
 
 function normalize(value: string) {
