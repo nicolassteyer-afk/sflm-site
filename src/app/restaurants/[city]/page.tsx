@@ -297,7 +297,7 @@ export function CityRestaurantPage({
             minFontSize={24}
             stroke={false}
             text={copy.pressure[2]}
-            textColor="#f3b12a"
+            textColor="#f8af07"
             weight
             width
           />

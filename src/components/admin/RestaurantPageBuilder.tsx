@@ -266,13 +266,13 @@ function PreviewBlock({ block }: { block: Block }) {
 
   return (
     <article className="border-b border-[#2a1511]/10 p-6">
-      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#ef3c19]">
+      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#f8af07]">
         {block.type.replaceAll("_", " ")}
       </p>
       {block.image ? (
         <div className="mt-4 aspect-[16/9] rounded-lg bg-cover bg-center" style={{ backgroundImage: `url(${block.image})` }} />
       ) : null}
-      {block.subtitle ? <p className="mt-4 text-xs font-black uppercase tracking-[0.18em] text-[#ef3c19]">{block.subtitle}</p> : null}
+      {block.subtitle ? <p className="mt-4 text-xs font-black uppercase tracking-[0.18em] text-[#f8af07]">{block.subtitle}</p> : null}
       {block.title ? <h3 className="mt-3 text-4xl font-black uppercase leading-none">{block.title}</h3> : null}
       {block.body ? <p className="mt-4 text-sm font-bold leading-6 text-[#2a1511]/70">{block.body}</p> : null}
     </article>

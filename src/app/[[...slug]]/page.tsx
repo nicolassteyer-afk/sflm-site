@@ -80,7 +80,7 @@ export default function Page() {
           </p>
         </div>
         <div className="texture relative min-h-[62vh] overflow-hidden bg-cacao lg:min-h-screen">
-          <div className="absolute inset-8 bg-[linear-gradient(135deg,#65131a,#ef3c19_52%,#f3b12a)] shadow-soft transition duration-700 hover:scale-[1.02]" />
+          <div className="absolute inset-8 bg-[linear-gradient(135deg,#65131a,#f8af07_52%,#f8af07)] shadow-soft transition duration-700 hover:scale-[1.02]" />
           <div className="absolute bottom-10 left-10 right-10 border-t border-bone/30 pt-6 text-bone">
             <p className="font-display text-6xl uppercase leading-none md:text-8xl">
               Feu doux. Grande table.

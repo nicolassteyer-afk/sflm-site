@@ -59,8 +59,8 @@ function toneBackground(tone: string) {
   const colors: Record<string, string> = {
     wine: "#65131a",
     cacao: "#2a1511",
-    ember: "#ef3c19",
-    saffron: "#f3b12a",
+    ember: "#f8af07",
+    saffron: "#f8af07",
     bone: "#fff7df",
     ink: "#11100d",
   };

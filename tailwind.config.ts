@@ -7,8 +7,8 @@ const config: Config = {
       colors: {
         cream: "#f5ead2",
         bone: "#fff7df",
-        ember: "#ef3c19",
-        saffron: "#f3b12a",
+        ember: "#f8af07",
+        saffron: "#f8af07",
         wine: "#65131a",
         cacao: "#2a1511",
         ink: "#11100d",

@@ -265,7 +265,7 @@ function PreviewBlock({ block }: { block: Block }) {
 
   return (
     <article className="border-b border-[#2a1511]/10 p-6">
-      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#ef3c19]">
+      <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#f8af07]">
         {block.type.replaceAll("_", " ")}
       </p>
       {block.image ? (

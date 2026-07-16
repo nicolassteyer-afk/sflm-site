@@ -148,7 +148,7 @@ function RestaurantCmsBlock({
               minFontSize={24}
               stroke={false}
               text={line}
-              textColor={index === lines.length - 1 ? "#f3b12a" : "#fff7df"}
+              textColor={index === lines.length - 1 ? "#f8af07" : "#fff7df"}
               weight
               width
             />
