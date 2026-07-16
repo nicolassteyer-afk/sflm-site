@@ -9,6 +9,7 @@ export function FlamsCursor() {
   const pathname = usePathname();
   const [enabled, setEnabled] = useState(false);
   const [mode, setMode] = useState<CursorMode>("idle");
+  const [pressed, setPressed] = useState(false);
 
   useEffect(() => {
     if (pathname?.startsWith("/admin")) return;
@@ -49,6 +50,9 @@ export function FlamsCursor() {
       setMode("idle");
     };
 
+    const press = () => setPressed(true);
+    const release = () => setPressed(false);
+
     const render = () => {
       renderedX += (x - renderedX) * 0.22;
       renderedY += (y - renderedY) * 0.22;
@@ -60,6 +64,9 @@ export function FlamsCursor() {
     window.addEventListener("pointermove", move, { passive: true });
     window.addEventListener("pointerover", updateMode, { passive: true });
     window.addEventListener("pointerout", updateMode, { passive: true });
+    window.addEventListener("pointerdown", press, { passive: true });
+    window.addEventListener("pointerup", release, { passive: true });
+    window.addEventListener("pointercancel", release, { passive: true });
     frame = requestAnimationFrame(render);
 
     return () => {
@@ -67,17 +74,24 @@ export function FlamsCursor() {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerover", updateMode);
       window.removeEventListener("pointerout", updateMode);
+      window.removeEventListener("pointerdown", press);
+      window.removeEventListener("pointerup", release);
+      window.removeEventListener("pointercancel", release);
       root.classList.remove("flams-cursor-on");
       root.style.removeProperty("--flams-cursor-x");
       root.style.removeProperty("--flams-cursor-y");
       setEnabled(false);
+      setPressed(false);
     };
   }, [pathname]);
 
   if (!enabled) return null;
 
   return (
-    <div aria-hidden="true" className={`flams-cursor flams-cursor--${mode}`}>
+    <div
+      aria-hidden="true"
+      className={`flams-cursor flams-cursor--${mode}${pressed ? " flams-cursor--pressed" : ""}`}
+    >
       <img
         alt=""
         className="flams-cursor__image"

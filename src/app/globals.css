@@ -80,14 +80,14 @@ button {
   left: var(--flams-cursor-x, 50vw);
   top: var(--flams-cursor-y, 50vh);
   z-index: 9999;
-  width: 2.25rem;
-  height: 6rem;
+  width: 1.52rem;
+  height: 4.05rem;
   pointer-events: none;
-  transform: translate3d(-50%, -0.72rem, 0);
-  transform-origin: 50% 10%;
+  transform: translate3d(-72%, -0.42rem, 0);
+  transform-origin: 50% 9%;
   transition: filter 180ms ease, opacity 180ms ease, transform 180ms ease;
   mix-blend-mode: normal;
-  filter: drop-shadow(0 9px 12px rgba(42, 21, 17, 0.22));
+  filter: drop-shadow(0 6px 9px rgba(42, 21, 17, 0.2));
 }
 
 .flams-cursor__image {
@@ -99,13 +99,18 @@ button {
 }
 
 .flams-cursor--link {
-  transform: translate3d(-50%, -0.72rem, 0) scale(0.88);
-  filter: drop-shadow(0 7px 9px rgba(42, 21, 17, 0.2));
+  transform: translate3d(-72%, -0.42rem, 0) scale(0.92);
+  filter: brightness(0) saturate(100%) invert(26%) sepia(91%) saturate(2798%) hue-rotate(353deg) brightness(99%) contrast(93%) drop-shadow(0 5px 8px rgba(42, 21, 17, 0.2));
 }
 
 .flams-cursor--title {
-  transform: translate3d(-50%, -0.88rem, 0) scale(1.16);
-  filter: drop-shadow(0 13px 16px rgba(42, 21, 17, 0.28));
+  transform: translate3d(-72%, -0.42rem, 0) scale(1.04);
+  filter: brightness(0) saturate(100%) invert(26%) sepia(91%) saturate(2798%) hue-rotate(353deg) brightness(99%) contrast(93%) drop-shadow(0 7px 10px rgba(42, 21, 17, 0.22));
+}
+
+.flams-cursor--pressed {
+  transform: translate3d(-72%, -0.42rem, 0) scale(0.84);
+  filter: brightness(0) saturate(100%) invert(69%) sepia(72%) saturate(779%) hue-rotate(352deg) brightness(100%) contrast(92%) drop-shadow(0 4px 7px rgba(42, 21, 17, 0.18));
 }
 
 @media (hover: none), (pointer: coarse) {
