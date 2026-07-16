@@ -78,10 +78,12 @@ export function FlamsCursor() {
 
   return (
     <div aria-hidden="true" className={`flams-cursor flams-cursor--${mode}`}>
-      <span className="flams-cursor__toe flams-cursor__toe--left" />
-      <span className="flams-cursor__toe flams-cursor__toe--center" />
-      <span className="flams-cursor__toe flams-cursor__toe--right" />
-      <span className="flams-cursor__pad" />
+      <img
+        alt=""
+        className="flams-cursor__image"
+        draggable={false}
+        src="/assets/cursors/chatgpt-pointer.png"
+      />
     </div>
   );
 }
