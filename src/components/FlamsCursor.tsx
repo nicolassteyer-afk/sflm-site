@@ -96,8 +96,9 @@ export function FlamsCursor() {
         alt=""
         className="flams-cursor__image"
         draggable={false}
-        src="/assets/cursors/chatgpt-pointer.png"
+        src="/assets/cursors/chatgpt-pointer-grey.png"
       />
+      <span className="flams-cursor__wheel-action" />
     </div>
   );
 }
