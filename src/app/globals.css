@@ -80,10 +80,11 @@ button {
   left: var(--flams-cursor-x, 50vw);
   top: var(--flams-cursor-y, 50vh);
   z-index: 9999;
-  width: 1.12rem;
-  height: 2.98rem;
+  width: 1.52rem;
+  height: 3.42rem;
+  padding: 0.22rem 0.2rem;
   pointer-events: none;
-  transform: translate3d(-96%, -0.24rem, 0) rotate(-10deg);
+  transform: translate3d(-104%, -0.38rem, 0) rotate(-16deg);
   transform-origin: 50% 9%;
   transition: filter 180ms ease, opacity 180ms ease, transform 180ms ease;
   mix-blend-mode: normal;
@@ -100,17 +101,17 @@ button {
 }
 
 .flams-cursor--link {
-  transform: translate3d(-96%, -0.24rem, 0) rotate(-14deg) scale(0.94);
+  transform: translate3d(-104%, -0.38rem, 0) rotate(-21deg) scale(0.94);
   filter: drop-shadow(0 6px 9px rgba(42, 21, 17, 0.22));
 }
 
 .flams-cursor--title {
-  transform: translate3d(-96%, -0.24rem, 0) rotate(-14deg) scale(1.02);
+  transform: translate3d(-104%, -0.38rem, 0) rotate(-21deg) scale(1.02);
   filter: drop-shadow(0 7px 10px rgba(42, 21, 17, 0.22));
 }
 
 .flams-cursor--pressed {
-  transform: translate3d(-96%, -0.24rem, 0) rotate(-17deg) scale(0.86);
+  transform: translate3d(-104%, -0.38rem, 0) rotate(-24deg) scale(0.86);
   filter: drop-shadow(0 4px 7px rgba(42, 21, 17, 0.18));
 }
 
