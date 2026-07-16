@@ -96,20 +96,7 @@ button {
   height: 100%;
   pointer-events: none;
   user-select: none;
-}
-
-.flams-cursor__wheel-action {
-  position: absolute;
-  left: 50%;
-  top: 0.58rem;
-  width: 1.4rem;
-  height: 1.4rem;
-  pointer-events: none;
-  border: 2px solid #f8af07;
-  border-radius: 999px;
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.62);
-  transition: opacity 160ms ease, transform 160ms ease;
+  transition: transform 160ms ease;
 }
 
 .flams-cursor--link {
@@ -127,31 +114,28 @@ button {
   filter: drop-shadow(0 4px 7px rgba(42, 21, 17, 0.18));
 }
 
-.flams-cursor--link .flams-cursor__wheel-action,
-.flams-cursor--title .flams-cursor__wheel-action {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
+.flams-cursor--link .flams-cursor__image,
+.flams-cursor--title .flams-cursor__image {
   animation: flams-wheel-action 680ms linear infinite;
-  box-shadow: 0 0 0 0.2rem rgba(248, 175, 7, 0.14), 0 0 1rem rgba(248, 175, 7, 0.42);
+  content: url("/assets/cursors/chatgpt-pointer-wheel-yellow.png");
 }
 
-.flams-cursor--pressed .flams-cursor__wheel-action {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(0.82);
+.flams-cursor--pressed .flams-cursor__image {
+  content: url("/assets/cursors/chatgpt-pointer-wheel-yellow.png");
   animation-duration: 240ms;
 }
 
 @keyframes flams-wheel-action {
   0% {
-    transform: translate(-50%, -50%) rotate(0deg) scale(0.88);
+    transform: rotate(0deg) scale(0.94);
   }
 
   50% {
-    transform: translate(-50%, -50%) rotate(180deg) scale(1.08);
+    transform: rotate(3deg) scale(1.04);
   }
 
   100% {
-    transform: translate(-50%, -50%) rotate(360deg) scale(0.88);
+    transform: rotate(0deg) scale(0.94);
   }
 }
 

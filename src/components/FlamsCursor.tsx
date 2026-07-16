@@ -98,7 +98,6 @@ export function FlamsCursor() {
         draggable={false}
         src="/assets/cursors/chatgpt-pointer-grey.png"
       />
-      <span className="flams-cursor__wheel-action" />
     </div>
   );
 }
