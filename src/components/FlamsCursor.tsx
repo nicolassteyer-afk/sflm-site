@@ -80,7 +80,6 @@ export function FlamsCursor() {
     <div aria-hidden="true" className={`flams-cursor flams-cursor--${mode}`}>
       <span className="flams-cursor__ring" />
       <span className="flams-cursor__flame" />
-      <span className="flams-cursor__label">Flam's</span>
     </div>
   );
 }
