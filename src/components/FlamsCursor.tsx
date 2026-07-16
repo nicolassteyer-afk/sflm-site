@@ -78,8 +78,10 @@ export function FlamsCursor() {
 
   return (
     <div aria-hidden="true" className={`flams-cursor flams-cursor--${mode}`}>
-      <span className="flams-cursor__ring" />
-      <span className="flams-cursor__flame" />
+      <span className="flams-cursor__toe flams-cursor__toe--left" />
+      <span className="flams-cursor__toe flams-cursor__toe--center" />
+      <span className="flams-cursor__toe flams-cursor__toe--right" />
+      <span className="flams-cursor__pad" />
     </div>
   );
 }
