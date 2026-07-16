@@ -264,13 +264,12 @@ export function CityRestaurantPage({
       </section>
 
       <section className="flex min-h-screen items-center justify-center overflow-hidden bg-wine px-5 py-24 text-bone md:px-10">
-        <div className="flex w-full max-w-[92rem] flex-col items-center gap-2 overflow-hidden">
+        <div className="flex w-full max-w-[96rem] flex-col items-center gap-0">
           <TextPressure
             alpha={false}
-            className="h-[clamp(4.75rem,9vw,8rem)] w-full overflow-hidden"
+            className="h-[clamp(5.5rem,11vw,10rem)] w-full overflow-visible"
             flex={false}
             italic={false}
-            maxFontSize={128}
             minFontSize={24}
             stroke={false}
             text={copy.pressure[0]}
@@ -280,10 +279,9 @@ export function CityRestaurantPage({
           />
           <TextPressure
             alpha={false}
-            className="h-[clamp(4.75rem,9vw,8rem)] w-full overflow-hidden"
+            className="-mt-[clamp(1rem,2vw,2rem)] h-[clamp(5.5rem,11vw,10rem)] w-full overflow-visible"
             flex={false}
             italic={false}
-            maxFontSize={128}
             minFontSize={24}
             stroke={false}
             text={copy.pressure[1]}
@@ -293,10 +291,9 @@ export function CityRestaurantPage({
           />
           <TextPressure
             alpha={false}
-            className="h-[clamp(4.75rem,9vw,8rem)] w-full overflow-hidden"
+            className="-mt-[clamp(1rem,2vw,2rem)] h-[clamp(5.5rem,11vw,10rem)] w-full overflow-visible"
             flex={false}
             italic={false}
-            maxFontSize={128}
             minFontSize={24}
             stroke={false}
             text={copy.pressure[2]}

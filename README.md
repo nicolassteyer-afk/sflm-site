@@ -20,7 +20,6 @@ Le site sera disponible sur `http://localhost:3000`.
 - `DATABASE_URL`: connexion PostgreSQL.
 - `ADMIN_SESSION_SECRET`: secret long pour signer les sessions admin.
 - `ADMIN_EMAIL` et `ADMIN_PASSWORD`: identifiants utilises par le seed et la creation admin.
-- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`: cle publique Google Maps JavaScript API pour activer la carte professionnelle du store locator. Sans cette cle, le site garde une carte de secours.
 
 ## Back-office
 
