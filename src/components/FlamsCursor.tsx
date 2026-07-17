@@ -94,9 +94,15 @@ export function FlamsCursor() {
     >
       <img
         alt=""
-        className="flams-cursor__image"
+        className="flams-cursor__image flams-cursor__image--base"
         draggable={false}
         src="/assets/cursors/chatgpt-pointer-grey.png"
+      />
+      <img
+        alt=""
+        className="flams-cursor__image flams-cursor__image--hover"
+        draggable={false}
+        src="/assets/cursors/chatgpt-pointer-wheel-yellow.png"
       />
     </div>
   );
