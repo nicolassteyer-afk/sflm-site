@@ -7,6 +7,7 @@ import { countries, type City } from "@/data/restaurants";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const footerLinks = [
+  { href: "/notre-univers", label: "Notre Univers" },
   { href: "/recrutement", label: "Recrutement" },
   { href: "/a-propos", label: "A propos" },
   { href: "/contact", label: "Contact" },
