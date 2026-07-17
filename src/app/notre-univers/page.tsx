@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
 import { CTAReservation } from "@/components/CTAReservation";
 import { ImageParallax } from "@/components/ImageParallax";
+import { Timeline } from "@/components/Timeline";
 
 export const metadata = {
   title: "Notre Univers | Flam's",
@@ -172,84 +173,40 @@ export default function NotreUniversPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-ink px-5 py-24 text-bone md:px-10 lg:px-16">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-wine/70 to-transparent"
-        />
-        <div className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px bg-bone/18 lg:block" />
-        <div className="mx-auto max-w-7xl">
-          <div className="relative z-10 mb-16 grid gap-8 lg:grid-cols-[.95fr_1fr] lg:items-end">
-            <div>
-              <p className="mb-5 text-xs font-black uppercase tracking-[0.22em] text-saffron">
-                Frise chronologique
-              </p>
-              <h2 className="font-display text-7xl uppercase leading-[0.86] md:text-9xl lg:text-[11rem]">
-                De 1989 a 2025.
-              </h2>
-            </div>
-            <p className="max-w-xl text-lg leading-8 text-bone/62">
-              Les etapes de l'enseigne, dans l'ordre chronologique de la page
-              d'origine : creation, premieres ouvertures, nouvelle identite et
-              modernisation de la carte.
-            </p>
-          </div>
-
-          <div className="relative z-10 grid gap-10 lg:gap-0">
-            {timeline.map((item, index) => (
-              <article
-                className={`relative grid min-h-[36rem] gap-6 border-t border-bone/12 py-10 lg:grid-cols-2 lg:items-center lg:border-t-0 lg:py-0 ${
-                  index % 2 === 0 ? "" : "lg:[&_.timeline-copy]:col-start-2 lg:[&_.timeline-visual]:col-start-1 lg:[&_.timeline-visual]:row-start-1"
-                }`}
-                key={`${item.year}-${item.eyebrow}-${index}`}
-              >
-                <div className="timeline-copy relative flex min-h-[22rem] flex-col justify-center lg:px-14">
-                  <span
-                    aria-hidden="true"
-                    className={`absolute top-1/2 hidden h-5 w-5 -translate-y-1/2 rounded-full border border-saffron bg-ink shadow-[0_0_0_1rem_rgba(248,175,7,0.08)] lg:block ${
-                      index % 2 === 0 ? "-right-2.5" : "-left-2.5"
-                    }`}
-                  />
-                  <p
-                    aria-hidden="true"
-                    className={`pointer-events-none absolute -top-7 font-display text-[11rem] uppercase leading-none text-bone/[0.045] md:text-[15rem] lg:top-8 ${
-                      index % 2 === 0 ? "left-0" : "right-0"
-                    }`}
-                  >
-                    {item.year}
+      <Timeline
+        data={timeline.map((item, index) => ({
+          title: item.year,
+          content: (
+            <article className="relative max-w-3xl overflow-hidden rounded-sm border border-bone/10 bg-bone/[0.035] p-5 shadow-soft md:p-8">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_22%,rgba(248,175,7,.18),transparent_26%),linear-gradient(135deg,rgba(101,19,26,.38),rgba(42,21,17,.22),rgba(17,16,13,.86))]" />
+              <div className="relative z-10 grid gap-7 lg:grid-cols-[1fr_.8fr] lg:items-end">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.2em] text-saffron">
+                    {item.eyebrow}
                   </p>
-                  <div className="relative">
-                    <p className="font-display text-8xl uppercase leading-none text-saffron md:text-[9rem]">
-                      {item.year}
-                    </p>
-                    <p className="mt-8 text-xs font-black uppercase tracking-[0.2em] text-bone/45">
-                      {item.eyebrow}
-                    </p>
-                    <h3 className="mt-3 max-w-xl font-display text-6xl uppercase leading-[0.84] text-bone md:text-8xl">
-                      {item.title}
-                    </h3>
-                    <p className="mt-6 max-w-lg text-base leading-7 text-bone/62">
-                      {item.body}
-                    </p>
-                  </div>
+                  <h3 className="mt-3 font-display text-6xl uppercase leading-[0.86] text-bone md:text-8xl">
+                    {item.title}
+                  </h3>
+                  <p className="mt-5 max-w-xl text-base leading-7 text-bone/65">
+                    {item.body}
+                  </p>
                 </div>
-                <div className="timeline-visual relative min-h-[18rem] overflow-hidden rounded-sm bg-bone/5 lg:mx-14 lg:min-h-[27rem]">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_22%,rgba(248,175,7,.22),transparent_25%),linear-gradient(135deg,rgba(101,19,26,.72),rgba(42,21,17,.32),rgba(17,16,13,.9))]" />
+                <div className="relative min-h-56 overflow-hidden rounded-sm bg-ink/35">
                   <img
                     alt=""
-                    className="relative z-10 h-full min-h-[18rem] w-full object-contain p-10 lg:min-h-[27rem]"
+                    className="h-full min-h-56 w-full object-contain p-7"
                     loading="lazy"
                     src={item.image}
                   />
-                  <p className="absolute bottom-5 left-5 rounded-full border border-bone/25 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-bone/70">
+                  <p className="absolute bottom-4 left-4 rounded-full border border-bone/25 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-bone/70">
                     {String(index + 1).padStart(2, "0")}
                   </p>
                 </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+              </div>
+            </article>
+          ),
+        }))}
+      />
 
       <section className="grid bg-cacao text-bone lg:grid-cols-[.78fr_1fr]">
         <ImageParallax
