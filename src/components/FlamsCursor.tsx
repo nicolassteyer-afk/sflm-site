@@ -96,13 +96,13 @@ export function FlamsCursor() {
         alt=""
         className="flams-cursor__image flams-cursor__image--base"
         draggable={false}
-        src="/assets/cursors/chatgpt-pointer-grey.png"
+        src="/assets/cursors/flams-cursor-base.svg"
       />
       <img
         alt=""
         className="flams-cursor__image flams-cursor__image--hover"
         draggable={false}
-        src="/assets/cursors/chatgpt-pointer-wheel-yellow.png"
+        src="/assets/cursors/flams-cursor-hover.svg"
       />
     </div>
   );
