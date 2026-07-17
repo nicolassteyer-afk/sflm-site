@@ -157,9 +157,15 @@ export function TextPressure({
           const opacity = alpha
             ? getAttribute(charDistance, maxDistance, 0, 1).toFixed(2)
             : "1";
+          const influence = Math.max(0, 1 - charDistance / maxDistance);
+          const scaleX = width ? 1 + influence * 0.42 : 1;
+          const scaleY = weight ? 1 + influence * 0.18 : 1;
+          const lift = influence * -0.06;
 
           span.style.fontVariationSettings = `'wght' ${wght}, 'wdth' ${wdth}, 'ital' ${ital}`;
+          span.style.fontWeight = String(wght);
           span.style.opacity = opacity;
+          span.style.transform = `translateY(${lift}em) scale(${scaleX}, ${scaleY})`;
         });
       }
 
@@ -217,6 +223,9 @@ export function TextPressure({
             style={{
               color: stroke ? "transparent" : textColor,
               display: "inline-block",
+              transformOrigin: "center center",
+              transition: "color 180ms ease",
+              willChange: "font-variation-settings, font-weight, opacity, transform",
               WebkitTextStroke: stroke ? `2px ${strokeColor}` : undefined,
             }}
           >
