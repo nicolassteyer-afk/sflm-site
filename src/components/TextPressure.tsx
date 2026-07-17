@@ -35,8 +35,8 @@ type FontAxis = {
   toValue: number;
 };
 
-const fromFontVariationSettings = "'wght' 400, 'opsz' 9";
-const toFontVariationSettings = "'wght' 1000, 'opsz' 40";
+const fromFontVariationSettings = "'wght' 180, 'opsz' 8";
+const toFontVariationSettings = "'wght' 1000, 'opsz' 80";
 
 function parseFontVariationSettings(fromSettings: string, toSettings: string) {
   const parseSettings = (settings: string) =>
@@ -143,9 +143,7 @@ export function TextPressure({
 
     const { width: containerWidth, height: containerHeight } =
       container.getBoundingClientRect();
-    setFontSize(
-      Math.max(containerWidth / (characters.length / 2), minFontSize),
-    );
+    setFontSize(Math.max(containerWidth / (characters.length * 0.68), minFontSize));
     setScaleY(1);
     setLineHeight(1);
 
@@ -206,6 +204,7 @@ export function TextPressure({
         if (letterDistance >= radius) {
           letter.style.fontVariationSettings = fromFontVariationSettings;
           letter.style.opacity = "1";
+          letter.style.transform = "scale(1)";
           return;
         }
 
@@ -225,6 +224,7 @@ export function TextPressure({
 
         letter.style.fontVariationSettings = settings;
         letter.style.opacity = alpha ? String(Math.max(amount, 0.25)) : "1";
+        letter.style.transform = `scale(${1 + amount * 0.24})`;
       });
 
       frame = requestAnimationFrame(animate);
@@ -253,7 +253,7 @@ export function TextPressure({
           fontFamily: `"${fontFamily}", sans-serif`,
           fontSize,
           fontVariationSettings: fromFontVariationSettings,
-          fontWeight: 400,
+          fontWeight: 180,
           lineHeight,
           margin: 0,
           padding: "0.14em 0",
@@ -278,6 +278,9 @@ export function TextPressure({
               color: stroke ? "transparent" : textColor,
               display: "inline-block",
               fontVariationSettings: fromFontVariationSettings,
+              transform: "scale(1)",
+              transformOrigin: "center center",
+              willChange: "font-variation-settings, transform, opacity",
               WebkitTextStroke: stroke ? `2px ${strokeColor}` : undefined,
             }}
           >

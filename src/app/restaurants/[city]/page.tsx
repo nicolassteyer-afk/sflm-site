@@ -264,10 +264,10 @@ export function CityRestaurantPage({
       </section>
 
       <section className="flex min-h-screen items-center justify-center overflow-hidden bg-wine px-5 py-24 text-bone md:px-10">
-        <div className="flex w-full max-w-[96rem] flex-col items-center gap-0">
+        <div className="flex w-full max-w-[88rem] flex-col items-center gap-3">
           <TextPressure
             alpha={false}
-            className="h-[clamp(5.5rem,11vw,10rem)] w-full overflow-visible"
+            className="h-[clamp(4.25rem,8vw,7.25rem)] w-full overflow-visible"
             flex={false}
             italic={false}
             minFontSize={24}
@@ -279,7 +279,7 @@ export function CityRestaurantPage({
           />
           <TextPressure
             alpha={false}
-            className="-mt-[clamp(1rem,2vw,2rem)] h-[clamp(5.5rem,11vw,10rem)] w-full overflow-visible"
+            className="h-[clamp(4.25rem,8vw,7.25rem)] w-full overflow-visible"
             flex={false}
             italic={false}
             minFontSize={24}
@@ -291,7 +291,7 @@ export function CityRestaurantPage({
           />
           <TextPressure
             alpha={false}
-            className="-mt-[clamp(1rem,2vw,2rem)] h-[clamp(5.5rem,11vw,10rem)] w-full overflow-visible"
+            className="h-[clamp(4.25rem,8vw,7.25rem)] w-full overflow-visible"
             flex={false}
             italic={false}
             minFontSize={24}
