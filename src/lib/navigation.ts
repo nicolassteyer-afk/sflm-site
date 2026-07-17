@@ -1,8 +1,8 @@
 export const mainLinks = [
-  { href: "/notre-univers", label: "Notre Univers" },
   { href: "/menu", label: "Carte" },
   { href: "/restaurants", label: "Restaurants" },
   { href: "/recrutement", label: "Recrutement" },
+  { href: "/a-propos", label: "A propos" },
   { href: "/contact", label: "Contact" },
 ];
 
