@@ -25,26 +25,59 @@ type TextPressureProps = {
   strokeColor?: string;
   className?: string;
   minFontSize?: number;
+  radius?: number;
+  falloff?: "linear" | "exponential" | "gaussian";
 };
 
-const distance = (a: Point, b: Point) =>
-  Math.hypot(b.x - a.x, b.y - a.y);
-
-const getAttribute = (
-  currentDistance: number,
-  maxDistance: number,
-  minValue: number,
-  maxValue: number,
-) => {
-  const value =
-    maxValue - Math.abs((maxValue * currentDistance) / maxDistance);
-  return Math.max(minValue, value + minValue);
+type FontAxis = {
+  axis: string;
+  fromValue: number;
+  toValue: number;
 };
+
+const fromFontVariationSettings = "'wght' 400, 'opsz' 9";
+const toFontVariationSettings = "'wght' 1000, 'opsz' 40";
+
+function parseFontVariationSettings(fromSettings: string, toSettings: string) {
+  const parseSettings = (settings: string) =>
+    new Map(
+      settings
+        .split(",")
+        .map((setting) => setting.trim())
+        .map((setting) => {
+          const [name, value] = setting.split(" ");
+          return [name.replace(/['"]/g, ""), Number.parseFloat(value)];
+        }),
+    );
+
+  const from = parseSettings(fromSettings);
+  const to = parseSettings(toSettings);
+
+  return Array.from(from.entries()).map<FontAxis>(([axis, fromValue]) => ({
+    axis,
+    fromValue,
+    toValue: to.get(axis) ?? fromValue,
+  }));
+}
+
+function distance(a: Point, b: Point) {
+  return Math.hypot(b.x - a.x, b.y - a.y);
+}
+
+function falloffValue(distanceFromPointer: number, radius: number, falloff: TextPressureProps["falloff"]) {
+  const normalized = Math.min(Math.max(1 - distanceFromPointer / radius, 0), 1);
+
+  if (falloff === "exponential") return normalized ** 2;
+  if (falloff === "gaussian") {
+    return Math.exp(-((distanceFromPointer / (radius / 2)) ** 2) / 2);
+  }
+
+  return normalized;
+}
 
 export function TextPressure({
   text = "Strasbourg",
-  fontFamily = "Compressa VF",
-  fontUrl = "https://res.cloudinary.com/dr6lvwubh/raw/upload/v1529908256/CompressaPRO-GX.woff2",
+  fontFamily = "Roboto Flex",
   width = true,
   weight = true,
   italic = false,
@@ -56,35 +89,51 @@ export function TextPressure({
   strokeColor = "#ef240d",
   className = "",
   minFontSize = 36,
+  radius = 220,
+  falloff = "linear",
 }: TextPressureProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const spansRef = useRef<Array<HTMLSpanElement | null>>([]);
-  const mouseRef = useRef<Point>({ x: 0, y: 0 });
-  const cursorRef = useRef<Point>({ x: 0, y: 0 });
+  const letterRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  const mousePositionRef = useRef<Point>({ x: 0, y: 0 });
+  const lastPositionRef = useRef<Point>({ x: -1, y: -1 });
   const [fontSize, setFontSize] = useState(minFontSize);
   const [scaleY, setScaleY] = useState(1);
   const [lineHeight, setLineHeight] = useState(1);
   const characters = useMemo(() => Array.from(text), [text]);
+  const parsedSettings = useMemo(
+    () => parseFontVariationSettings(fromFontVariationSettings, toFontVariationSettings),
+    [],
+  );
 
   useEffect(() => {
-    const move = (event: PointerEvent) => {
-      cursorRef.current = { x: event.clientX, y: event.clientY };
+    const updatePosition = (clientX: number, clientY: number) => {
+      const rect = containerRef.current?.getBoundingClientRect();
+      mousePositionRef.current = rect
+        ? { x: clientX - rect.left, y: clientY - rect.top }
+        : { x: clientX, y: clientY };
     };
 
-    window.addEventListener("pointermove", move);
+    const handlePointerMove = (event: PointerEvent) => {
+      updatePosition(event.clientX, event.clientY);
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (touch) updatePosition(touch.clientX, touch.clientY);
+    };
 
     const rect = containerRef.current?.getBoundingClientRect();
     if (rect) {
-      const center = {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
-      };
-      mouseRef.current = center;
-      cursorRef.current = center;
+      mousePositionRef.current = { x: rect.width / 2, y: rect.height / 2 };
     }
 
-    return () => window.removeEventListener("pointermove", move);
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("touchmove", handleTouchMove);
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("touchmove", handleTouchMove);
+    };
   }, []);
 
   const setSize = useCallback(() => {
@@ -127,54 +176,63 @@ export function TextPressure({
 
   useEffect(() => {
     let frame = 0;
+
     const animate = () => {
-      mouseRef.current.x +=
-        (cursorRef.current.x - mouseRef.current.x) / 15;
-      mouseRef.current.y +=
-        (cursorRef.current.y - mouseRef.current.y) / 15;
-
-      const title = titleRef.current;
-      if (title) {
-        const maxDistance = Math.max(title.getBoundingClientRect().width / 2, 1);
-
-        spansRef.current.forEach((span) => {
-          if (!span) return;
-          const rect = span.getBoundingClientRect();
-          const charCenter = {
-            x: rect.x + rect.width / 2,
-            y: rect.y + rect.height / 2,
-          };
-          const charDistance = distance(mouseRef.current, charCenter);
-          const wdth = width
-            ? Math.floor(getAttribute(charDistance, maxDistance, 5, 200))
-            : 100;
-          const wght = weight
-            ? Math.floor(getAttribute(charDistance, maxDistance, 100, 900))
-            : 400;
-          const ital = italic
-            ? getAttribute(charDistance, maxDistance, 0, 1).toFixed(2)
-            : "0";
-          const opacity = alpha
-            ? getAttribute(charDistance, maxDistance, 0, 1).toFixed(2)
-            : "1";
-          const influence = Math.max(0, 1 - charDistance / maxDistance);
-          const scaleX = width ? 1 + influence * 0.42 : 1;
-          const scaleY = weight ? 1 + influence * 0.18 : 1;
-          const lift = influence * -0.06;
-
-          span.style.fontVariationSettings = `'wght' ${wght}, 'wdth' ${wdth}, 'ital' ${ital}`;
-          span.style.fontWeight = String(wght);
-          span.style.opacity = opacity;
-          span.style.transform = `translateY(${lift}em) scale(${scaleX}, ${scaleY})`;
-        });
+      const container = containerRef.current;
+      if (!container) {
+        frame = requestAnimationFrame(animate);
+        return;
       }
+
+      const mouse = mousePositionRef.current;
+      if (lastPositionRef.current.x === mouse.x && lastPositionRef.current.y === mouse.y) {
+        frame = requestAnimationFrame(animate);
+        return;
+      }
+      lastPositionRef.current = { ...mouse };
+
+      const containerRect = container.getBoundingClientRect();
+
+      letterRefs.current.forEach((letter) => {
+        if (!letter) return;
+
+        const rect = letter.getBoundingClientRect();
+        const letterCenter = {
+          x: rect.left + rect.width / 2 - containerRect.left,
+          y: rect.top + rect.height / 2 - containerRect.top,
+        };
+        const letterDistance = distance(mouse, letterCenter);
+
+        if (letterDistance >= radius) {
+          letter.style.fontVariationSettings = fromFontVariationSettings;
+          letter.style.opacity = "1";
+          return;
+        }
+
+        const amount = falloffValue(letterDistance, radius, falloff);
+        const settings = parsedSettings
+          .filter(({ axis }) => {
+            if (axis === "wght") return weight;
+            if (axis === "wdth") return width;
+            if (axis === "ital") return italic;
+            return true;
+          })
+          .map(({ axis, fromValue, toValue }) => {
+            const value = fromValue + (toValue - fromValue) * amount;
+            return `'${axis}' ${value}`;
+          })
+          .join(", ");
+
+        letter.style.fontVariationSettings = settings;
+        letter.style.opacity = alpha ? String(Math.max(amount, 0.25)) : "1";
+      });
 
       frame = requestAnimationFrame(animate);
     };
 
     frame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(frame);
-  }, [alpha, italic, weight, width]);
+  }, [alpha, falloff, italic, parsedSettings, radius, weight, width]);
 
   return (
     <div
@@ -183,12 +241,7 @@ export function TextPressure({
       style={{ position: "relative", width: "100%", height: "100%" }}
     >
       <style>{`
-        @font-face {
-          font-family: "${fontFamily}";
-          src: url("${fontUrl}") format("woff2");
-          font-style: normal;
-          font-display: swap;
-        }
+        @import url("https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap");
       `}</style>
       <h1
         aria-label={text}
@@ -197,9 +250,10 @@ export function TextPressure({
           color: textColor,
           display: flex ? "flex" : "block",
           justifyContent: flex ? "space-between" : undefined,
-          fontFamily,
+          fontFamily: `"${fontFamily}", sans-serif`,
           fontSize,
-          fontWeight: 100,
+          fontVariationSettings: fromFontVariationSettings,
+          fontWeight: 400,
           lineHeight,
           margin: 0,
           padding: "0.14em 0",
@@ -218,14 +272,12 @@ export function TextPressure({
             data-char={character}
             key={`${character}-${index}`}
             ref={(element) => {
-              spansRef.current[index] = element;
+              letterRefs.current[index] = element;
             }}
             style={{
               color: stroke ? "transparent" : textColor,
               display: "inline-block",
-              transformOrigin: "center center",
-              transition: "color 180ms ease",
-              willChange: "font-variation-settings, font-weight, opacity, transform",
+              fontVariationSettings: fromFontVariationSettings,
               WebkitTextStroke: stroke ? `2px ${strokeColor}` : undefined,
             }}
           >
@@ -233,6 +285,21 @@ export function TextPressure({
           </span>
         ))}
       </h1>
+      <span
+        style={{
+          position: "absolute",
+          width: 1,
+          height: 1,
+          padding: 0,
+          margin: -1,
+          overflow: "hidden",
+          clip: "rect(0, 0, 0, 0)",
+          whiteSpace: "nowrap",
+          border: 0,
+        }}
+      >
+        {text}
+      </span>
     </div>
   );
 }
