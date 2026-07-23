@@ -37,11 +37,11 @@ export function SuggestionsMomentCarousel() {
   return (
     <ProgressSlider
       activeSlider="cookie"
-      className="mx-auto w-full overflow-hidden rounded-sm border border-bone/15 bg-ink shadow-soft"
+      className="mx-auto w-full overflow-hidden rounded-sm border border-bone/15 bg-bone shadow-soft"
       duration={5600}
       vertical={false}
     >
-      <SliderContent className="relative min-h-[520px] md:min-h-[680px] lg:min-h-[74vh]">
+      <SliderContent className="relative min-h-[420px] bg-bone md:min-h-[620px] lg:min-h-[68vh]">
         {items.map((item) => (
           <SliderWrapper
             className="absolute inset-0 h-full w-full"
@@ -50,22 +50,21 @@ export function SuggestionsMomentCarousel() {
           >
             <Image
               alt={item.desc}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain"
               fill
               placeholder="blur"
               priority={item.sliderName === "cookie"}
               sizes="(min-width: 1280px) 1184px, 100vw"
               src={item.img}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-ink/15" />
           </SliderWrapper>
         ))}
       </SliderContent>
 
-      <SliderBtnGroup className="absolute bottom-0 grid w-full grid-cols-1 overflow-hidden bg-bone/80 text-cacao backdrop-blur-md md:grid-cols-2">
+      <SliderBtnGroup className="grid w-full grid-cols-1 overflow-hidden border-t border-cacao/15 bg-bone text-cacao md:grid-cols-2">
         {items.map((item) => (
           <SliderBtn
-            className="min-h-[118px] border-t border-cacao/15 p-5 md:min-h-[136px] md:border-r md:p-6 md:last:border-r-0"
+            className="min-h-[118px] border-t border-cacao/15 p-5 md:min-h-[136px] md:border-r md:border-t-0 md:p-6 md:last:border-r-0"
             key={item.sliderName}
             progressBarClass="h-full bg-saffron/80"
             value={item.sliderName}
