@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AnimatedTitle } from "@/components/AnimatedTitle";
-import { ImageParallax } from "@/components/ImageParallax";
+import { SuggestionsMomentCarousel } from "@/components/SuggestionsMomentCarousel";
 
 export const metadata = {
   title: "Suggestions du moment | Flam's",
@@ -62,11 +62,9 @@ export default function SuggestionsDuMomentPage() {
             </Link>
           </div>
         </div>
-        <ImageParallax
-          className="min-h-[70vh]"
-          label="selection chaude"
-          tone="from-saffron via-ember to-wine"
-        />
+        <div className="flex items-end">
+          <SuggestionsMomentCarousel />
+        </div>
       </section>
 
       <section className="bg-cream px-5 py-24 text-cacao md:px-10 lg:px-16">
