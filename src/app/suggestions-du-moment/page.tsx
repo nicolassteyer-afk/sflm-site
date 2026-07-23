@@ -34,20 +34,26 @@ const suggestions = [
 export default function SuggestionsDuMomentPage() {
   return (
     <>
-      <section className="grid min-h-screen gap-10 bg-cacao px-5 pb-16 pt-32 text-bone md:px-10 lg:grid-cols-[1fr_.8fr] lg:px-16">
-        <div className="flex flex-col justify-end">
+      <section className="min-h-screen bg-cacao px-5 pb-16 pt-28 text-bone md:px-10 lg:px-16">
+        <div className="mx-auto flex max-w-7xl flex-col items-center text-center">
           <p className="mb-5 text-xs font-black uppercase tracking-[0.22em] text-saffron">
             Suggestions du moment
           </p>
           <AnimatedTitle
-            className="text-[16vw] md:text-[9vw]"
+            className="max-w-6xl text-[17vw] md:text-[10vw] lg:text-[8vw]"
             text="Les envies qui tournent bien."
           />
-          <p className="mt-8 max-w-xl text-lg leading-8 text-bone/70">
+          <p className="mt-7 max-w-2xl text-lg leading-8 text-bone/70">
             Une selection courte pour commander vite, partager chaud et garder
             le meilleur de la saison sur la table.
           </p>
-          <div className="mt-9 flex flex-wrap gap-3">
+        </div>
+
+        <div className="mx-auto mt-12 max-w-7xl">
+          <SuggestionsMomentCarousel />
+        </div>
+
+        <div className="mx-auto mt-10 flex max-w-7xl flex-wrap justify-center gap-3">
             <Link
               className="rounded-full bg-bone px-8 py-5 text-xs font-black uppercase tracking-[0.18em] text-cacao transition hover:bg-saffron"
               href="/la-carte"
@@ -60,10 +66,6 @@ export default function SuggestionsDuMomentPage() {
             >
               Reserver
             </Link>
-          </div>
-        </div>
-        <div className="flex items-end">
-          <SuggestionsMomentCarousel />
         </div>
       </section>
 
