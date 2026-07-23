@@ -34,28 +34,31 @@ const suggestions = [
 export default function SuggestionsDuMomentPage() {
   return (
     <>
-      <section className="min-h-screen bg-cacao px-5 pb-16 pt-28 text-bone md:px-10 lg:px-16">
-        <div className="mx-auto flex max-w-7xl flex-col items-center text-center">
-          <p className="mb-5 text-xs font-black uppercase tracking-[0.22em] text-saffron">
-            Suggestions du moment
-          </p>
-          <AnimatedTitle
-            className="max-w-6xl text-[17vw] md:text-[10vw] lg:text-[8vw]"
-            text="Les envies qui tournent bien."
-          />
-          <p className="mt-7 max-w-2xl text-lg leading-8 text-bone/70">
-            Une selection courte pour commander vite, partager chaud et garder
-            le meilleur de la saison sur la table.
-          </p>
-        </div>
-
-        <div className="mx-auto mt-12 max-w-7xl">
+      <section className="relative min-h-screen overflow-hidden bg-cacao px-5 pb-10 pt-24 text-bone md:px-10 lg:px-16">
+        <div className="mx-auto max-w-7xl">
           <SuggestionsMomentCarousel />
         </div>
 
-        <div className="mx-auto mt-10 flex max-w-7xl flex-wrap justify-center gap-3">
+        <div className="pointer-events-none absolute inset-x-0 top-24 z-10 px-5 md:px-10 lg:px-16">
+          <div className="mx-auto max-w-7xl pt-8 text-center">
+            <p className="mb-4 text-xs font-black uppercase tracking-[0.22em] text-saffron">
+              Suggestions du moment
+            </p>
+            <AnimatedTitle
+              className="mx-auto max-w-6xl text-[17vw] drop-shadow-2xl md:text-[10vw] lg:text-[8vw]"
+              text="Les envies qui tournent bien."
+            />
+          </div>
+        </div>
+
+        <div className="absolute inset-x-0 bottom-44 z-10 flex flex-col items-center px-5 text-center md:bottom-48">
+          <p className="max-w-2xl text-lg font-bold leading-8 text-bone drop-shadow-2xl">
+            Une selection courte pour commander vite, partager chaud et garder
+            le meilleur de la saison sur la table.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
-              className="rounded-full bg-bone px-8 py-5 text-xs font-black uppercase tracking-[0.18em] text-cacao transition hover:bg-saffron"
+              className="rounded-full bg-bone px-8 py-5 text-xs font-black uppercase tracking-[0.18em] text-cacao shadow-soft transition hover:bg-saffron"
               href="/la-carte"
             >
               Voir la carte
@@ -66,6 +69,7 @@ export default function SuggestionsDuMomentPage() {
             >
               Reserver
             </Link>
+          </div>
         </div>
       </section>
 
