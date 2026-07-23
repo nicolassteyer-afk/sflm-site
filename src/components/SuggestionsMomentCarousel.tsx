@@ -37,11 +37,11 @@ export function SuggestionsMomentCarousel() {
   return (
     <ProgressSlider
       activeSlider="cookie"
-      className="mx-auto h-[calc(100vh-7rem)] min-h-[720px] w-full overflow-hidden rounded-sm border border-bone/15 bg-ink shadow-soft"
+      className="mx-auto w-full overflow-hidden rounded-sm border border-bone/15 bg-ink shadow-soft"
       duration={5600}
       vertical={false}
     >
-      <SliderContent className="relative h-full min-h-[720px]">
+      <SliderContent className="relative min-h-[520px] md:min-h-[680px] lg:min-h-[74vh]">
         {items.map((item) => (
           <SliderWrapper
             className="absolute inset-0 h-full w-full"

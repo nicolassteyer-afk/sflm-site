@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { AnimatedTitle } from "@/components/AnimatedTitle";
 import { SuggestionsMomentCarousel } from "@/components/SuggestionsMomentCarousel";
 
 export const metadata = {
@@ -34,42 +33,37 @@ const suggestions = [
 export default function SuggestionsDuMomentPage() {
   return (
     <>
-      <section className="relative min-h-screen overflow-hidden bg-cacao px-5 pb-10 pt-24 text-bone md:px-10 lg:px-16">
-        <div className="mx-auto max-w-7xl">
-          <SuggestionsMomentCarousel />
-        </div>
-
-        <div className="pointer-events-none absolute inset-x-0 top-24 z-10 px-5 md:px-10 lg:px-16">
-          <div className="mx-auto max-w-7xl pt-8 text-center">
-            <p className="mb-4 text-xs font-black uppercase tracking-[0.22em] text-saffron">
-              Suggestions du moment
-            </p>
-            <AnimatedTitle
-              className="mx-auto max-w-6xl text-[17vw] drop-shadow-2xl md:text-[10vw] lg:text-[8vw]"
-              text="Les envies qui tournent bien."
-            />
-          </div>
-        </div>
-
-        <div className="absolute inset-x-0 bottom-44 z-10 flex flex-col items-center px-5 text-center md:bottom-48">
-          <p className="max-w-2xl text-lg font-bold leading-8 text-bone drop-shadow-2xl">
+      <section className="bg-cacao px-5 pb-16 pt-28 text-bone md:px-10 lg:px-16">
+        <div className="mx-auto max-w-7xl text-center">
+          <p className="mb-4 text-xs font-black uppercase tracking-[0.22em] text-saffron">
+            Suggestions du moment
+          </p>
+          <h1 className="mx-auto max-w-6xl font-display text-[18vw] uppercase leading-[0.82] md:text-[10vw] lg:text-[8vw]">
+            Les envies qui tournent bien.
+          </h1>
+          <p className="mx-auto mt-7 max-w-2xl text-lg font-bold leading-8 text-bone/75">
             Une selection courte pour commander vite, partager chaud et garder
             le meilleur de la saison sur la table.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link
-              className="rounded-full bg-bone px-8 py-5 text-xs font-black uppercase tracking-[0.18em] text-cacao shadow-soft transition hover:bg-saffron"
-              href="/la-carte"
-            >
-              Voir la carte
-            </Link>
-            <Link
-              className="rounded-full border border-bone/35 px-8 py-5 text-xs font-black uppercase tracking-[0.18em] text-bone transition hover:bg-bone hover:text-cacao"
-              href="/reservation"
-            >
-              Reserver
-            </Link>
-          </div>
+        </div>
+
+        <div className="mx-auto mt-12 max-w-7xl">
+          <SuggestionsMomentCarousel />
+        </div>
+
+        <div className="mx-auto mt-10 flex max-w-7xl flex-wrap justify-center gap-3">
+          <Link
+            className="rounded-full bg-bone px-8 py-5 text-xs font-black uppercase tracking-[0.18em] text-cacao shadow-soft transition hover:bg-saffron"
+            href="/la-carte"
+          >
+            Voir la carte
+          </Link>
+          <Link
+            className="rounded-full border border-bone/35 px-8 py-5 text-xs font-black uppercase tracking-[0.18em] text-bone transition hover:bg-bone hover:text-cacao"
+            href="/reservation"
+          >
+            Reserver
+          </Link>
         </div>
       </section>
 
