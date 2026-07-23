@@ -71,6 +71,7 @@ export function FooterClient({ cmsFooter }: { cmsFooter: FooterData }) {
         <div className="grid content-start gap-3 text-sm font-black uppercase tracking-[0.16em] text-bone/70">
           <Link href="/notre-univers">Notre Univers</Link>
           <Link href="/la-carte">La carte</Link>
+          <Link href="/suggestions-du-moment">Suggestions du moment</Link>
           <Link href="/restaurants">Nos restaurants</Link>
           <Link href="/contact">Contact</Link>
           <Link href="/recrutement">Recrutement</Link>
